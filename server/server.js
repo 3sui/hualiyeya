@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:03:27
- * @LastEditTime: 2020-05-27 14:57:33
+ * @LastEditTime: 2020-06-01 10:48:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\server.js
@@ -24,12 +24,12 @@ app.get('/abc', (res, req) => {
 })
 
 
-app.listen(9999, (err) => {
+app.listen(8085, (err) => {
     if (err) {
         console.log(err);
 
     } else {
-        console.log('服务器已连接,端口号9999');
+        console.log('服务器已连接,端口号8085');
 
     }
 })

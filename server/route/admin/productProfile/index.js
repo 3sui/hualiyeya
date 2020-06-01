@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 14:36:20
- * @LastEditTime: 2020-05-27 15:46:32
+ * @LastEditTime: 2020-06-01 11:01:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\admin\productProfile\index.js
@@ -26,7 +26,7 @@ module.exports = app => {
             .then(res => {
                 // console.log(res.data)
                 let data = res.data
-                req.status(200).send(data)
+                req.status(404).send(data)
             })
             .catch()
     })
@@ -88,7 +88,7 @@ module.exports = app => {
                     }
                 })
                 .then(res => {
-                    console.log(res.data.data);
+                    console.log(res);
 
                     res.data.data.forEach(item => {
                         a.push(item.id)
