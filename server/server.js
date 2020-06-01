@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:03:27
- * @LastEditTime: 2020-06-01 10:48:47
+ * @LastEditTime: 2020-06-01 13:39:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\server.js
@@ -16,7 +16,10 @@ app.use(cors())
 app.use('/uploads', express.static(__dirname + '/uploads'))
 //连接服务器
 require('./mysql/mysql.js')(app)
-require('./route/admin/productProfile/index')(app)
+// require('./route/admin/productProfile/index')(app)
+require('./route/map/index.js')(app)
+
+
 app.get('/abc', (res, req) => {
     console.log(123);
 

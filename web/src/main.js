@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-04-28 15:28:09
- * @LastEditTime: 2020-05-16 10:56:05
+ * @LastEditTime: 2020-06-01 15:04:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\main.js
@@ -26,6 +26,8 @@ import './assets/css/icon.css';
 import './components/common/directives';
 import 'babel-polyfill';
 import XLSX from 'xlsx'
+
+import './assets/scss/style.scss'
 
 import JsonExcel from 'vue-json-excel'
 Vue.component('downloadExcel', JsonExcel)
