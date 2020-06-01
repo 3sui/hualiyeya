@@ -1,0 +1,270 @@
+{
+    "datadictionary": [
+        {
+            "id": 1,
+            "classification": "客户行业",
+            "names": "钢铁",
+            "description": "钢铁",
+            "createtime": "2020-05-09 09:25:26",
+            "createuser": "admin"
+        },
+        {
+            "id": 2,
+            "classification": "客户行业",
+            "names": "钢铁",
+            "description": "钢铁",
+            "createtime": "2020-05-09 09:25:26",
+            "createuser": "admin"
+        },
+        {
+            "id": 3,
+            "classification": "客户行业",
+            "names": "钢铁",
+            "description": "钢铁",
+            "createtime": "2020-05-09 09:25:26",
+            "createuser": "admin"
+        },
+        {
+            "id": 4,
+            "classification": "客户行业",
+            "names": "钢铁",
+            "description": "钢铁",
+            "createtime": "2020-05-09 09:25:26",
+            "createuser": "admin"
+        },
+        {
+            "id": 5,
+            "classification": "客户行业",
+            "names": "钢铁",
+            "description": "钢铁",
+            "createtime": "2020-05-09 09:25:26",
+            "createuser": "admin"
+        },
+        {
+            "id": 6,
+            "classification": "客户行业",
+            "names": "钢铁",
+            "description": "钢铁",
+            "createtime": "2020-05-09 09:25:26",
+            "createuser": "admin"
+        }
+    ],
+    "pageTotal": 10,
+    "alarmsetting": [
+        {
+            "id": 1,
+            "deviceName": "数控机床1",
+            "deviceType": "数控机床",
+            "deviceModel": "KN-001",
+            "pointName": "温度",
+            "upperlimit": "200",
+            "lowerlimit": "30",
+            "updatetime": "2020-05-09 09:25:26"
+        },
+        {
+            "id": 2,
+            "deviceName": "数控机床1",
+            "deviceType": "数控机床",
+            "deviceModel": "KN-001",
+            "pointName": "温度",
+            "upperlimit": "200",
+            "lowerlimit": "30",
+            "updatetime": "2020-05-09 09:25:26"
+        },
+        {
+            "id": 3,
+            "deviceName": "数控机床1",
+            "deviceType": "数控机床",
+            "deviceModel": "KN-001",
+            "pointName": "温度",
+            "upperlimit": "200",
+            "lowerlimit": "30",
+            "updatetime": "2020-05-09 09:25:26"
+        },
+        {
+            "id": 4,
+            "deviceName": "数控机床1",
+            "deviceType": "数控机床",
+            "deviceModel": "KN-001",
+            "pointName": "温度",
+            "upperlimit": "200",
+            "lowerlimit": "30",
+            "updatetime": "2020-05-09 09:25:26"
+        },
+        {
+            "id": 5,
+            "deviceName": "数控机床1",
+            "deviceType": "数控机床",
+            "deviceModel": "KN-001",
+            "pointName": "温度",
+            "upperlimit": "200",
+            "lowerlimit": "30",
+            "updatetime": "2020-05-09 09:25:26"
+        },
+        {
+            "id": 6,
+            "deviceName": "数控机床1",
+            "deviceType": "数控机床",
+            "deviceModel": "KN-001",
+            "pointName": "温度",
+            "upperlimit": "200",
+            "lowerlimit": "30",
+            "updatetime": "2020-05-09 09:25:26"
+        }
+    ],
+    "supplier": [
+        {
+            "id": 1,
+            "supplierID": "001",
+            "supplierName": "航天云网",
+            "contactName": "张三",
+            "phone": "1562839294",
+            "email": "sssss@qq.com",
+            "industry": "制造业",
+            "province": "江苏省",
+            "city": "常州市",
+            "district": "新北区",
+            "createtime": "2020-05-09 09:25:26"
+        },
+        {
+            "id": 2,
+            "supplierID": "001",
+            "supplierName": "航天云网",
+            "contactName": "张三",
+            "phone": "1562839294",
+            "email": "sssss@qq.com",
+            "industry": "制造业",
+            "province": "江苏省",
+            "city": "常州市",
+            "district": "新北区",
+            "createtime": "2020-05-09 09:25:26"
+        },
+        {
+            "id": 3,
+            "supplierID": "001",
+            "supplierName": "航天云网",
+            "contactName": "张三",
+            "phone": "1562839294",
+            "email": "sssss@qq.com",
+            "industry": "制造业",
+            "province": "江苏省",
+            "city": "常州市",
+            "district": "新北区",
+            "createtime": "2020-05-09 09:25:26"
+        },
+        {
+            "id": 4,
+            "supplierID": "001",
+            "supplierName": "航天云网",
+            "contactName": "张三",
+            "phone": "1562839294",
+            "email": "sssss@qq.com",
+            "industry": "制造业",
+            "province": "江苏省",
+            "city": "常州市",
+            "district": "新北区",
+            "createtime": "2020-05-09 09:25:26"
+        },
+        {
+            "id": 5,
+            "supplierID": "001",
+            "supplierName": "航天云网",
+            "contactName": "张三",
+            "phone": "1562839294",
+            "email": "sssss@qq.com",
+            "industry": "制造业",
+            "province": "江苏省",
+            "city": "常州市",
+            "district": "新北区",
+            "createtime": "2020-05-09 09:25:26"
+        }
+    ],
+    "userlist": [
+        {
+            "id": 1,
+            "account": "aaaa",
+            "userName": "张三",
+            "userTeam": "企业用户",
+            "company": "航天云网",
+            "phone": "156462893846",
+            "email": "aaa@qq.com",
+            "registrationDate": "2020-05-09 09:25:26",
+            "industry": "制造业",
+            "deviceType": "磨具",
+            "role": "系统管理员"
+        },
+        {
+            "id": 2,
+            "account": "aaaa",
+            "userName": "张三",
+            "userTeam": "企业用户",
+            "company": "航天云网",
+            "phone": "156462893846",
+            "email": "aaa@qq.com",
+            "registrationDate": "2020-05-09 09:25:26",
+            "industry": "制造业",
+            "deviceType": "磨具",
+            "role": "系统管理员"
+        }
+    ],
+    "rolelist":[
+        {
+            "id":1,
+            "role":"系统管理员",
+            "roleDescription": "系统管理员",
+            "userList": ["aaa","bbb"],
+            "userSum": "2",
+            "createTime": "2020-05-09 09:25:26"
+        },
+        {
+            "id": 2,
+            "role": "普通用户",
+            "roleDescription": "普通用户",
+            "userList": [
+                "aaa",
+                "bbb",
+                "ccc"
+            ],
+            "userSum": "3",
+            "createTime": "2020-05-09 09:25:26"
+        }
+    ],
+    "list": [
+        {
+            "id": 1,
+            "name": "张三",
+            "money": 123,
+            "address": "广东省东莞市长安镇",
+            "state": "成功",
+            "date": "2019-11-1",
+            "thumb": "https://lin-xin.gitee.io/images/post/wms.png"
+        },
+        {
+            "id": 2,
+            "name": "李四",
+            "money": 456,
+            "address": "广东省广州市白云区",
+            "state": "成功",
+            "date": "2019-10-11",
+            "thumb": "https://lin-xin.gitee.io/images/post/node3.png"
+        },
+        {
+            "id": 3,
+            "name": "王五",
+            "money": 789,
+            "address": "湖南省长沙市",
+            "state": "失败",
+            "date": "2019-11-11",
+            "thumb": "https://lin-xin.gitee.io/images/post/parcel.png"
+        },
+        {
+            "id": 4,
+            "name": "赵六",
+            "money": 1011,
+            "address": "福建省厦门市鼓浪屿",
+            "state": "成功",
+            "date": "2019-10-20",
+            "thumb": "https://lin-xin.gitee.io/images/post/notice.png"
+        }
+    ]
+}
