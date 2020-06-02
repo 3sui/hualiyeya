@@ -137,23 +137,27 @@ export default {
                     title: '分析中心',
                     subs: [
                         {
-                            index: 'EnterpriseView',
-                            title: '企业视图'
+                            index: 'DeviceAnalysis',
+                            title: '设备分析'
+                        },
+                        {
+                            index: 'IndustryAnalysis',
+                            title: '行业分析'
+                        },
+                        {
+                            index: 'FaultAnalysis',
+                            title: '故障分析'
                         }
-                        // {
-                        //     index: 'AdminView',
-                        //     title: '管理员视图'
-                        // }
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-calendar',
+                    icon: 'el-icon-setting',
                     index: '5',
                     title: '基础数据管理',
                     subs: [
                         {
-                            index: 'DataDictionary',
-                            title: '数据字典'
+                            index: 'Industry',
+                            title: '行业设置'
                             // subs: [
                             //     {
                             //         index: '',
@@ -162,44 +166,24 @@ export default {
                             // ]
                         },
                         {
-                            index: 'SupplierManagement',
-                            title: '供应商管理'
-                            // subs: [
-                            //     {
-                            //         index: '',
-                            //         title: '新增/编辑'
-                            //     }
-                            // ]
-                        },
-                        {
-                            index: 'AlarmSetting',
-                            title: '报警设置/阈值设置'
-                            // subs: [
-                            //     {
-                            //         index: '',
-                            //         title: '新增/编辑'
-                            //     }
-                            // ]
+                            index: 'Enterprise',
+                            title: '企业管理'
+                          
                         },
                         {
                             index: 'UserInfo',
                             title: '用户信息'
-                            // subs: [
-                            //     {
-                            //         index: '',
-                            //         title: '新增/编辑'
-                            //     }
-                            // ]
+                          
                         },
                         {
-                            index: 'RoleList',
-                            title: '角色设置'
-                            // subs: [
-                            //     {
-                            //         index: '',
-                            //         title: '添加角色'
-                            //     }
-                            // ]
+                            index: 'DeviceType',
+                            title: '设备类型'
+                           
+                        },
+                        {
+                            index: 'FaultType',
+                            title: '故障类型'
+                           
                         }
                     ]
                 }

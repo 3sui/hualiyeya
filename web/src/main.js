@@ -17,6 +17,7 @@ import VueI18n from 'vue-i18n';
 import BaiduMap from 'vue-baidu-map'
 import echarts from 'echarts'
 
+
 import {
     messages
 } from './components/common/i18n';
