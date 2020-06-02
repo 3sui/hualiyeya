@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:46:57
- * @LastEditTime: 2020-05-11 15:49:34
+ * @LastEditTime: 2020-06-01 13:38:05
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\mysql\mysql.js
@@ -21,7 +21,7 @@ module.exports = app => {
 
     var cnt = 0;
     var conn = function () {
-        connection.query('SELECT * FROM Device'); //查询MySQL中数据库
+        connection.query('SELECT * FROM device'); //查询MySQL中数据库
         cnt++;
         console.log("Mysql重连接成功! 次数:" + cnt);
     }

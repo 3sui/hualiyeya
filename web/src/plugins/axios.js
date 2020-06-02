@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 10:56:38
- * @LastEditTime: 2020-05-27 10:42:45
+ * @LastEditTime: 2020-06-01 15:30:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\plugins\axios.js
@@ -18,7 +18,7 @@ axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 
 let config = {
   // baseURL: 'http://127.0.0.1:9999',
-  baseURL: 'http://localhost:8085',
+  baseURL: 'http://localhost:8085/api',
   // baseURL: 'http://58.216.47.110:9999',
   // baseURL: 'http://58.216.47.108:8890',
 
