@@ -17,6 +17,7 @@ app.use('/uploads', express.static(__dirname + '/uploads'))
 //连接服务器
 require('./mysql/mysql.js')(app)
 require('./route/admin/productProfile/index')(app)
+require('./route/dataSettings/index')(app)
 app.get('/abc', (res, req) => {
     console.log(123);
 
