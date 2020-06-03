@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:03:27
- * @LastEditTime: 2020-06-01 13:39:23
+ * @LastEditTime: 2020-06-03 10:19:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\server.js
@@ -11,6 +11,8 @@ const app = express()
 const cors = require('cors')
 app.use(express.json())
 app.use(cors())
+const assert = require('http-assert')
+
 
 //开放uploads文件夹
 app.use('/uploads', express.static(__dirname + '/uploads'))
@@ -18,14 +20,23 @@ app.use('/uploads', express.static(__dirname + '/uploads'))
 require('./mysql/mysql.js')(app)
 // require('./route/admin/productProfile/index')(app)
 require('./route/map/index.js')(app)
+require('./route/deviceRecord/index.js')(app)
+require('./route/login/index.js')(app)
 
 
+
+app.set('secret', 'password')
 app.get('/abc', (res, req) => {
     console.log(123);
 
     req.send('123')
 })
-
+app.use((err, req, res, next) => {
+    // console.log(123)
+    res.status(err.statusCode || 500).send({
+        message: err.message
+    })
+})
 
 app.listen(8085, (err) => {
     if (err) {
