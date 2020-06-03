@@ -69,27 +69,27 @@ export default {
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '1',
-                    title: '产品档案',
+                    title: '设备档案',
                     subs: [
                         {
                             index: 'productlist',
-                            title: '产品列表'
+                            title: '设备列表'
                             // subs: [
                             //     {
                             //         index: 'productlist',
-                            //         title: '产品列表'
+                            //         title: '设备列表'
                             //     },
                             //     {
                             //         index: '',
-                            //         title: '产品导入模板'
+                            //         title: '设备导入模板'
                             //     },
                             //     {
                             //         index: 'productDetails',
-                            //         title: '产品详情'
+                            //         title: '设备详情'
                             //     },
                             //     {
                             //         index: 'addnewproduct',
-                            //         title: '产品添加/编辑'
+                            //         title: '设备添加/编辑'
                             //     }
                             // ]
                         },
@@ -109,23 +109,23 @@ export default {
                         }
                     ]
                 },
-                // {
-                //     icon: 'el-icon-lx-calendar',
-                //     index: '2',
-                //     title: '远程监控',
-                //     subs: [
-                //         {
-                //             index: 'EquipmentMonitoring',
-                //             // index: 'DeviceList',
+                {
+                    icon: 'el-icon-lx-calendar',
+                    index: '2',
+                    title: '远程监控',
+                    subs: [
+                        {
+                            index: 'EquipmentMonitoring',
+                            // index: 'DeviceList',
 
-                //             title: '设备监控'
-                //         },
-                //         {
-                //             index: 'AlarmRecord',
-                //             title: '报警记录'
-                //         }
-                //     ]
-                // },
+                            title: '设备监控'
+                        },
+                        {
+                            index: 'AlarmRecord',
+                            title: '报警记录'
+                        }
+                    ]
+                },
                 // {
                 //     icon: 'el-icon-lx-calendar',
                 //     index: 'ServiceBooklet',

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 14:19:13
- * @LastEditTime: 2020-05-16 12:07:05
+ * @LastEditTime: 2020-06-02 10:33:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\AddNewProduct.vue
@@ -11,7 +11,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-calendar"></i> 产品档案
+                    <i class="el-icon-lx-calendar"></i> 设备档案
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>添加维修记录</el-breadcrumb-item>
             </el-breadcrumb>

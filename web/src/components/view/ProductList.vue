@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-05-17 17:15:49
+ * @LastEditTime: 2020-06-02 11:32:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -11,9 +11,9 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 产品档案
+                    <i class="el-icon-lx-cascades"></i> 设备档案
                 </el-breadcrumb-item>
-                <el-breadcrumb-item>产品列表</el-breadcrumb-item>
+                <el-breadcrumb-item>设备列表</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
@@ -119,19 +119,15 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="序号" width="55" align="center" type="index"></el-table-column>
-                <el-table-column prop="DeviceID" label="设备ID"></el-table-column>
-                <el-table-column prop="DeviceName" label="设备名称"></el-table-column>
-                <el-table-column prop="DeviceClass" label="设备种类"></el-table-column>
-                <el-table-column prop="Model" label="型号描述"></el-table-column>
-                <el-table-column prop="SerialNumber" label="出厂编号"></el-table-column>
-                <el-table-column prop="CustomerName" label="客户名称"></el-table-column>
-                <el-table-column prop="CustomerIndustry" label="客户行业"></el-table-column>
-                <el-table-column prop="Province" label="安装地址(省)"></el-table-column>
-                <el-table-column prop="City" label="安装地址(市)"></el-table-column>
-                <el-table-column prop="District" label="安装地址(区)"></el-table-column>
-                <el-table-column prop="Address" label="安装地址(详情)"></el-table-column>
-                <el-table-column prop="Duration" label="运行时长(h)"></el-table-column>
+                <el-table-column label="序号" width="55" align="center" type="index"></el-table-column>
+                <el-table-column prop="eq" label="设备ID"></el-table-column>
+                <el-table-column prop="device_name" label="设备名称"></el-table-column>
+                <el-table-column prop="device_type" label="设备种类"></el-table-column>
+                <el-table-column prop="device_description" label="型号描述"></el-table-column>
+                <el-table-column prop="device_supplier" label="客户名称"></el-table-column>
+                <!-- <el-table-column prop="CustomerIndustry" label="客户行业"></el-table-column> -->
+                <el-table-column prop="address" label="安装地址(详情)"></el-table-column>
+                <!-- <el-table-column prop="Duration" label="运行时长(h)"></el-table-column> -->
 
                 <!-- <el-table-column label="账户余额">
                     <template slot-scope="scope">￥{{scope.row.money}}</template>
@@ -156,8 +152,8 @@
                 <el-table-column label="开关机" align="center">
                     <template slot-scope="scope">
                         <el-tag
-                            :type="scope.row.switch==='开机'?'success':(scope.row.switch==='关机'?'danger':'')"
-                        >{{scope.row.switch}}</el-tag>
+                            :type="scope.row.is_on==='0'?'success':(scope.row.is_on==='1'?'danger':'')"
+                        >{{scope.row.is_on === 0? '开机' : '关机'}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column prop="AlarmTimes" label="报警次数"></el-table-column>
@@ -300,13 +296,15 @@ export default {
 
         // 获取设备列表数据
         getData() {
-            axios
-                .get('/getProductList')
+            axios({
+                method: 'get',
+                url: '/device/fetchAllDevice'
+            })
                 .then(res => {
                     window.console.log(res);
-                    if (res.status === 200) {
-                        this.tableData = res.data;
-                        this.pageTotal = res.data.length;
+                    if (res.data.success) {
+                        this.tableData = res.data.data;
+                        this.pageTotal = res.data.data.length;
                         window.console.log(res.data);
                     } else {
                         window.console.log('服务器错误');

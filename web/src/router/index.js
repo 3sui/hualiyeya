@@ -290,19 +290,12 @@ export default new Router({
                     meta: {
                         title: '403'
                     }
-                },
-                {
-                    path: '/donate',
-                    component: () => import( /* webpackChunkName: "donate" */ '../components/page/Donate.vue'),
-                    meta: {
-                        title: '支持作者'
-                    }
                 }
             ]
         },
         {
             path: '/login',
-            component: () => import( /* webpackChunkName: "login" */ '../components/page/Login.vue'),
+            component: () => import( /* webpackChunkName: "login" */ '../components/login/Login.vue'),
             meta: {
                 title: '登录'
             }

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-04-28 16:25:21
- * @LastEditTime: 2020-06-01 18:02:01
+ * @LastEditTime: 2020-06-02 10:51:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\vue-manage-system\src\components\page\map.vue
@@ -23,7 +23,7 @@
                             <bml-marker-clusterer :averageCenter="true">
                                 <div v-for="(marker, i) of allDevice" :key="i">
                                     <bm-marker
-                                        :icon="{url: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1591015785174&di=0f3d1082e6d3de97a898b433b136582f&imgtype=0&src=http%3A%2F%2Fimages.669pic.com%2Felement_pic%2F90%2F37%2F17%2F46%2Fdd97a3cd5a139633ceb99f292b1aea8c.jpg%2521w700wb', size: {width: 300, height: 157}}"
+                                        :icon="{url: marker.status == '正常'? require('../../../public/bposition.png') : require('../../../public/rposition.png'), size: {width: 60, height: 60}}"
                                         :dragging="false"
                                         animation="BMAP_ANIMATION_BOUNCE"
                                         :position="{lng: marker.lng, lat: marker.lat}"
@@ -40,7 +40,11 @@
                                             <p>地址: {{marker.address}}</p>
                                             <p>设备ID: {{marker.eq}}</p>
                                             <p>设备状态: {{marker.is_on?'开机':'关机'}}</p>
-                                            <p>设备报警: 0</p>
+                                            <p>设备报警: {{marker.status}}</p>
+                                            <el-button
+                                                class="my-2"
+                                                @click="showDrawer(marker.eq)"
+                                            >查看更多</el-button>
                                         </bm-info-window>
                                     </bm-marker>
                                 </div>
@@ -55,34 +59,56 @@
                             <p>设备数量</p>
                         </div>
                         <div class="info-two">
-                            <el-progress type="circle" :percentage="status.yxs*2" v-if="status.yxs"></el-progress>
+                            <el-progress type="circle" :percentage="100"></el-progress>
                             <div>
-                                <p>{{status.yxs}}</p>
+                                <p>2</p>
                                 <p>运行设备数</p>
                             </div>
                         </div>
                         <div class="info-three">
-                            <el-progress
-                                type="circle"
-                                :percentage="(deviceNum-status.yxs)*2"
-                                v-if="status.yxs"
-                            ></el-progress>
+                            <el-progress type="circle" :percentage="0"></el-progress>
                             <div>
-                                <p>{{deviceNum-status.yxs}}</p>
+                                <p>0</p>
                                 <p>关机设备数</p>
                             </div>
                         </div>
                         <div class="info-four">
-                            <el-progress type="circle" :percentage="status.djs*2" v-if="status.yxs"></el-progress>
+                            <el-progress type="circle" :percentage="0"></el-progress>
                             <div>
-                                <p>{{status.djs}}</p>
-                                <p>设备故障数</p>
+                                <p>0</p>
+                                <p>待机设备数</p>
                             </div>
                         </div>
                     </div>
                 </el-col>
             </el-row>
         </div>
+        <el-drawer
+            :title="drawerData.device_name"
+            :visible.sync="drawer"
+            direction="rtl"
+            size="35%"
+        >
+            <div class="w-100 px-4">
+                <div class="d-flex jc-around my-2">
+                    <div class="img">图片</div>
+                    <div class="img">图片</div>
+                    <div class="img">图片</div>
+                    <div class="img">图片</div>
+                    <div class="img">图片</div>
+                </div>
+                <p>设备id: {{drawerData.eq}}</p>
+                <p>设备名称: {{drawerData.device_name}}</p>
+                <p>设备型号: {{drawerData.device_model}}</p>
+                <p>工作状态: {{drawerData.status}}</p>
+                <p>设备地址: {{drawerData.address}}</p>
+                <p>设备负责人: {{drawerData.principal}}</p>
+
+                <el-button
+                    @click="$router.push({path: '/ProductDetails', query: drawerData.eq})"
+                >跳转到详情页</el-button>
+            </div>
+        </el-drawer>
     </div>
 </template>
 
@@ -90,52 +116,18 @@
 import { BmlMarkerClusterer } from 'vue-baidu-map';
 // 引入marker
 import BmMarker from 'vue-baidu-map/components/overlays/Marker';
-// 插入 100 个随机点
-// const markers = [
-//     {
-//         lng: 119.946973,
-//         lat: 31.772752,
-//         // url: 'http://developer.baidu.com/map/jsdemo/img/fox.gif',
-//         company: '江苏常州华丽液压润滑设备有限公司',
-//         address: '中国 江苏 常州市 三河口',
-//         deviceId: '10000093803899',
 
-//         showFlag: false
-//     },
-//     {
-//         lng: 119.946973,
-//         lat: 31.772752,
-//         // url: 'http://developer.baidu.com/map/jsdemo/img/fox.gif',
-//         company: '江苏常州华丽液压润滑设备有限公司',
-//         address: '中国 江苏 常州市 三河口',
-//         deviceId: '10000093803934',
-
-//         showFlag: false
-//     },
-//     {
-//         lng: 119.946973,
-//         lat: 31.772752,
-//         // url: 'http://developer.baidu.com/map/jsdemo/img/fox.gif',
-//         company: '江苏常州华丽液压润滑设备有限公司',
-//         address: '中国 江苏 常州市 三河口',
-//         deviceId: '10000093803937',
-//         showFlag: false
-//     }
-// ];
-
-const carList = [{}];
 export default {
     name: 'maps',
     data() {
         return {
-            imgUrl: ['./src/assets/img/bpositon.png'],
+            drawerData: {},
+            drawer: false,
             allDevice: null,
             BMap: '',
             map: '',
-            carList,
             show: false,
-            deviceNum: 0,
-            status: {}
+            deviceNum: 0
         };
     },
 
@@ -151,6 +143,15 @@ export default {
         this.fetchDeviceStatus();
     },
     methods: {
+        //显示侧边栏设备详情
+        showDrawer(id) {
+            window.console.log(id);
+            this.drawerData = this.allDevice.filter(item => {
+                return item.eq == id;
+            })[0];
+            window.console.log(this.drawerData);
+            this.drawer = true;
+        },
         // 关闭信息窗口 @close 自带的方法
         infoWindowClose(marker) {
             marker.showFlag = false;
@@ -182,20 +183,6 @@ export default {
                 .catch();
         },
 
-        //获取企业设备数量
-        async fetchDeviceAddress() {},
-
-        //获取企业设备各种状态的数据
-        fetchDeviceStatus() {
-            // axios({
-            //     method: 'get',
-            //     url: '/fetchDeviceStatus'
-            // })
-            //     .then(res => {
-            //         this.status = res.data;
-            //     })
-            //     .catch();
-        },
 
         //获取所有设备数据
         fetchAllDevice() {
@@ -228,12 +215,7 @@ export default {
                                 if (point) {
                                     _this.$set(_this.allDevice[i], 'lng', point.lng);
                                     _this.$set(_this.allDevice[i], 'lat', point.lat);
-
                                     _this.$set(_this.allDevice[i], 'showFlag', point.showFlag);
-
-                                    // _this.allDevice[i].lng = point.lng;
-                                    // _this.allDevice[i].lat = point.lat;
-                                    // _this.allDevice[i].showFlag = false;
                                 }
                             });
                         }
@@ -286,10 +268,18 @@ export default {
 .info-four > div p:nth-child(1) {
     font-size: 26px;
 }
+.img {
+    width: 90px;
+    height: 90px;
+    background: red;
+}
 </style>
 <style>
 .el-progress-circle {
     height: 100px !important;
     width: 100px !important;
+}
+.BMap_Marker img {
+    width: 40px;
 }
 </style>

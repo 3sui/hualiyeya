@@ -11,9 +11,9 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-calendar"></i> 产品档案
+                    <i class="el-icon-lx-calendar"></i> 设备档案
                 </el-breadcrumb-item>
-                <el-breadcrumb-item>添加产品</el-breadcrumb-item>
+                <el-breadcrumb-item>添加设备</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">

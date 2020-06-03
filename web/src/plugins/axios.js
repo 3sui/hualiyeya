@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 10:56:38
- * @LastEditTime: 2020-06-01 15:30:12
+ * @LastEditTime: 2020-06-03 10:31:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\plugins\axios.js
@@ -10,6 +10,7 @@
 
 import Vue from 'vue';
 import axios from "axios";
+import router from 'vue-router'
 
 // Full config:  https://github.com/axios/axios#request-config
 axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -32,6 +33,10 @@ const _axios = axios.create(config);
 _axios.interceptors.request.use(
   function (config) {
     // Do something before request is sent
+    console.log(config)
+    if (localStorage.token) {
+      config.headers.Authorization = 'Bearer ' + localStorage.token
+    }
     return config;
   },
   function (error) {
@@ -48,6 +53,16 @@ _axios.interceptors.response.use(
   },
   function (error) {
     // Do something with response error
+    // window.console.log(error.response);
+    if (error.response.data.message) {
+      Vue.prototype.$message({
+        type: 'error',
+        message: error.response.data.message
+      })
+      if (error.response.status === 401) {
+        router.push('/login')
+      }
+    }
     return Promise.reject(error);
   }
 );
