@@ -334,5 +334,5 @@ module.exports = app => {
 
 
 
-    app.use('/', router)
+    app.use('/api', router)
 }

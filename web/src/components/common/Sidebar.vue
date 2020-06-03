@@ -132,7 +132,7 @@ export default {
                 //     title: '服务手册'
                 // },
                 {
-                    icon: 'el-icon-lx-calendar',
+                    icon: 'el-icon-s-data',
                     index: '4',
                     title: '分析中心',
                     subs: [
