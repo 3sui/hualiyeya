@@ -14,7 +14,8 @@ module.exports = app => {
         port: '3309',
         user: 'root',
         password: 'htyw2019',
-        database: 'hlyy'
+        database: 'hlyy',
+        dateStrings:true
     }
     let connection = mysql.createPool(options)
 
