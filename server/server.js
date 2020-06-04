@@ -18,6 +18,8 @@ app.use('/uploads', express.static(__dirname + '/uploads'))
 require('./mysql/mysql.js')(app)
 require('./route/admin/productProfile/index')(app)
 require('./route/dataSettings/index')(app)
+require('./route/analysis/index')(app)
+require('./route/product/repair')(app)
 app.get('/abc', (res, req) => {
     console.log(123);
 
@@ -28,10 +30,8 @@ app.get('/abc', (res, req) => {
 app.listen(8085, (err) => {
     if (err) {
         console.log(err);
-
     } else {
         console.log('服务器已连接,端口号8085');
-
     }
 })
 
@@ -41,6 +41,5 @@ app.listen(8085, (err) => {
 
 //     } else {
 //         console.log('服务器已连接,端口号8890');
-
 //     }
 // })
