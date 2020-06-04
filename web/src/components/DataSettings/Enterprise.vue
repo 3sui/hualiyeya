@@ -269,8 +269,10 @@ export default {
                         });
                 } else {
                     this.form.id = this.idx;
-                    let date =new Date(this.form.created_time )
-                    this.form.created_time =  date.getTime();
+                    delete this.form['industry_name']
+                    delete this.form['created_time']
+                    // let date =new Date(this.form.created_time )
+                    // this.form.created_time =  date.getTime();
                     this.$axios
                         .post('/updateEnterprise', this.form)
                         .then(res => {
@@ -295,8 +297,9 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
-            delete row['industry_name'];
+            // delete row['industry_name'];
             this.form = row;
+            // delete this.form['industry_name']
             this.editVisible = true;
             this.isAdd = false;
         },

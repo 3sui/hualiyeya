@@ -214,8 +214,9 @@ export default {
                         });
                 } else {
                     this.form.id = this.idx;
-                     let date =new Date(this.form.created_time )
-                    this.form.created_time =  date.getTime();
+                    delete this.form['created_time']
+                    //  let date =new Date(this.form.created_time )
+                    // this.form.created_time =  date.getTime();
                     this.$axios
                         .post('/updateFaultType', this.form)
                         .then(res => {
