@@ -21,7 +21,7 @@
                             range-separator="-"
                             start-placeholder="开始日期"
                             end-placeholder="结束日期"
-                            :picker-options="pickerOptions"
+                            
                         ></el-date-picker>
                     </div>
                 </el-col>
@@ -79,50 +79,75 @@ export default {
     data() {
         return {
             datepick: '',
-            deviceTop: [
-                {
-                    sort: 1,
-                    device_type: '干燥设备',
-                    count: 247
-                },
-                {
-                    sort: 2,
-                    device_type: '电机设备',
-                    count: 180
-                },
-                {
-                    sort: 3,
-                    device_type: '钣金设备',
-                    count: 140
-                },
-                {
-                    sort: 4,
-                    device_type: '数控机床',
-                    count: 93
-                },
-                {
-                    sort: 5,
-                    device_type: '智能设备',
-                    count: 48
-                },
-                {
-                    sort: 6,
-                    device_type: '三哑设备',
-                    count: 35
-                }
-            ],
+            deviceTop: [],
+            //     {
+            //         sort: 1,
+            //         device_type: '干燥设备',
+            //         count: 247
+            //     },
+            //     {
+            //         sort: 2,
+            //         device_type: '电机设备',
+            //         count: 180
+            //     },
+            //     {
+            //         sort: 3,
+            //         device_type: '钣金设备',
+            //         count: 140
+            //     },
+            //     {
+            //         sort: 4,
+            //         device_type: '数控机床',
+            //         count: 93
+            //     },
+            //     {
+            //         sort: 5,
+            //         device_type: '智能设备',
+            //         count: 48
+            //     },
+            //     {
+            //         sort: 6,
+            //         device_type: '三哑设备',
+            //         count: 35
+            //     }
+            // ],
             style: ['s1', 's2', 's3', 's4'],
             backgroundstyle: ['b1', 'b2', 'b3', 'b4'],
             devicetypelist: [],
             devicedatalist: []
         };
     },
+    created(){
+this.getDeviceTypes()
+    },
     mounted() {
-        this.getdata(), this.getChart3();
+      this.getChart3();
     },
     methods: {
+
+         //获取设备类型设备数量数据
+        getDeviceTypes() {
+            this.$axios
+                .get('DeviceByType')
+                .then(res => {
+                    if (res) {
+                        this.deviceTop = res.data;
+                        console.log(this.deviceTop);
+                    }
+                })
+                .then(() => {
+                    this.getdata();
+                    this.getChart3();
+                })
+
+                .catch(err => {
+                    console.log(err);
+                });
+        },
         //获取数据
         getdata() {
+             this.devicetypelist=[];
+              this.devicedatalist=[];
             for (let i = 0; i < this.deviceTop.length; i++) {
                 let item = this.deviceTop[i];
                 this.devicetypelist.push(item.device_type);

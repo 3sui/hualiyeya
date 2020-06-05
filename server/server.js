@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:03:27
- * @LastEditTime: 2020-06-03 14:03:36
+ * @LastEditTime: 2020-06-05 10:41:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\server.js
@@ -27,6 +27,8 @@ require('./route/dataSettings/index')(app)
 
 app.set('secret', 'password')
 
+require('./route/analysis/index')(app)
+require('./route/product/repair')(app)
 app.get('/abc', (res, req) => {
     console.log(123);
 
@@ -42,10 +44,8 @@ app.use((err, req, res, next) => {
 app.listen(8085, (err) => {
     if (err) {
         console.log(err);
-
     } else {
         console.log('服务器已连接,端口号8085');
-
     }
 })
 
@@ -55,6 +55,5 @@ app.listen(8085, (err) => {
 
 //     } else {
 //         console.log('服务器已连接,端口号8890');
-
 //     }
 // })

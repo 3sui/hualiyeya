@@ -274,8 +274,10 @@ export default {
                         });
                 } else {
                     this.form.id = this.idx;
-                    let date = new Date(this.form.created_time);
-                    this.form.created_time = date.getTime();
+                     delete this.form['enterprise_name'];
+                      delete this.form['created_time']
+                    // let date = new Date(this.form.created_time);
+                    // this.form.created_time = date.getTime();
                     this.$axios
                         .post('/updateUserInfo', this.form)
                         .then(res => {
@@ -300,7 +302,7 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
-            delete row['enterprise_name'];
+           // delete row['enterprise_name'];
             this.form = row;
             this.editVisible = true;
             this.isAdd = false;

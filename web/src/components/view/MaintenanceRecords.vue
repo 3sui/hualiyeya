@@ -37,50 +37,7 @@
                         <div></div>
                     </el-col>
                     <el-col :span="18">
-                        <!-- <div class="product-status">
-                            <el-select
-                                v-model="query.address"
-                                placeholder="请选择省"
-                                class="handle-select mr10"
-                            >
-                                <el-option key="1" label="江苏省" value="江苏省"></el-option>
-                            </el-select>
-                            <el-select
-                                v-model="query.address"
-                                placeholder="请选择市"
-                                class="handle-select mr10"
-                            >
-                                <el-option key="1" label="常州市" value="常州市"></el-option>
-                            </el-select>
-                            <el-select
-                                v-model="query.address"
-                                placeholder="请选择区"
-                                class="handle-select mr10"
-                            >
-                                <el-option key="1" label="天宁区" value="天宁区"></el-option>
-                            </el-select>
-                            <el-select
-                                v-model="query.address"
-                                placeholder="设备种类"
-                                class="handle-select mr10"
-                            >
-                                <el-option key="1" label="干燥设备" value="干燥设备"></el-option>
-                            </el-select>
-                            <el-select
-                                v-model="query.address"
-                                placeholder="工作状态"
-                                class="handle-select mr10"
-                            >
-                                <el-option key="1" label="运行中" value="运行中"></el-option>
-                            </el-select>
-                            <el-select
-                                v-model="query.address"
-                                placeholder="开关机"
-                                class="handle-select"
-                            >
-                                <el-option key="1" label="开机" value="开机"></el-option>
-                            </el-select>
-                        </div>-->
+                      
                         <div class="product-status">
                             <el-input
                                 v-model="query.name"
@@ -125,21 +82,21 @@
                 <el-table-column prop="DeviceID" label="设备ID"></el-table-column>
                 <el-table-column prop="DeviceClass" label="设备种类"></el-table-column>
                 <el-table-column prop="DeviceName" label="设备名称"></el-table-column>
-                <el-table-column prop="Model" label="型号描述"></el-table-column>
+                <!-- <el-table-column prop="Model" label="型号描述"></el-table-column>
                 <el-table-column prop="SerialNumber" label="出厂编号"></el-table-column>
-                <el-table-column prop="StartTime" label="服务提出日期"></el-table-column>
-                <el-table-column prop="EndTime" label="维修时间"></el-table-column>
+                <el-table-column prop="StartTime" label="服务提出日期"></el-table-column> -->
+               
 
                 <el-table-column prop="FaultType" label="故障类型"></el-table-column>
                 <el-table-column prop="FaultPhenomenon" label="故障现象"></el-table-column>
-                <el-table-column prop="LastSupplier" label="故障部件供应商"></el-table-column>
+                <!-- <el-table-column prop="LastSupplier" label="故障部件供应商"></el-table-column>
                 <el-table-column prop="IsReplace" label="是否更换零部件"></el-table-column>
                 <el-table-column prop="NewSupplier" label="更换部件供应商"></el-table-column>
-                <el-table-column prop="Price" label="维修费用（元）"></el-table-column>
+                <el-table-column prop="Price" label="维修费用（元）"></el-table-column> -->
                 <el-table-column prop="More" label="备注"></el-table-column>
 
                 <el-table-column prop="RepairMan" label="维修人"></el-table-column>
-
+ <el-table-column prop="EndTime" label="维修时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button

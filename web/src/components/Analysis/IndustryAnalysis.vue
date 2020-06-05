@@ -10,7 +10,7 @@
         </div>
         <div class="container">
             <el-row :gutter="20" class="mgb20">
-                <el-col :span="6">
+                <!-- <el-col :span="6">
                     <div class="block">
                         <span class="demonstration"></span>
                         <el-date-picker
@@ -24,10 +24,10 @@
                             :picker-options="pickerOptions"
                         ></el-date-picker>
                     </div>
-                </el-col>
+                </el-col>-->
                 <el-col :span="6">
-                    <el-button type="primary" icon="el-icon-search">查询报表</el-button>
-                    <el-button type="primary" icon="el-icon-download">导出报表</el-button>
+                    <el-button type="primary" icon="el-icon-search" @click="Refresh">刷新</el-button>
+                    <el-button type="primary" icon="el-icon-download" @click="Download">导出报表</el-button>
                 </el-col>
             </el-row>
             <!-- </div>
@@ -74,9 +74,14 @@
             <el-row :gutter="20" class="mgb20">
                 <el-col :span="12">
                     <!-- <div id="byEnterprise" style="height: 460px; width: 100%;"></div> -->
-                     <el-table :data="industryTop" height="480px" border style="width: 100%">
+                    <el-table :data="industryTop" height="480px" border style="width: 100%">
                         <el-table-column prop="sort" label="序号" width="180" align="center"></el-table-column>
-                        <el-table-column prop="industryname" label="行业名称" width="180" align="center"></el-table-column>
+                        <el-table-column
+                            prop="industryname"
+                            label="行业名称"
+                            width="180"
+                            align="center"
+                        ></el-table-column>
                         <el-table-column prop="enterpriseNum" label="企业数" align="center"></el-table-column>
                         <el-table-column prop="deviceNum" label="设备数" align="center"></el-table-column>
                     </el-table>
@@ -96,89 +101,89 @@ export default {
     name: 'IndustryAnalysis',
     data() {
         return {
-            datepick:'',
-            pickerOptions: {
-                shortcuts: [
-                    {
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    },
-                    {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    },
-                    {
-                        text: '最近三个月',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }
-                ]
-            },
-           
-            industryTop: [
-                {
-                    industryname: '干燥行业',
-                    enterpriseNum: 20,
-                    deviceNum: 200,
-                    sort: 1
-                },
-                {
-                    industryname: '液压行业',
-                    enterpriseNum: 17,
-                    deviceNum: 150,
-                    sort: 2
-                },
-                {
-                    industryname: '钢铁行业',
-                    enterpriseNum: 10,
-                    deviceNum: 80,
-                    sort: 3
-                },
-                {
-                    industryname: '电子行业',
-                    enterpriseNum: 26,
-                    deviceNum: 30,
-                    sort: 4
-                },
-                {
-                    industryname: '纺织行业',
-                    enterpriseNum: 8,
-                    deviceNum: 40,
-                    sort: 5
-                },
-                {
-                    industryname: '钣金行业',
-                    enterpriseNum: 5,
-                    deviceNum: 20,
-                    sort: 6
-                },
-                {
-                    industryname: '实施行业',
-                    enterpriseNum: 8,
-                    deviceNum: 40,
-                    sort: 7
-                },
-                {
-                    industryname: '看了行业',
-                    enterpriseNum: 5,
-                    deviceNum: 20,
-                    sort: 8
-                }
-            ],
+            datepick: '',
+            // pickerOptions: {
+            //     shortcuts: [
+            //         {
+            //             text: '最近一周',
+            //             onClick(picker) {
+            //                 const end = new Date();
+            //                 const start = new Date();
+            //                 start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            //                 picker.$emit('pick', [start, end]);
+            //             }
+            //         },
+            //         {
+            //             text: '最近一个月',
+            //             onClick(picker) {
+            //                 const end = new Date();
+            //                 const start = new Date();
+            //                 start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            //                 picker.$emit('pick', [start, end]);
+            //             }
+            //         },
+            //         {
+            //             text: '最近三个月',
+            //             onClick(picker) {
+            //                 const end = new Date();
+            //                 const start = new Date();
+            //                 start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            //                 picker.$emit('pick', [start, end]);
+            //             }
+            //         }
+            //     ]
+            // },
+
+            industryTop: [],
+            // {
+            //     industryname: '干燥行业',
+            //     enterpriseNum: 20,
+            //     deviceNum: 200,
+            //     sort: 1
+            // },
+            // {
+            //     industryname: '液压行业',
+            //     enterpriseNum: 17,
+            //     deviceNum: 150,
+            //     sort: 2
+            // },
+            // {
+            //     industryname: '钢铁行业',
+            //     enterpriseNum: 10,
+            //     deviceNum: 80,
+            //     sort: 3
+            // },
+            // {
+            //     industryname: '电子行业',
+            //     enterpriseNum: 26,
+            //     deviceNum: 30,
+            //     sort: 4
+            // },
+            // {
+            //     industryname: '纺织行业',
+            //     enterpriseNum: 8,
+            //     deviceNum: 40,
+            //     sort: 5
+            // },
+            // {
+            //     industryname: '钣金行业',
+            //     enterpriseNum: 5,
+            //     deviceNum: 20,
+            //     sort: 6
+            // },
+            // {
+            //     industryname: '实施行业',
+            //     enterpriseNum: 8,
+            //     deviceNum: 40,
+            //     sort: 7
+            // },
+            // {
+            //     industryname: '看了行业',
+            //     enterpriseNum: 5,
+            //     deviceNum: 20,
+            //     sort: 8
+            // }
+            // ],
             style: ['s1', 's2', 's3', 's4'],
             backgroundstyle: ['b1', 'b2', 'b3', 'b4'],
             industrylist: [],
@@ -186,20 +191,50 @@ export default {
             enterprisenumlist: []
         };
     },
+    created() {
+        this.getEnterprise();
+    },
+
     mounted() {
-        this.getdata(), this.getChart2();
+        this.getChart2();
     },
     methods: {
+        //获取企业行业数据
+        getEnterprise() {
+            this.$axios
+                .get('EnterprisesByIndustry')
+                .then(res => {
+                    if (res) {
+                        this.industryTop = res.data;
+                        console.log(this.industryTop);
+                    }
+                })
+                .then(() => {
+                    this.getdata();
+                    this.getChart2();
+                })
+
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
         //获取数据
         getdata() {
+            this.industrylist = [];
+            this.devicenumlist = [];
+            this.enterprisenumlist = [];
             for (let i = 0; i < this.industryTop.length; i++) {
+                // console.log(1);
                 let item = this.industryTop[i];
                 this.industrylist.push(item.industryname);
                 this.devicenumlist.push(item.deviceNum);
                 this.enterprisenumlist.push(item.enterpriseNum);
             }
+            // console.log(this.industrylist)
+            //  console.log(this.devicenumlist)
+            //   console.log(this.enterprisenumlist)
         },
-        
 
         //获取图表2
         getChart2() {
@@ -278,7 +313,7 @@ export default {
                             left: '51%',
                             top: '15%',
                             bottom: '8%',
-                         //    containLabel: true,
+                            //    containLabel: true,
                             width: '0%'
                         },
                         {
@@ -286,7 +321,7 @@ export default {
                             right: '2%',
                             top: '15%',
                             bottom: '8%',
-                           containLabel: true,
+                            containLabel: true,
                             width: '37%'
                         }
                     ],
@@ -504,7 +539,14 @@ export default {
 
             // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
+        },
+
+        //刷新
+        Refresh() {
+            this.getEnterprise();
         }
+
+        //导出excel表
     }
 };
 </script>
