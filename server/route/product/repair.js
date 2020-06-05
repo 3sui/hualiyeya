@@ -9,7 +9,7 @@ module.exports = app => {
 
     //获取维修表信息
     router.get('/Repair', async (req, res) => {
-        let sql = "select * from repair where is_deleted = 0 or is_deleted is NULL order by created_time Desc"
+        let sql = "select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device_type.typename from repair,enterprise,device,device_type where (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id order by repair.created_time Desc"
         connection.query(sql, (err, results) => {
             if (err) throw err
             for (let i = 0; i < results.length; i++) {
@@ -19,12 +19,26 @@ module.exports = app => {
             res.send(results)
         })
     })
-    //添加行业表信息
-    router.post('/AddIndustry', async (req, res) => {
+    //获取维修设备详情
+    router.get('/RepairInfo', async (req, res) => {
+        
+        let id=req.query.id
+        let sql = `select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device.device_supplier,device.device_model,device.device_description,device.address,device.principal,device_type.typename from repair,enterprise,device,device_type where repair.id=${id} and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id `
+        connection.query(sql, (err, results) => {
+            if (err) throw err
+            for (let i = 0; i < results.length; i++) {
+                results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            }
+            // console.log(results)
+            res.send(results)
+        })
+    })
+    //添加维修记录表信息
+    router.post('/AddRepair', async (req, res) => {
         let query = req.body;
 
         console.log(query)
-        let sql = "insert into industry set ? "
+        let sql = "insert into repair set ? "
         connection.query(sql, query, (err, results) => {
             if (err) throw err
             // console.log(results)
@@ -32,12 +46,12 @@ module.exports = app => {
         })
     })
 
-    //修改行业表信息
-    router.post('/UpdateIndustry', async (req, res) => {
+    //修改维修表信息
+    router.post('/UpdateRepair', async (req, res) => {
         let id = req.body.id;
         let query = req.body;
-
-        let sql = "update industry set ? where id=" + id
+2
+        let sql = "update repair set ? where id=" + id
         connection.query(sql, query, (err, results) => {
             if (err) throw err
             // console.log(results)
@@ -47,8 +61,8 @@ module.exports = app => {
 
 
     //单个删除行业表信息
-    router.post('/DeleteIndustry', async (req, res) => {
-        let id = req.body.id;
+    router.get('/DeleteRepair', async (req, res) => {
+        let id = req.query.id;
         let sql = "update industry set is_deleted=1 where id=" + id
         connection.query(sql, (err, results) => {
             if (err) throw err
@@ -66,6 +80,55 @@ module.exports = app => {
             res.send(results)
         })
     })
+
+    //获得故障种类选择对象
+    router.get('/FaultTypeChoose', async (req, res) => {
+        let sql = "select fault_type,fault_phenomenon from fault_type where is_deleted = 0 or is_deleted is NULL"
+        connection.query(sql, (err, results) => {
+            if (err) throw err
+            if (results) {
+                let faultTypelist = [];
+                let typeContainer = {};
+                results.forEach(element => {
+
+                    typeContainer[element.fault_type] = typeContainer[element.fault_type] || [];
+                    typeContainer[element.fault_type].push(element)
+                });
+                // console.log(typeContainer);
+                var TypeName = Object.keys(typeContainer);
+
+                TypeName.forEach(element => {
+                    // console.log(element);                  
+                    let typeItem = {}
+                    typeItem['fault_type'] = element
+                    let phenomenonlist = []
+                    typeContainer[element].forEach(item => {
+                        phenomenonlist.push(item.fault_phenomenon)
+                    })
+                    typeItem['fault_phenomenon'] = phenomenonlist
+
+                    faultTypelist.push(typeItem)
+                });
+                // console.log(faultTypelist);           
+                res.send(faultTypelist)
+            }
+
+        })
+    })
+
+    //根据企业id获取设备
+    router.post('/Devices', async (req, res) => {
+        let id = req.body.enterprise_id
+        let sql = `select id,eq as value from device where  enterprise_id=${id} and is_deleted = 0 or is_deleted is NULL `
+        connection.query(sql, (err, results) => {
+            if (err) throw err
+            if (results) {
+               
+                res.send(results)
+            }
+        })
+    })
+
 
 
 

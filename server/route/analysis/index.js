@@ -129,9 +129,58 @@ module.exports = app => {
         })
     })
 
+ //超级管理员权限
+    //获取故障记录信息
+
+    router.get('/FaultByType', async (req, res) => {
+        let sql = `select id,type from repair where (is_deleted = 0 or is_deleted is NULL) `
+        connection.query(sql, (err, results) => {
+            if (err) throw err
+            if (results) {
+
+                var FaultTypeTotal = [];  // 存最终数据结果
+                // 数据按照设备种类进行归类
+                var nameContainer = {}; // 针对键name进行归类的容器
+                results.forEach(item => {
+                    nameContainer[item.type] = nameContainer[item.type] || [];
+
+                    //当逻辑或||时，找到为true的分项就停止处理，并返回该分项的值，否则执行完，并返回最后分项的值。
+
+                    nameContainer[item.type].push(item);
+                });
+
+                console.log(nameContainer);
+
+                // 统计不同种类设备的数量
+                var TypeName = Object.keys(nameContainer);
+                // console.log(TypeName)
+                TypeName.forEach(nameItem => {
+                    let count = 0;
+                    nameContainer[nameItem].forEach(item => {
+                        count++
+                    });
+                    FaultTypeTotal.push({ 'fault_type': nameItem, 'count': count });
+                })
 
 
+                //对json进行降序排序函数
+                var colId = "count"
+                var desc = function (x, y) {
+                    return (x[colId] < y[colId]) ? 1 : -1
+                }
+                //降序排序
+                FaultTypeTotal.sort(desc);
 
+                FaultTypeTotal.forEach((item, index) => {
+                    item['sort'] = index + 1
+                })
+                // console.log(deviceTypeTotal) 
+                res.send(FaultTypeTotal)
+            } else {
+                console.log("数据查询为空")
+            }
+        })
+    })
 
     app.use('/api', router)
 }
