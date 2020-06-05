@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 10:34:44
- * @LastEditTime: 2020-06-03 11:05:41
+ * @LastEditTime: 2020-06-04 16:28:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\deviceRecord\index.js
@@ -14,7 +14,17 @@ module.exports = app => {
     const authMiddle = require('../../middleware/auth')()
 
     router.get('/fetchAllDevice', authMiddle, async (req, res) => {
-        let sql = "select * from device"
+
+        if (req.user.role === 1) {
+            console.log('超级');
+            sql = "select * from device where is_deleted = 0"
+        } else if (req.user.role === 2) {
+            console.log('企业');
+            sql = `select * from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
+        } else {
+            console.log('普通');
+            sql = `select * from from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and is_deleted = 0`
+        }
         let row = await connection(sql)
         let data = {
             success: true,

@@ -53,6 +53,7 @@ export default {
                         this.$message.success('登录成功');
                         localStorage.ms_username = res.data.ms_username;
                         localStorage.token = res.data.token;
+                        localStorage.role = res.data.role;
 
                         this.$router.push('/');
                         console.log(res.data);

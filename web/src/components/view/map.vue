@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-04-28 16:25:21
- * @LastEditTime: 2020-06-02 10:51:41
+ * @LastEditTime: 2020-06-04 15:04:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\vue-manage-system\src\components\page\map.vue
@@ -19,12 +19,12 @@
             <el-row class="container">
                 <el-col :span="18">
                     <div class="mapbox">
-                        <baidu-map class="map" center="中国" :map-click="false" v-if="allDevice">
+                        <baidu-map class="map" center="中国" :map-click="false" v-if="allDevice" :scroll-wheel-zoom="true">
                             <bml-marker-clusterer :averageCenter="true">
                                 <div v-for="(marker, i) of allDevice" :key="i">
                                     <bm-marker
                                         :icon="{url: marker.status == '正常'? require('../../../public/bposition.png') : require('../../../public/rposition.png'), size: {width: 60, height: 60}}"
-                                        :dragging="false"
+                                        :dragging="true"
                                         animation="BMAP_ANIMATION_BOUNCE"
                                         :position="{lng: marker.lng, lat: marker.lat}"
                                         @click="infoWindowOpen(marker)"
@@ -61,7 +61,7 @@
                         <div class="info-two">
                             <el-progress type="circle" :percentage="100"></el-progress>
                             <div>
-                                <p>2</p>
+                                <p>{{deviceNum}}</p>
                                 <p>运行设备数</p>
                             </div>
                         </div>

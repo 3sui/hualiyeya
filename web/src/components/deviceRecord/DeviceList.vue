@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-02 11:32:27
+ * @LastEditTime: 2020-06-04 16:25:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -111,7 +111,7 @@
                 </el-row>
             </div>
             <el-table
-                :data="tableData"
+                :data="tableData.slice((query.pageIndex-1)*query.pageSize,query.pageIndex*query.pageSize)"
                 border
                 class="table"
                 ref="multipleTable"
@@ -159,21 +159,21 @@
                 <el-table-column prop="AlarmTimes" label="报警次数"></el-table-column>
                 <el-table-column prop="LastMaintenance:" label="上次维修日期">
                     <template slot-scope="scope">
-                        <span>{{formateTimeStamp(scope.row.LastMaintenance)}}</span>
+                        <span>{{scope.row.LastMaintenance | converTime('YYYY-MM-DD HH:mm')}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="Createtime" label="建档日期">
                     <template slot-scope="scope">
-                        <span>{{formateTimeStamp(scope.row.Createtime)}}</span>
+                        <span>{{scope.row.Createtime | converTime('YYYY-MM-DD HH:mm')}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="120" align="center">
                     <template slot-scope="scope">
-                        <!-- <el-button
+                        <el-button
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
-                        >编辑</el-button>-->
+                        >编辑</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-view"
@@ -281,19 +281,6 @@ export default {
     },
     computed: {},
     methods: {
-        //吧时间戳转化为想要的时间格式
-        formateTimeStamp(time) {
-            var date = new Date();
-            date.setTime(time);
-            var year = date.getFullYear();
-            var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
-            var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-            var hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-            var minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-            var second = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-            return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
-        },
-
         // 获取设备列表数据
         getData() {
             axios({

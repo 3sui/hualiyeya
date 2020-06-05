@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-04-28 15:28:09
- * @LastEditTime: 2020-06-03 13:47:48
+ * @LastEditTime: 2020-06-04 10:05:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\main.js
@@ -17,6 +17,7 @@ import VueI18n from 'vue-i18n';
 import BaiduMap from 'vue-baidu-map'
 import echarts from 'echarts'
 
+import Moment from 'moment'
 
 import {
     messages
@@ -34,6 +35,7 @@ import JsonExcel from 'vue-json-excel'
 Vue.component('downloadExcel', JsonExcel)
 Vue.use(XLSX)
 Vue.use(echarts)
+// Vue.use(Moment)
 Vue.config.productionTip = false;
 Vue.use(BaiduMap, {
     // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
@@ -43,6 +45,7 @@ Vue.use(VueI18n);
 Vue.use(ElementUI, {
     size: 'small'
 });
+// Vue.use(Moment)
 const i18n = new VueI18n({
     locale: 'zh',
     messages
@@ -69,8 +72,13 @@ router.beforeEach((to, from, next) => {
     }
 });
 
+//全局过滤器
+Vue.filter('converTime', function (data, formatStr) {
+    return Moment(data).format(formatStr);
+});
+
 new Vue({
-   
+
     router,
     i18n,
     render: h => h(App)

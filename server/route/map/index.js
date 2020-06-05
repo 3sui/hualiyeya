@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-01 11:31:14
- * @LastEditTime: 2020-06-03 11:11:21
+ * @LastEditTime: 2020-06-04 15:50:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\server\route\map\index.js
@@ -15,13 +15,24 @@ module.exports = app => {
 
     //获取设备数量
     router.get('/fetchDeviceNum', authMiddle, async (req, res) => {
-        let sql = "select COUNT(*) from device"
+        let sql
+        if (req.user.role === 1) {
+            console.log('超级');
+            sql = "select COUNT(*) from device where is_deleted = 0"
+        } else if (req.user.role === 2) {
+            console.log('企业');
+            sql = `select COUNT(*) from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
+        } else {
+            console.log('普通');
+            sql = `select COUNT(*) from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and is_deleted = 0`
+        }
+
         let row = await connection(sql)
         let data = {
             success: true,
             data: row[0]['COUNT(*)']
         }
-        // console.log(row);
+        console.log(row);
 
         res.status(200).send(data)
 
@@ -29,7 +40,17 @@ module.exports = app => {
 
     //获取所有设备数据
     router.get('/fetchAllDevice', authMiddle, async (req, res) => {
-        let sql = "select * from device"
+        let sql
+        if (req.user.role === 1) {
+            console.log('超级');
+            sql = "select * from device where is_deleted = 0"
+        } else if (req.user.role === 2) {
+            console.log('企业');
+            sql = `select * from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
+        } else {
+            console.log('普通');
+            sql = `select * from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and is_deleted = 0`
+        }
         let row = await connection(sql)
         let data = {
             success: true,

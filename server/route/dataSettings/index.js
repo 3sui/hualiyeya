@@ -7,6 +7,7 @@ module.exports = app => {
     const fs = require("fs"); // 读写文件的模块
     const path = require("path") // 处理路径的模块
     const authMiddle = require('../../middleware/auth')()
+    const assert = require('http-assert')
 
     //获取行业表信息
     router.get('/Industry', async (req, res) => {
@@ -334,10 +335,48 @@ module.exports = app => {
 
     //获取所有用户权限
     router.get('/fetchAuthList', authMiddle, async (req, res) => {
+        let sql
+        if (req.user.role === 1) {
+            console.log('超级');
+            sql = `select u.*, e.enterprise_name, ur.role_id, r.id rid, r.name from user_info u left outer join enterprise e ON e.id = u.enterprise_id left outer join user_role ur on ur.user_id = u.id left outer join role r on ur.role_id = r.id where u.is_deleted = 0`
+        } else if (req.user.role === 2) {
+            console.log('企业');
+            console.log('企业');
+
+            sql = `select u.*, e.enterprise_name, ur.role_id, r.id rid, r.name from user_info u left outer join enterprise e ON e.id = u.enterprise_id left outer join user_role ur on ur.user_id = u.id left outer join role r on ur.role_id = r.id where u.is_deleted = 0 and u.enterprise_id = ${req.user.enterprise_id}`
+        } else {
+            assert(false, 403, '没有权限')
+        }
         let row = {}
-        row.tableData = await connection('select u.*, e.enterprise_name, ur.role_id, r.id, r.name from user_info u left outer join enterprise e ON e.id = u.enterprise_id left outer join user_role ur on ur.user_id = u.id left outer join role r on ur.role_id = r.id where u.is_deleted = 0')
-        row.roles = await connection('select * from role')
+        row.tableData = await connection(sql)
+        row.roles = await connection(`select * from role where id >= ${req.user.role}`)
+
         res.send(row)
+    })
+
+    //修改用户权限
+    //无法修改自己权限
+    //超级管理员可以改所有人的权限
+    //企业管理员可以改普通用户权限
+    //普通用户无权限修改
+    router.post('/changeAuth', authMiddle, async (req, res) => {
+        assert(req.user.role < 3, 403, '没有权限')
+        console.log(req.user.role);
+
+        let {
+            id, //角色id
+            name, //角色名称
+            user_id //用户id
+        } = req.body
+        console.log(id, name, user_id);
+        assert(req.user.id !== user_id, 403, '无法修改自己权限')
+
+        let results = {}
+        results.results = await connection(`update user_role set role_id = ${id} where user_id = ${user_id}`)
+        results.success = true
+        results.message = '数据修改成功'
+        res.send(results)
+
     })
 
     app.use('/api/dataSettings', router)

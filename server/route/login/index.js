@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 14:22:53
- * @LastEditTime: 2020-06-03 11:23:01
+ * @LastEditTime: 2020-06-04 16:03:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\login\index.js
@@ -28,8 +28,9 @@ module.exports = app => {
         }, app.get('secret'))
         result.ms_username = row[0].nickname
         result.success = true
+        let result2 = await connection(`select * from user_role where user_id = ${row[0].id}`)
+        result.role = result2[0].role_id
         res.send(result)
-
     })
 
 

@@ -18,35 +18,42 @@ export default new Router({
                     path: '/dashboard',
                     component: () => import( /* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
                     meta: {
-                        title: '系统首页'
+                        title: '系统首页',
+                        auth: []
                     }
                 },
                 {
                     path: '/map',
                     component: () => import( /* webpackChunkName: "map" */ '../components/view/map.vue'),
                     meta: {
-                        title: '设备地图'
+                        title: '设备地图',
+                        auth: []
                     }
                 },
                 {
-                    path: '/productList',
-                    component: () => import( /* webpackChunkName: "ProductList" */ '../components/view/ProductList.vue'),
+                    path: '/DeviceList',
+                    component: () => import( /* webpackChunkName: "DeviceList" */ '../components/deviceRecord/DeviceList.vue'),
                     meta: {
-                        title: '设备列表'
+                        title: '设备列表',
+                        auth: []
+
                     }
                 },
                 {
                     path: '/productDetails',
                     component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/view/ProductDetails.vue'),
                     meta: {
-                        title: '设备详情'
+                        title: '设备详情',
+                        auth: []
+
                     }
                 },
                 {
                     path: '/addnewproduct',
                     component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/view/AddNewProduct.vue'),
                     meta: {
-                        title: '添加设备'
+                        title: '添加设备',
+                        auth: [3]
                     }
                 },
                 {

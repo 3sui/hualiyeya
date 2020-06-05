@@ -12,14 +12,18 @@
         >
             <template v-for="item in items">
                 <template v-if="item.subs">
-                    <el-submenu :index="item.index" :key="item.index">
+                    <el-submenu
+                        :index="item.index"
+                        :key="item.index"
+                        v-if="!item.auth.includes(+role)"
+                    >
                         <template slot="title">
                             <i :class="item.icon"></i>
                             <span slot="title">{{ item.title }}</span>
                         </template>
                         <template v-for="subItem in item.subs">
                             <el-submenu
-                                v-if="subItem.subs"
+                                v-if="subItem.subs && subItem.auth.includes(+role)"
                                 :index="subItem.index"
                                 :key="subItem.index"
                             >
@@ -31,15 +35,21 @@
                                 >{{ threeItem.title }}</el-menu-item>
                             </el-submenu>
                             <el-menu-item
-                                v-else
+                                v-else-if="!subItem.auth.includes(+role)"
                                 :index="subItem.index"
                                 :key="subItem.index"
-                            >{{ subItem.title }}</el-menu-item>
+                            >
+                                <template>{{ subItem.title }}</template>
+                            </el-menu-item>
                         </template>
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
+                    <el-menu-item
+                        :index="item.index"
+                        :key="item.index"
+                        v-if="!item.auth.includes(role)"
+                    >
                         <i :class="item.icon"></i>
                         <span slot="title">{{ item.title }}</span>
                     </el-menu-item>
@@ -54,26 +64,32 @@ import bus from '../common/bus';
 export default {
     data() {
         return {
+            role: 1,
             collapse: false,
             items: [
                 {
                     icon: 'el-icon-lx-home',
                     index: 'dashboard',
-                    title: '主页'
+                    title: '主页',
+                    auth: []
                 },
                 {
                     icon: 'el-icon-lx-location',
                     index: 'map',
-                    title: '用户地图'
+                    title: '用户地图',
+                    auth: []
                 },
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '1',
                     title: '设备档案',
+
+                    auth: [],
                     subs: [
                         {
-                            index: 'productlist',
-                            title: '设备列表'
+                            index: 'DeviceList',
+                            title: '设备列表',
+                            auth: []
                             // subs: [
                             //     {
                             //         index: 'productlist',
@@ -95,31 +111,35 @@ export default {
                         },
                         {
                             index: 'MaintenanceRecords',
-                            title: '维修记录'
-                        },
+                            title: '维修记录',
+                            auth: []
+                        }
                         // {
                         //     index: 'EquipmentMonitoring',
                         //     // index: 'DeviceList',
 
                         //     title: '设备监控'
                         // },
-                      
                     ]
                 },
                 {
                     icon: 'el-icon-lx-calendar',
                     index: '2',
                     title: '远程监控',
+
+                    auth: [],
                     subs: [
                         {
                             index: 'EquipmentMonitoring',
                             // index: 'DeviceList',
 
-                            title: '设备监控'
+                            title: '设备监控',
+                            auth: []
                         },
                         {
                             index: 'AlarmRecord',
-                            title: '报警记录'
+                            title: '报警记录',
+                            auth: []
                         }
                     ]
                 },
@@ -132,18 +152,23 @@ export default {
                     icon: 'el-icon-s-data',
                     index: '4',
                     title: '分析中心',
+
+                    auth: [2, 3],
                     subs: [
                         {
                             index: 'DeviceAnalysis',
-                            title: '设备分析'
+                            title: '设备分析',
+                            auth: []
                         },
                         {
                             index: 'IndustryAnalysis',
-                            title: '行业分析'
+                            title: '行业分析',
+                            auth: []
                         },
                         {
                             index: 'FaultAnalysis',
-                            title: '故障分析'
+                            title: '故障分析',
+                            auth: []
                         }
                     ]
                 },
@@ -151,10 +176,13 @@ export default {
                     icon: 'el-icon-setting',
                     index: '5',
                     title: '基础数据管理',
+                    auth: [3],
+
                     subs: [
                         {
                             index: 'Industry',
-                            title: '行业设置'
+                            title: '行业设置',
+                            auth: [2]
                             // subs: [
                             //     {
                             //         index: '',
@@ -164,28 +192,28 @@ export default {
                         },
                         {
                             index: 'Enterprise',
-                            title: '企业管理'
-                          
+                            title: '企业管理',
+                            auth: [2]
                         },
                         {
                             index: 'UserInfo',
-                            title: '用户信息'
-                          
+                            title: '用户信息',
+                            auth: []
                         },
                         {
                             index: 'DeviceType',
-                            title: '设备类型'
-                           
+                            title: '设备类型',
+                            auth: [2]
                         },
                         {
                             index: 'FaultType',
-                            title: '故障类型'
-                           
+                            title: '故障类型',
+                            auth: [2]
                         },
                         {
                             index: 'Authority',
-                            title: '权限管理'
-                           
+                            title: '权限管理',
+                            auth: []
                         }
                     ]
                 }
@@ -290,11 +318,13 @@ export default {
         }
     },
     created() {
+        this.role = localStorage.role;
         // 通过 Event Bus 进行组件间通信，来折叠侧边栏
         bus.$on('collapse', msg => {
             this.collapse = msg;
             bus.$emit('collapse-content', msg);
         });
+        console.log(this.role);
     }
 };
 </script>

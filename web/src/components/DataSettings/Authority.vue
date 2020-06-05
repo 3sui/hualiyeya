@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-03 15:08:38
- * @LastEditTime: 2020-06-03 17:47:04
+ * @LastEditTime: 2020-06-04 11:25:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \web\src\components\DataSettings\Authority.vue
@@ -20,11 +20,11 @@
 
         <div class="container">
             <div class="handle-box">
-                <el-button type="primary" class="handle-del mr10" icon="el-icon-plus">新增</el-button>
-                <el-input v-model="keyword" placeholder="企业名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search">搜索</el-button>
-            </div>
+                <el-input v-model="keyword" placeholder="企业/账号" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+            <el-button type="primary" plain icon="el-icon-refresh" @click="refresh">重置</el-button>
 
+            </div>
             <!-- 表格列 -->
             <el-table
                 :data="tableData.slice((pageIndex-1)*pageSize,pageIndex*pageSize)"
@@ -43,8 +43,19 @@
                 <el-table-column prop="enterprise_name" label="企业" align="center"></el-table-column>
 
                 <!-- 创建日期 -->
-                <el-table-column prop="created_time" label="修改日期" align="center"></el-table-column>
-                <el-table-column prop="name" label="权限等级" align="center"></el-table-column>
+                <el-table-column label="修改日期" align="center">
+                    <template slot-scope="scope">
+                        <div>{{+scope.row.created_time | converTime('YYYY-MM-DD HH:mm')}}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    prop="name"
+                    label="权限等级"
+                    align="center"
+                    :filters="[{ text: '超级管理员', value: '超级管理员' }, { text: '企业管理员', value: '企业管理员' }, { text: '企业用户', value: '企业用户' }]"
+                    :filter-method="filterRole"
+                    filter-placement="bottom-end"
+                ></el-table-column>
 
                 <!-- 操作 -->
                 <el-table-column label="操作" width="180" align="center">
@@ -76,14 +87,14 @@
             </div>
         </div>
         <el-dialog :title="'权限更改'" :visible.sync="editVisible" width="30%" class="demo-ruleForm">
-            <el-form ref="form" :model="form" label-width="100px">
+            <el-form ref="form" :model="role" label-width="100px">
                 <el-form-item label="权限">
-                    <el-select v-model="form.role" placeholder="请选择权限角色">
+                    <el-select v-model="role.id" placeholder="请选择权限角色">
                         <el-option
                             v-for="item in roles"
                             :label="item.name"
                             :value="item.id"
-                            :key="item"
+                            :key="item.id"
                         ></el-option>
                     </el-select>
                 </el-form-item>
@@ -108,9 +119,13 @@ export default {
             pageTotal: 0,
             pageIndex: 1,
             pageSize: 10,
-            form: {
-                role: ''
+
+            role: {
+                id: '',
+                name: '',
+                user_id: ''
             },
+
             isAdd: true,
             idx: 1
         };
@@ -132,15 +147,17 @@ export default {
                     this.tableData = res.data.tableData;
                     this.roles = res.data.roles;
                     window.console.log(res.data);
+                    this.pageTotal = this.tableData.length;
                 })
                 .catch(err => {});
         },
         handleEdit(index, row) {
             this.editVisible = true;
-            this.form.role = row.name;
+            this.role.name = row.name;
+            this.role.id = row.role_id;
+            this.role.user_id = row.id;
             window.console.log(index, row);
         },
-        handleDelete() {},
         handlePageChange() {},
         handleSelectionChange(val) {
             this.multipleSelection = val;
@@ -151,7 +168,45 @@ export default {
         },
 
         //弹窗确定按钮
-        Confirm() {}
+        Confirm() {
+            axios({
+                method: 'post',
+                url: '/dataSettings/changeAuth',
+                data: this.role
+            })
+                .then(res => {
+                    this.$message({
+                        type: 'success',
+                        message: res.data.message
+                    });
+                    this.editVisible = false;
+                    this.getData();
+                })
+                .catch(err => {});
+        },
+        //根据权限角色筛选
+        filterRole(value, row) {
+            return row.name === value;
+        },
+
+        // 触发搜索按钮
+        handleSearch() {
+            this.tableData = this.tableData.filter((item, index) => {
+                // return item.Address == '竹林北路256号';
+                for (let key in item) {
+                    // window.console.log(i, item[i]);
+                    if ((item[key] + '').includes(this.keyword)) {
+                        return true;
+                    }
+                }
+            });
+        },
+
+        // 触发重置按钮
+        refresh() {
+            this.getData();
+            this.keyword = '';
+        }
     }
 };
 </script>
