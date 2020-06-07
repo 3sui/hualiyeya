@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-03 15:08:38
- * @LastEditTime: 2020-06-04 11:25:42
+ * @LastEditTime: 2020-06-05 17:05:47
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \web\src\components\DataSettings\Authority.vue
@@ -20,10 +20,14 @@
 
         <div class="container">
             <div class="handle-box">
+                <el-button
+                    type="primary"
+                    class="handle-del mr10"
+                    @click="AddData"
+                    icon="el-icon-plus"
+                >新增</el-button>
                 <el-input v-model="keyword" placeholder="企业/账号" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-            <el-button type="primary" plain icon="el-icon-refresh" @click="refresh">重置</el-button>
-
             </div>
             <!-- 表格列 -->
             <el-table
@@ -86,10 +90,28 @@
                 ></el-pagination>
             </div>
         </div>
-        <el-dialog :title="'权限更改'" :visible.sync="editVisible" width="30%" class="demo-ruleForm">
-            <el-form ref="form" :model="role" label-width="100px">
+
+        <!-- 新增弹出框 -->
+        <el-dialog title="新增" :visible.sync="editVisible" width="30%" class="demo-ruleForm">
+            <el-form ref="add" :model="newUser" label-width="100px">
+                <el-form-item label="所属企业">
+                    <el-select v-model="newUser.enterprise_id" placeholder="请选择所属企业">
+                        <el-option
+                            v-for="item in enterprises"
+                            :label="item.enterprise_name"
+                            :value="item.id"
+                            :key="item.id"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="账号">
+                    <el-input v-model="newUser.username"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名">
+                    <el-input v-model="newUser.nickname"></el-input>
+                </el-form-item>
                 <el-form-item label="权限">
-                    <el-select v-model="role.id" placeholder="请选择权限角色">
+                    <el-select v-model="newUser.role" placeholder="请选择权限角色">
                         <el-option
                             v-for="item in roles"
                             :label="item.name"
@@ -97,6 +119,15 @@
                             :key="item.id"
                         ></el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item label="手机">
+                    <el-input v-model="newUser.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱">
+                    <el-input v-model="newUser.email"></el-input>
+                </el-form-item>
+                <el-form-item label="头像">
+                    <el-input v-model="newUser.avatar"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -113,13 +144,22 @@ export default {
     data() {
         return {
             roles: [],
+            enterprises: [],
             keyword: '',
             tableData: [],
             editVisible: false,
             pageTotal: 0,
             pageIndex: 1,
             pageSize: 10,
-
+            newUser: {
+                enterprise_id: '',
+                username: '',
+                nickname: '',
+                role: '',
+                phone: '',
+                email: '',
+                avatar: ''
+            },
             role: {
                 id: '',
                 name: '',
@@ -144,10 +184,13 @@ export default {
                 url: '/dataSettings/fetchAuthList'
             })
                 .then(res => {
-                    this.tableData = res.data.tableData;
-                    this.roles = res.data.roles;
-                    window.console.log(res.data);
-                    this.pageTotal = this.tableData.length;
+                    if (res.data.success) {
+                        this.tableData = res.data.tableData;
+                        this.roles = res.data.roles;
+                        this.enterprises = res.data.enterprise;
+                        window.console.log(res.data);
+                        this.pageTotal = this.tableData.length;
+                    }
                 })
                 .catch(err => {});
         },
@@ -166,21 +209,41 @@ export default {
         Cancel() {
             this.editVisible = false;
         },
+        //新增操作
+        AddData() {
+            this.editVisible = true;
+            this.newUser = {
+                enterprise_id: '',
+                username: '',
+                nickname: '',
+                role: '',
+                phone: '',
+                email: '',
+                avatar: ''
+            };
+        },
 
         //弹窗确定按钮
         Confirm() {
             axios({
                 method: 'post',
-                url: '/dataSettings/changeAuth',
-                data: this.role
+                url: '/dataSettings/addNewUser',
+                data: this.newUser
             })
                 .then(res => {
-                    this.$message({
-                        type: 'success',
-                        message: res.data.message
-                    });
-                    this.editVisible = false;
-                    this.getData();
+                    if (res.data.success) {
+                        this.$message({
+                            type: 'success',
+                            message: res.data.message
+                        });
+                        this.editVisible = false;
+                        this.getData();
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: res.data.message
+                        });
+                    }
                 })
                 .catch(err => {});
         },

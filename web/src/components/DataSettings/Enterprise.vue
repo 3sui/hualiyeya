@@ -58,7 +58,11 @@
                 <!-- 地址 -->
                 <el-table-column prop="address" label="地址" align="center"></el-table-column>
                 <!-- 创建日期 -->
-                <el-table-column prop="created_time" label="创建日期" align="center"></el-table-column>
+                <el-table-column prop="created_time" label="创建日期" align="center">
+                    <template
+                        slot-scope="scope"
+                    >{{+scope.row.created_time | converTime('YYYY-MM-DD HH:mm')}}</template>
+                </el-table-column>
                 <!-- 操作 -->
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
@@ -96,7 +100,7 @@
             width="30%"
             class="demo-ruleForm"
         >
-            <el-form ref="form" :model="form"  label-width="100px">
+            <el-form ref="form" :model="form" label-width="100px">
                 <el-form-item label="企业名称">
                     <el-input v-model="form.enterprise_name"></el-input>
                 </el-form-item>
@@ -145,7 +149,7 @@ export default {
             pageSize: 10,
             form: {},
             isAdd: true,
-            idx: 1,
+            idx: 1
             // rules: {
             //     enterprise_name: [
             //         { required: true, message: '请输入企业名称', trigger: 'blur' },
@@ -161,14 +165,14 @@ export default {
     },
     created() {
         this.getData();
-        this.getIndustrys();
+        this.getIndustries();
     },
 
     methods: {
         //获取行业选项
-        getIndustrys() {
+        getIndustries() {
             this.$axios
-                .get('/Industry')
+                .get('/dataSettings/Industry')
                 .then(res => {
                     // console.log(res.data);
                     this.industrys = res.data;
@@ -181,7 +185,7 @@ export default {
         // 获取数据
         getData() {
             this.$axios
-                .get('/Enterprise')
+                .get('/dataSettings/Enterprise')
                 .then(res => {
                     console.log(res.data);
                     this.tableData = res.data;
@@ -197,7 +201,7 @@ export default {
                 let query = {
                     keyword: value
                 };
-                this.$axios.post('SearchEnterprise', query).then(res => {
+                this.$axios.post('/dataSettings/SearchEnterprise', query).then(res => {
                     if (res) {
                         this.tableData = res.data;
                         this.pageTotal = this.tableData.length;
@@ -220,7 +224,7 @@ export default {
                         id: this.tableData[index + this.pageSize * (this.pageIndex - 1)].id
                     };
                     this.$axios
-                        .post('DeleteEnterprise', query)
+                        .post('/dataSettings/DeleteEnterprise', query)
                         .then(res => {
                             // console.log(res);
                             this.pageIndex = 1;
@@ -244,9 +248,9 @@ export default {
         AddData() {
             this.editVisible = true;
             this.isAdd = true;
-            this.form={
-                is_deleted:0
-            }
+            this.form = {
+                is_deleted: 0
+            };
         },
         //添加确认
         Confirm() {
@@ -260,7 +264,7 @@ export default {
                     this.form.created_time = date.getTime();
                     console.log(date);
                     this.$axios
-                        .post('/AddEnterprise', this.form)
+                        .post('/dataSettings/AddEnterprise', this.form)
                         .then(res => {
                             console.log(res.data);
                             this.getData();
@@ -270,12 +274,12 @@ export default {
                         });
                 } else {
                     this.form.id = this.idx;
-                    delete this.form['industry_name']
-                    delete this.form['created_time']
+                    delete this.form['industry_name'];
+                    delete this.form['created_time'];
                     // let date =new Date(this.form.created_time )
                     // this.form.created_time =  date.getTime();
                     this.$axios
-                        .post('/updateEnterprise', this.form)
+                        .post('/dataSettings/updateEnterprise', this.form)
                         .then(res => {
                             console.log(res.data);
                             this.getData();

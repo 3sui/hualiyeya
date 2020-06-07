@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 10:56:38
- * @LastEditTime: 2020-06-03 10:31:45
+ * @LastEditTime: 2020-06-05 14:49:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\plugins\axios.js
@@ -10,7 +10,7 @@
 
 import Vue from 'vue';
 import axios from "axios";
-import router from 'vue-router'
+import router from '../router/index'
 
 // Full config:  https://github.com/axios/axios#request-config
 axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -59,8 +59,13 @@ _axios.interceptors.response.use(
         type: 'error',
         message: error.response.data.message
       })
+      window.console.log(error.response.status);
       if (error.response.status === 401) {
         router.push('/login')
+      } else if (error.response.status === 403) {
+        router.push('/403')
+        // Vue.router.push('403')
+        // console.log(router)
       }
     }
     return Promise.reject(error);

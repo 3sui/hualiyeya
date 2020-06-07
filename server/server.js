@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:03:27
- * @LastEditTime: 2020-06-05 10:41:09
+ * @LastEditTime: 2020-06-05 10:45:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\server.js
@@ -23,12 +23,12 @@ require('./route/deviceRecord/index.js')(app)
 require('./route/login/index.js')(app)
 require('./route/admin/productProfile/index')(app)
 require('./route/dataSettings/index')(app)
-
+require('./route/analysis/index')(app)
+require('./route/product/repair')(app)
 
 app.set('secret', 'password')
 
-require('./route/analysis/index')(app)
-require('./route/product/repair')(app)
+
 app.get('/abc', (res, req) => {
     console.log(123);
 
