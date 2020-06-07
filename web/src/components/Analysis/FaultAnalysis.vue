@@ -27,7 +27,7 @@
                 </el-col>
                 <el-col :span="6">
                     <el-button type="primary" icon="el-icon-search">查询报表</el-button>
-                      <el-button type="primary" icon="el-icon-download">导出报表</el-button>
+                    <el-button type="primary" icon="el-icon-download">导出报表</el-button>
                 </el-col>
             </el-row>
             <el-row :gutter="20" class="mgb20">
@@ -78,75 +78,97 @@ export default {
     name: 'FaultAnalysis',
     data() {
         return {
-            datepick:'',
-            faultTop: [
-                {
-                    sort: 1,
-                    fault_type: '泵类',
-                    count: 20
-                },
-                {
-                    sort: 2,
-                    fault_type: '电机类',
-                    count: 18
-                },
-                {
-                    sort: 3,
-                    fault_type: '冷却器类',
-                    count: 14
-                },
-                {
-                    sort: 4,
-                    fault_type: '过滤器类',
-                    count: 8
-                },
-                {
-                    sort: 5,
-                    fault_type: '油雾风机类',
-                    count: 4
-                },
-                {
-                    sort: 6,
-                    fault_type: '电加热器类',
-                    count: 2
-                },
-                {
-                    sort: 7,
-                    fault_type: '减压阀类',
-                    count: 1
-                },
-                {
-                    sort: 8,
-                    fault_type: '减压阀类',
-                    count: 1
-                },
-                {
-                    sort: 9,
-                    fault_type: '减压阀类',
-                    count: 1
-                },
-                {
-                    sort: 10,
-                    fault_type: '减压阀类',
-                    count: 1
-                },
+            datepick: '',
+            faultTop: [],
+            //     {
+            //         sort: 1,
+            //         fault_type: '泵类',
+            //         count: 20
+            //     },
+            //     {
+            //         sort: 2,
+            //         fault_type: '电机类',
+            //         count: 18
+            //     },
+            //     {
+            //         sort: 3,
+            //         fault_type: '冷却器类',
+            //         count: 14
+            //     },
+            //     {
+            //         sort: 4,
+            //         fault_type: '过滤器类',
+            //         count: 8
+            //     },
+            //     {
+            //         sort: 5,
+            //         fault_type: '油雾风机类',
+            //         count: 4
+            //     },
+            //     {
+            //         sort: 6,
+            //         fault_type: '电加热器类',
+            //         count: 2
+            //     },
+            //     {
+            //         sort: 7,
+            //         fault_type: '减压阀类',
+            //         count: 1
+            //     },
+            //     {
+            //         sort: 8,
+            //         fault_type: '减压阀类',
+            //         count: 1
+            //     },
+            //     {
+            //         sort: 9,
+            //         fault_type: '减压阀类',
+            //         count: 1
+            //     },
+            //     {
+            //         sort: 10,
+            //         fault_type: '减压阀类',
+            //         count: 1
+            //     },
 
-                {
-                    sort: 11,
-                    fault_type: '减压阀类',
-                    count: 1
-                }
-            ],
+            //     {
+            //         sort: 11,
+            //         fault_type: '减压阀类',
+            //         count: 1
+            //     }
+            // ],
             style: ['s1', 's2', 's3', 's4'],
             backgroundstyle: ['b1', 'b2', 'b3', 'b4'],
             faulttypelist: [],
             faultnumlist: []
         };
     },
+    created() {
+        this.getFaultList();
+    },
     mounted() {
         this.getdata(), this.getChart1();
     },
     methods: {
+        //获取数据库数据
+        getFaultList() {
+            this.$axios
+                .get('FaultByType')
+                .then(res => {
+                    if (res) {
+                        this.faultTop = res.data;
+                       
+                    }
+                })
+                .then(() => {
+                    this.getdata();
+                    this.getChart1();
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
         //获取数据
         getdata() {
             for (let i = 0; i < this.faultTop.length; i++) {
@@ -179,7 +201,7 @@ export default {
                 },
                 grid: {
                     left: 150,
-                    bottom:30
+                    bottom: 30
                 },
                 toolbox: {
                     show: true,

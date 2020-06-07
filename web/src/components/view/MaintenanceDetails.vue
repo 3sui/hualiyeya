@@ -18,51 +18,98 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-button
-                type="primary"
-                icon="el-icon-delete"
-                class="handle-del mr10 mb-30"
-                @click="$router.go(-1)"
-            >返回</el-button>
-            <div class="plugins-tips">设备信息</div>
-            <el-row :gutter="20" class="mb-30">
-                <el-col :span="12">
-                    <div class="ml-50">
-                        <p>客户名称:{{tableData.CustomerName}}</p>
-                        <p>设备ID:{{tableData.DeviceID}}</p>
-                        <p>设备种类:{{tableData.DeviceClass}}</p>
-                        <p>设备名称:{{tableData.DeviceName}}</p>
-                        <p>型号描述:{{tableData.Model}}</p>
-                        <p>出厂编号:{{tableData.SerialNumber}}</p>
-                        <p>安装地址:{{tableData.Address}}</p>
+            <!-- <el-button type="primary" class="handle-del mr10 mb-30" @click="$router.go(-1)">返回</el-button>
+            <el-button type="primary" class="handle-del mr10 mb-30" @click="handelEdit">编辑</el-button>-->
+            <div class="plugins-tips">设备维修详情</div>
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <div class="demo-image__preview">
+                        <el-image
+                            style="width: 320px; height: 160px"
+                            :src="url"
+                            :preview-src-list="srcList"
+                        ></el-image>
                     </div>
+
+                    <div class="keyvalue">客户名称：{{deviceDetail.enterprise_name}}</div>
+                    <div class="keyvalue">设备ID：{{deviceDetail.eq}}</div>
+                    <div class="keyvalue">设备种类：{{deviceDetail.typename}}</div>
+                    <div class="keyvalue">设备名称：{{deviceDetail.device_name}}</div>
+                    <div class="keyvalue">设备厂家：{{deviceDetail.device_supplier}}</div>
+                    <div class="keyvalue">设备型号：{{deviceDetail.device_model}}</div>
+                    <div class="keyvalue">安装地址：{{deviceDetail.address}}</div>
                 </el-col>
-                <el-col :span="12">
-                    <div class="ml-50">
-                        <img
-                            width="100%"
-                            src="http://127.0.0.1:5500/images/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85/u711.png"
-                            alt
-                        />
-                    </div>
+                <el-col :span="14" :offset="1">
+                    <el-form
+                        ref="form"
+                        :model="form"
+                        label-width="80px"
+                        size="mini"
+                        :disabled="editEnable"
+                    >
+                        <el-form-item label="故障类型">
+                            <el-select
+                                v-model="form.type"
+                                placeholder="请选择故障类型"
+                                @change="handelchoosefault"
+                            >
+                                <el-option
+                                    v-for="(type,index) in faultType"
+                                    :label="type.fault_type"
+                                    :value="type.fault_type"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="故障现象">
+                            <el-select v-model="form.phenomenon" placeholder="请选择故障现象">
+                                <el-option
+                                    v-for="phenomenon in choosefault"
+                                    :label="phenomenon"
+                                    :value="phenomenon"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+
+                        <el-form-item label="原因" :prop="cause">
+                            <el-input v-model="form.cause"></el-input>
+                        </el-form-item>
+                        <el-form-item label="排除方法" :prop="methods">
+                            <el-input v-model="form.methods"></el-input>
+                        </el-form-item>
+                        <el-form-item label="费用" :prop="cost">
+                            <el-input v-model="form.cost" type="text"></el-input>
+                        </el-form-item>
+                        <el-form-item label="维修人" :prop="repair_person">
+                            <el-input v-model="form.repair_person" type="text"></el-input>
+                        </el-form-item>
+                        <el-form-item label="联系电话" :prop="repair_person_phone">
+                            <el-input v-model="form.repair_person_phone" type="text"></el-input>
+                        </el-form-item>
+                        <el-form-item label="备注" :prop="more">
+                            <el-input v-model="form.more" type="text"></el-input>
+                        </el-form-item>
+                        <el-form-item label="维修时间" :prop="created_time">
+                            <el-input v-model="form.created_time" type="text" disabled></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <el-row :gutter="20">
+                        <el-col :offset="6" :span="3">
+                            <el-button type="primary" size="meduim" @click="handelEdit">编辑</el-button>
+                        </el-col>
+                        <el-col :offset="2" :span="3">
+                            <el-button
+                                type="primary"
+                                size="meduim"
+                                @click="onSubmit"
+                                :disabled="saveEnable"
+                            >保存</el-button>
+                        </el-col>
+                        <el-col :offset="2" :span="3">
+                            <el-button type="primary" size="meduim" @click="Cancel">取消</el-button>
+                        </el-col>
+                    </el-row>
                 </el-col>
             </el-row>
-            <div class="plugins-tips">维修记录</div>
-            <div class="ml-50">
-                <p>服务提出时间:{{tableData.StartTime}}</p>
-                <p>故障类型:{{tableData.FaultType}}</p>
-                <p>故障现象:{{tableData.FaultPhenomenon}}</p>
-                <p>可能产生的原因:{{tableData.PossiblePhenomena}}</p>
-                <p>排除办法:{{tableData.Method}}</p>
-                <p>故障部件供应商:{{tableData.LastSupplier}}</p>
-                <p>是否更换零部件:{{tableData.IsReplace}}</p>
-                <p>更换零部件供应商:{{tableData.NewSupplier}}</p>
-                <p>维修费用(元):{{tableData.Price}}</p>
-                <p>备注:{{tableData.More}}</p>
-                <p>维修人:{{tableData.RepairMan}}</p>
-                <p>维修时间:{{tableData.EndTime}}</p>
-
-            </div>
         </div>
     </div>
 </template>
@@ -72,7 +119,20 @@ export default {
     name: 'MaintenanceDetails',
     data() {
         return {
-            tableData: {}
+            // tableData: {},
+            url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+            srcList: [
+                'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+                'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
+                'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
+            ],
+            deviceDetail: {},
+
+            form: {},
+            faultType: [],
+            choosefault: [],
+            editEnable: true,
+            saveEnable: true
         };
     },
 
@@ -81,22 +141,87 @@ export default {
     computed: {},
     created() {
         this.getDeviceIDAndInfo();
+        this.getFaultType();
     },
     methods: {
+        //获取故障类型、故障现象选项
+        getFaultType() {
+            this.$axios
+                .get('/FaultTypeChoose')
+                .then(res => {
+                    console.log(res.data);
+                    this.faultType = res.data;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        //处理选择故障类型和故障现象
+        handelchoosefault() {
+            // console.log(1);
+            for (var i = 0; i < this.faultType.length; i++) {
+                if (this.faultType[i].fault_type === this.form.type) {
+                    this.choosefault = this.faultType[i].fault_phenomenon;
+                }
+            }
+        },
         getDeviceIDAndInfo() {
-            window.console.log(this.$route.query.id);
+            // window.console.log(this.$route.query.id);
             axios({
                 method: 'get',
-                url: '/getMaintenanceInfo',
+                url: '/RepairInfo',
                 params: {
                     id: this.$route.query.id
                 }
             })
                 .then(res => {
-                    window.console.log(res.data);
-                    this.tableData = res.data[0];
+                    this.deviceDetail = res.data[0];
+                    this.form = res.data[0];
                 })
                 .catch();
+        },
+        //提交
+        handelEdit() {
+            this.editEnable = false;
+            this.saveEnable = false;
+        },
+
+        //保存
+        onSubmit() {
+            let query = {
+                id: this.form.id,
+                type: this.form.type,
+                phenomenon: this.form.phenomenon,
+                cause: this.form.cause,
+                methods: this.form.methods,
+                cost:this.form.cost,
+                repair_person: this.form.repair_person,
+                repair_person_phone: this.form.repair_person_phone,
+                more: this.form.more,
+            };
+            this.$axios.post('UpdateRepair',query)
+            .then(res=>{
+                if(res){
+                    this.$message.success('保存成功')
+                    this.$router.go(-1);
+                }    
+            })
+            
+            .catch(err=>{
+                console.log(err);
+                
+            })
+            
+        },
+
+        //取消
+        Cancel() {
+            // console.log('submit!');
+            this.$router.go(-1);
+            // this.deviceDetail={}
+
+            // this.form={}
         }
     }
 };
@@ -124,5 +249,26 @@ p {
 .annex img {
     margin: 10px 10px;
     vertical-align: middle;
+}
+
+.plugins-tips {
+    font-size: 16px;
+    margin: 10px auto;
+}
+.keyvalue {
+    font-size: 12px;
+    text-align: left;
+    width: 100%;
+    font-size: 14px;
+    line-height: 40px;
+    height: 40px;
+    margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.buttonbox {
+    /* height: 40px; */
+    margin: 20px auto;
 }
 </style>
