@@ -39,8 +39,8 @@
                     <el-col :span="18">
                         <div class="product-status">
                             <el-input
-                                v-model="query.name"
-                                placeholder="请输入关键字"
+                                v-model="keyword"
+                                placeholder="客户名称、设备名称、设备ID、维修人"
                                 class="handle-input mr10"
                             ></el-input>
                             <!-- <div class="block">
@@ -146,47 +146,17 @@ export default {
     name: 'MaintenanceRecords',
     data() {
         return {
-            pickerOptions: {
-                shortcuts: [
-                    {
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    },
-                    {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    },
-                    {
-                        text: '最近三个月',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }
-                ]
-            },
+            keyword: '',
             tableData: [],
-query:{},
+            query: {},
             value1: '',
             value2: '',
-              pageIndex: 1,
-                pageSize: 10,
-          
+            pageIndex: 1,
+            pageSize: 10,
+
             multipleSelection: [],
             delList: [],
-            editVisible: false,
+            // editVisible: false,
             pageTotal: 0,
             form: {},
             idx: -1,
@@ -239,21 +209,35 @@ query:{},
 
         // 触发搜索按钮
         handleSearch() {
-            this.tableData = this.tableData.filter((item, index) => {
-                // return item.Address == '竹林北路256号';
-                for (let key in item) {
-                    // window.console.log(i, item[i]);
-                    if ((item[key] + '').includes(this.query.msg)) {
-                        return true;
+            
+             axios
+                .post('/SearchRepair',{keyword:this.keyword})
+                .then(res => {
+                    window.console.log(res);
+                    if (res.status === 200) {
+                        this.tableData = res.data;
+                        this.pageTotal = res.data.length;
+                        window.console.log(res.data);
+                    } else {
+                        window.console.log('服务器错误');
                     }
-                }
-            });
+                })
+                .catch();
+            // this.tableData = this.tableData.filter((item, index) => {
+            //     // return item.Address == '竹林北路256号';
+            //     for (let key in item) {
+            //         // window.console.log(i, item[i]);
+            //         if ((item[key] + '').includes(this.keyword)) {
+            //             return true;
+            //         }
+            //     }
+            // });
         },
 
         // 触发重置按钮
         refresh() {
             this.getData();
-            this.query.msg = '';
+            this.keyword = '';
         },
 
         // 删除操作
@@ -267,14 +251,14 @@ query:{},
                 .then(() => {
                     axios({
                         method: 'get',
-                        url: '/deleteMaintenance',
+                        url: '/DeleteRepair',
                         params: {
                             id: idArr
                         }
                     })
                         .then(res => {
                             window.console.log(res.data);
-                            this.$message.success(res.data);
+                            this.$message.success('删除成功');
                             this.getData();
                         })
                         .catch();
@@ -291,7 +275,7 @@ query:{},
         delAllSelection() {
             let idArr = [];
             for (let i = 0; i < this.multipleSelection.length; i++) {
-                idArr.push(this.multipleSelection[i].DeviceID);
+                idArr.push(this.multipleSelection[i].id);
             }
             window.console.log(idArr);
             if (this.multipleSelection.length === 0) {
@@ -304,14 +288,14 @@ query:{},
                 .then(() => {
                     axios({
                         method: 'get',
-                        url: '/deleteMaintenance',
+                        url: '/DeleteRepair',
                         params: {
                             id: idArr
                         }
                     })
                         .then(res => {
                             window.console.log(res.data);
-                            this.$message.success(res.data);
+                            this.$message.success('删除成功');
                             this.getData();
                         })
                         .catch({});
@@ -334,7 +318,7 @@ query:{},
         },
         // 分页导航
         handlePageChange(val) {
-            this.pageIndex=val;
+            this.pageIndex = val;
             this.getData();
         }
     }

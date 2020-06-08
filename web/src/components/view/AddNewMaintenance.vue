@@ -177,8 +177,8 @@ export default {
             } else if (this.form.phenomenon == '' || this.form.phenomenon == null) {
                 this.$message.error(`请选择故障现象`);
             } else {
-                let date = new Date();
-                this.form.created_time = date.getTime();
+                // let date = new Date();
+                // this.form.created_time = date.getTime();
                 axios({
                     method: 'post',
                     url: '/AddRepair',

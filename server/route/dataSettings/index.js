@@ -63,6 +63,9 @@ module.exports = app => {
         let sql = "select * from  industry where ( is_deleted=0 or is_deleted is NULL) and industry_name like '%" + keyword +"%' order by created_time Desc"
         connection.query(sql, (err, results) => {
             if (err) throw err
+            for (let i = 0; i < results.length; i++) {
+                results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            }
             console.log(results)
             res.send(results)
         })
@@ -126,6 +129,9 @@ module.exports = app => {
         let sql = "select * from  device_type where ( is_deleted=0 or is_deleted is NULL) and typename like '%" + keyword + "%' order by created_time Desc"
         connection.query(sql, (err, results) => {
             if (err) throw err
+            for (let i = 0; i < results.length; i++) {
+                results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            }
             console.log(results)
             res.send(results)
         })
@@ -190,6 +196,9 @@ module.exports = app => {
         // console.log(sql)
         connection.query(sql, (err, results) => {
             if (err) throw err
+            for (let i = 0; i < results.length; i++) {
+                results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            }
             console.log(results)
             res.send(results)
         })
@@ -253,6 +262,9 @@ module.exports = app => {
         // console.log(sql)
         connection.query(sql, (err, results) => {
             if (err) throw err
+            for (let i = 0; i < results.length; i++) {
+                results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            }
             console.log(results)
             res.send(results)
         })
@@ -326,6 +338,9 @@ module.exports = app => {
         // console.log(sql)
         connection.query(sql, (err, results) => {
             if (err) throw err
+            for (let i = 0; i < results.length; i++) {
+                results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            }
             console.log(results)
             res.send(results)
         })

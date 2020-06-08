@@ -12,10 +12,10 @@ module.exports = app => {
         let sql = "select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device_type.typename from repair,enterprise,device,device_type where (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id order by repair.created_time Desc"
         connection.query(sql, (err, results) => {
             if (err) throw err
-            for (let i = 0; i < results.length; i++) {
-                results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
-            }
-            // console.log(results)
+            // for (let i = 0; i < results.length; i++) {
+            //     results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            // }
+            console.log(results)
             res.send(results)
         })
     })
@@ -26,10 +26,10 @@ module.exports = app => {
         let sql = `select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device.device_supplier,device.device_model,device.device_description,device.address,device.principal,device_type.typename from repair,enterprise,device,device_type where repair.id=${id} and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id `
         connection.query(sql, (err, results) => {
             if (err) throw err
-            for (let i = 0; i < results.length; i++) {
-                results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
-            }
-            // console.log(results)
+            // for (let i = 0; i < results.length; i++) {
+            //     results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            // }
+            console.log(results)
             res.send(results)
         })
     })
@@ -60,22 +60,25 @@ module.exports = app => {
     })
 
 
-    //单个删除行业表信息
+    //单个删除维修表信息
     router.get('/DeleteRepair', async (req, res) => {
         let id = req.query.id;
-        let sql = "update industry set is_deleted=1 where id=" + id
+        let sql = `update repair set is_deleted=1 where id in (${id}) `
         connection.query(sql, (err, results) => {
             if (err) throw err
             // console.log(results)
             res.send(results)
         })
     })
-    //查询行业表信息
-    router.post('/SearchIndustry', async (req, res) => {
+    //查询维修表信息
+    router.post('/SearchRepair', async (req, res) => {
         let keyword = req.body.keyword;
-        let sql = "select * from  industry where ( is_deleted=0 or is_deleted is NULL) and industry_name like '%" + keyword + "%' order by created_time Desc"
+        let sql = `select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device_type.typename from repair,enterprise,device,device_type where (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id and (enterprise.enterprise_name like '%${keyword}%' or device.eq like '%${keyword}%' or device.device_name like '%${keyword}%' or repair.repair_person like '%${keyword}%')order by repair.created_time Desc`
         connection.query(sql, (err, results) => {
             if (err) throw err
+            // for (let i = 0; i < results.length; i++) {
+            //     results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            // }
             console.log(results)
             res.send(results)
         })
