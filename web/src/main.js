@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-04-28 15:28:09
- * @LastEditTime: 2020-06-04 10:05:19
+ * @LastEditTime: 2020-06-08 00:53:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\main.js
@@ -73,7 +73,7 @@ router.beforeEach((to, from, next) => {
 });
 
 //全局过滤器
-Vue.filter('converTime', function (data, formatStr) {
+Vue.filter('convertTime', function (data, formatStr) {
     return Moment(data).format(formatStr);
 });
 

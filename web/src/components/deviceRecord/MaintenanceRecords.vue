@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 15:04:18
- * @LastEditTime: 2020-06-08 00:43:58
+ * @LastEditTime: 2020-06-08 01:05:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\MaintenanceRecords.vue
@@ -94,7 +94,11 @@
                 <el-table-column prop="cause" label="原因"></el-table-column>
 
                 <el-table-column prop="repair_person" label="维修人"></el-table-column>
-                <el-table-column prop="created_time" label="维修时间123"></el-table-column>
+                <el-table-column prop="created_time" label="维修时间123">
+                    <template
+                        slot-scope="scope"
+                    >{{scope.row.created_time | convertTime('YYYY-MM-DD HH:mm')}}</template>
+                </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -178,12 +182,12 @@ export default {
                 ]
             },
             tableData: [],
-query:{},
+            query: {},
             value1: '',
             value2: '',
-              pageIndex: 1,
-                pageSize: 10,
-          
+            pageIndex: 1,
+            pageSize: 10,
+
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -334,7 +338,7 @@ query:{},
         },
         // 分页导航
         handlePageChange(val) {
-            this.pageIndex=val;
+            this.pageIndex = val;
             this.getData();
         }
     }

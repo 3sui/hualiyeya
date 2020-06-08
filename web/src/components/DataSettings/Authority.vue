@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-03 15:08:38
- * @LastEditTime: 2020-06-05 17:05:47
+ * @LastEditTime: 2020-06-08 00:28:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \web\src\components\DataSettings\Authority.vue
@@ -49,7 +49,7 @@
                 <!-- 创建日期 -->
                 <el-table-column label="修改日期" align="center">
                     <template slot-scope="scope">
-                        <div>{{+scope.row.created_time | converTime('YYYY-MM-DD HH:mm')}}</div>
+                        <div>{{scope.row.created_time | convertTimee('YYYY-MM-DD HH:mm')}}</div>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -69,6 +69,17 @@
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
                         >修改权限</el-button>
+                        <el-button
+                            type="text"
+                            icon="el-icon-refresh"
+                            @click="handleReset(scope.$index, scope.row)"
+                        >重置密码</el-button>
+                        <el-button
+                            type="text"
+                            icon="el-icon-delete"
+                            class="red"
+                            @click="handleDelete(scope.$index, scope.row)"
+                        >删除</el-button>
                         <!-- <el-button
                             type="text"
                             icon="el-icon-delete"
@@ -135,6 +146,26 @@
                 <el-button type="primary" @click="Confirm">确 定</el-button>
             </span>
         </el-dialog>
+
+        <!-- 权限弹出框 -->
+        <el-dialog title="修改权限" :visible.sync="editVisibleAuth" width="30%" class="demo-ruleForm">
+            <el-form ref="auth" :model="role" label-width="100px">
+                <el-form-item label="所属企业">
+                    <el-select v-model="role.id" placeholder="请选择所属企业">
+                        <el-option
+                            v-for="item in roles"
+                            :label="item.name"
+                            :value="item.id"
+                            :key="item.id"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="Cancel">取 消</el-button>
+                <el-button type="primary" @click="ConfirmAuth">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -148,6 +179,7 @@ export default {
             keyword: '',
             tableData: [],
             editVisible: false,
+            editVisibleAuth: false,
             pageTotal: 0,
             pageIndex: 1,
             pageSize: 10,
@@ -195,7 +227,7 @@ export default {
                 .catch(err => {});
         },
         handleEdit(index, row) {
-            this.editVisible = true;
+            this.editVisibleAuth = true;
             this.role.name = row.name;
             this.role.id = row.role_id;
             this.role.user_id = row.id;
@@ -208,6 +240,7 @@ export default {
         //弹窗取消按钮
         Cancel() {
             this.editVisible = false;
+            this.editVisibleAuth = false;
         },
         //新增操作
         AddData() {
@@ -223,7 +256,7 @@ export default {
             };
         },
 
-        //弹窗确定按钮
+        //新增弹窗确定按钮
         Confirm() {
             axios({
                 method: 'post',
@@ -237,6 +270,31 @@ export default {
                             message: res.data.message
                         });
                         this.editVisible = false;
+                        this.getData();
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: res.data.message
+                        });
+                    }
+                })
+                .catch(err => {});
+        },
+
+        //权限弹窗确定按钮
+        ConfirmAuth() {
+            axios({
+                method: 'post',
+                url: '/dataSettings/changeAuth',
+                data: this.role
+            })
+                .then(res => {
+                    if (res.data.success) {
+                        this.$message({
+                            type: 'success',
+                            message: res.data.message
+                        });
+                        this.editVisibleAuth = false;
                         this.getData();
                     } else {
                         this.$message({
@@ -269,6 +327,61 @@ export default {
         refresh() {
             this.getData();
             this.keyword = '';
+        },
+
+        //删除操作
+        handleDelete(index, row) {
+            // 二次确认删除
+            this.$confirm('确定要删除吗？', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    window.console.log(row.id);
+                    let query = {
+                        id: row.id
+                    };
+                    this.$axios
+                        .post('/dataSettings/DeleteUserInfo', query)
+                        .then(res => {
+                            // console.log(res);
+                            if (res.data.success) {
+                                this.pageIndex = 1;
+                                this.getData();
+                                this.$message.success(res.data.message);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+        //重置密码
+        handleReset(index, row) {
+            this.$confirm('确定要重置吗？', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    let query = {
+                        id: row.id
+                    };
+                    this.$axios
+                        .post('/dataSettings/UpdatePassword', query)
+                        .then(res => {
+                            if (res.data.success) {
+                                this.getData();
+                                this.$message.success(res.data.message);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
     }
 };

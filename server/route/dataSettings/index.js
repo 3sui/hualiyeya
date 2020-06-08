@@ -286,20 +286,15 @@ module.exports = app => {
 
         let id = req.body.id;
         let sql = "update user_info set password='123456' where id=" + id
-        let results = await connection(sql)
+        await connection(sql)
+        let results = {
+            success: true,
+            message: '重置成功'
+        }
         res.send(results)
     })
 
-    //单个删除用户表信息
-    router.post('/DeleteUserInfo', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 403, '您无权访问')
 
-        let id = req.body.id;
-        let sql = "update user_info set is_deleted=1 where id=" + id
-        let results = await connection(sql)
-
-        res.send(results)
-    })
     //查询用户表信息
     router.post('/SearchUserInfo', authMiddle, async (req, res) => {
         assert(req.user.role < 3, 403, '您无权访问')
@@ -319,12 +314,12 @@ module.exports = app => {
         let sql2
         if (req.user.role === 1) {
             console.log('超级');
-            sql = `select u.*, e.enterprise_name, ur.role_id, r.id rid, r.name from user_info u left outer join enterprise e ON e.id = u.enterprise_id left outer join user_role ur on ur.user_id = u.id left outer join role r on ur.role_id = r.id where u.is_deleted = 0`
+            sql = `select u.*, e.enterprise_name, ur.role_id, r.id rid, r.name from user_info u left outer join enterprise e ON e.id = u.enterprise_id left outer join user_role ur on ur.user_id = u.id left outer join role r on ur.role_id = r.id where u.is_deleted = 0 order by u.created_time Desc`
             sql2 = `select * from enterprise e where e.is_deleted = 0`
         } else if (req.user.role === 2) {
             console.log('企业');
 
-            sql = `select u.*, e.enterprise_name, ur.role_id, r.id rid, r.name from user_info u left outer join enterprise e ON e.id = u.enterprise_id left outer join user_role ur on ur.user_id = u.id left outer join role r on ur.role_id = r.id where u.is_deleted = 0 and u.enterprise_id = ${req.user.enterprise_id}`
+            sql = `select u.*, e.enterprise_name, ur.role_id, r.id rid, r.name from user_info u left outer join enterprise e ON e.id = u.enterprise_id left outer join user_role ur on ur.user_id = u.id left outer join role r on ur.role_id = r.id where u.is_deleted = 0 and u.enterprise_id = ${req.user.enterprise_id} order by u.created_time Desc`
             sql2 = `select * from enterprise e where e.is_deleted = 0 and e.id=${req.user.enterprise_id}`
         } else {
             assert(false, 403, '没有权限')
@@ -344,7 +339,7 @@ module.exports = app => {
     router.post('/addNewUser', authMiddle, async (req, res) => {
         assert(req.user.role < 3, 403, '没有权限')
 
-        console.log(req.body);
+        // console.log(req.body);
 
         let {
             enterprise_id,
@@ -367,10 +362,14 @@ module.exports = app => {
             return res.send(results)
         }
 
-        sql = `insert into user_info enterprise_id, username, nickname, phone, email, avatar values ?,?,?,?,?,?`
+        sql = `insert into user_info (enterprise_id, username, nickname, phone, email, avatar, password) values (?,?,?,?,?,?,?)`
         console.log(sql);
 
-        await connection(sql, [enterprise_id, username, nickname, phone, email, avatar])
+        results = await connection(sql, [enterprise_id, username, nickname, phone, email, avatar, '123456'])
+        console.log(results)
+        let ur_id = results.insertId
+        sql = `insert into user_role (user_id, role_id) values (?,?)`
+        await connection(sql, [ur_id, role])
         results = {
             success: true,
             message: '用户添加成功'
@@ -378,6 +377,20 @@ module.exports = app => {
         res.send(results)
 
 
+    })
+
+    //单个删除用户表信息
+    router.post('/DeleteUserInfo', authMiddle, async (req, res) => {
+        assert(req.user.role < 3, 403, '您无权访问')
+
+        let id = req.body.id;
+        let sql = "update user_info set is_deleted=1 where id=" + id
+        await connection(sql)
+        let results = {
+            success: true,
+            message: '删除成功'
+        }
+        res.send(results)
     })
 
     //修改用户权限

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-04 16:25:03
+ * @LastEditTime: 2020-06-08 01:07:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -159,12 +159,12 @@
                 <el-table-column prop="AlarmTimes" label="报警次数"></el-table-column>
                 <el-table-column prop="LastMaintenance:" label="上次维修日期">
                     <template slot-scope="scope">
-                        <span>{{scope.row.LastMaintenance | converTime('YYYY-MM-DD HH:mm')}}</span>
+                        <span>{{scope.row.LastMaintenance | convertTime('YYYY-MM-DD')}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="Createtime" label="建档日期">
                     <template slot-scope="scope">
-                        <span>{{scope.row.Createtime | converTime('YYYY-MM-DD HH:mm')}}</span>
+                        <span>{{scope.row.Createtime | convertTimee('YYYY-MM-DD HH:mm')}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="120" align="center">

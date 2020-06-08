@@ -57,7 +57,7 @@
                 <el-table-column prop="created_time" label="创建日期" align="center">
                     <template
                         slot-scope="scope"
-                    >{{+scope.row.created_time | converTime('YYYY-MM-DD HH:mm')}}</template>
+                    >{{+scope.row.created_time | convertTimee('YYYY-MM-DD HH:mm')}}</template>
                 </el-table-column>
                 <!-- 操作 -->
                 <el-table-column label="操作" width="300" align="center">
@@ -323,8 +323,10 @@ export default {
                     this.$axios
                         .post('/dataSettings/UpdatePassword', query)
                         .then(res => {
-                            this.getData();
-                            this.$message.success('重置成功');
+                            if (res.data.success) {
+                                this.getData();
+                                this.$message.success(res.data.message);
+                            }
                         })
                         .catch(err => {
                             console.log(err);

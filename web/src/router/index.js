@@ -58,7 +58,7 @@ export default new Router({
                 },
                 {
                     path: '/maintenancerecords',
-                    component: () => import( /* webpackChunkName: "MaintenanceRecords" */ '../components/view/MaintenanceRecords.vue'),
+                    component: () => import( /* webpackChunkName: "MaintenanceRecords" */ '../components/deviceRecord/MaintenanceRecords.vue'),
                     meta: {
                         title: '维修记录'
                     }
@@ -183,7 +183,7 @@ export default new Router({
                     path: '/Authority',
                     component: () => import( /* webpackChunkName: "Authority" */ '../components/DataSettings/Authority.vue'),
                     meta: {
-                        title: '权限管理'
+                        title: '用户管理'
                     }
                 },
 

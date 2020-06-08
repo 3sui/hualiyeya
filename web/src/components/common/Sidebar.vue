@@ -195,11 +195,11 @@ export default {
                             title: '企业管理',
                             auth: [2]
                         },
-                        {
-                            index: 'UserInfo',
-                            title: '用户信息',
-                            auth: []
-                        },
+                        // {
+                        //     index: 'UserInfo',
+                        //     title: '用户信息',
+                        //     auth: []
+                        // },
                         {
                             index: 'DeviceType',
                             title: '设备类型',
@@ -212,7 +212,7 @@ export default {
                         },
                         {
                             index: 'Authority',
-                            title: '权限管理',
+                            title: '用户管理',
                             auth: []
                         }
                     ]

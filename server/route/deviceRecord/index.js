@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 10:34:44
- * @LastEditTime: 2020-06-04 16:28:17
+ * @LastEditTime: 2020-06-08 09:04:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\deviceRecord\index.js
@@ -12,6 +12,7 @@ module.exports = app => {
     const router = express.Router()
     const jwt = require('jsonwebtoken')
     const authMiddle = require('../../middleware/auth')()
+    
 
     router.get('/fetchAllDevice', authMiddle, async (req, res) => {
 
