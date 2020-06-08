@@ -54,7 +54,11 @@
                 <!-- 用户权限 -->
                 <el-table-column prop="permission" label="用户权限" align="center"></el-table-column>
                 <!-- 创建日期 -->
-                <el-table-column prop="created_time" label="创建日期" align="center"></el-table-column>
+                <el-table-column prop="created_time" label="创建日期" align="center">
+                    <template
+                        slot-scope="scope"
+                    >{{+scope.row.created_time | convertTimee('YYYY-MM-DD HH:mm')}}</template>
+                </el-table-column>
                 <!-- 操作 -->
                 <el-table-column label="操作" width="300" align="center">
                     <template slot-scope="scope">
@@ -106,6 +110,7 @@
                             v-for="enterprise in enterprises"
                             :label="enterprise.enterprise_name"
                             :value="enterprise.id"
+                            :key="enterprise"
                         ></el-option>
                     </el-select>
                 </el-form-item>
@@ -121,6 +126,7 @@
                             v-for="permission in permissions"
                             :label="permission.permission_name"
                             :value="permission.id"
+                            :key="permission"
                         ></el-option>
                     </el-select>
                 </el-form-item>
@@ -165,7 +171,7 @@ export default {
         //获取企业选项
         getEnterprises() {
             this.$axios
-                .get('/Enterprise')
+                .get('/dataSettings/Enterprise')
                 .then(res => {
                     // console.log(res.data);
                     this.enterprises = res.data;
@@ -178,7 +184,7 @@ export default {
         // 获取数据
         getData() {
             this.$axios
-                .get('/UserInfo')
+                .get('/dataSettings/UserInfo')
                 .then(res => {
                     console.log(res.data);
                     this.tableData = res.data;
@@ -194,7 +200,7 @@ export default {
                 let query = {
                     keyword: value
                 };
-                this.$axios.post('SearchUserInfo', query).then(res => {
+                this.$axios.post('/dataSettings/SearchUserInfo', query).then(res => {
                     if (res) {
                         this.tableData = res.data;
                         this.pageTotal = this.tableData.length;
@@ -217,7 +223,7 @@ export default {
                         id: this.tableData[index + this.pageSize * (this.pageIndex - 1)].id
                     };
                     this.$axios
-                        .post('DeleteUserInfo', query)
+                        .post('/dataSettings/DeleteUserInfo', query)
                         .then(res => {
                             // console.log(res);
                             this.pageIndex = 1;
@@ -262,7 +268,7 @@ export default {
                     this.form.created_time = date.getTime();
                     console.log(date);
                     this.$axios
-                        .post('/AddUserInfo', this.form)
+                        .post('/dataSettings/AddUserInfo', this.form)
                         .then(res => {
                             console.log(res.data);
                             this.getData();
@@ -272,12 +278,12 @@ export default {
                         });
                 } else {
                     this.form.id = this.idx;
-                     delete this.form['enterprise_name'];
-                      delete this.form['created_time']
+                    delete this.form['enterprise_name'];
+                    delete this.form['created_time'];
                     // let date = new Date(this.form.created_time);
                     // this.form.created_time = date.getTime();
                     this.$axios
-                        .post('/updateUserInfo', this.form)
+                        .post('/dataSettings/updateUserInfo', this.form)
                         .then(res => {
                             console.log(res.data);
                             this.getData();
@@ -300,7 +306,7 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
-           // delete row['enterprise_name'];
+            // delete row['enterprise_name'];
             this.form = row;
             this.editVisible = true;
             this.isAdd = false;
@@ -315,10 +321,12 @@ export default {
                         id: this.tableData[index + this.pageSize * (this.pageIndex - 1)].id
                     };
                     this.$axios
-                        .post('UpdatePassword', query)
+                        .post('/dataSettings/UpdatePassword', query)
                         .then(res => {
-                            this.getData();
-                            this.$message.success('重置成功');
+                            if (res.data.success) {
+                                this.getData();
+                                this.$message.success(res.data.message);
+                            }
                         })
                         .catch(err => {
                             console.log(err);

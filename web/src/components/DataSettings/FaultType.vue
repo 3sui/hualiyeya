@@ -50,7 +50,11 @@
                 <!-- 故障现象 -->
                 <el-table-column prop="fault_phenomenon" label="故障现象" align="center"></el-table-column>
                 <!-- 创建日期 -->
-                <el-table-column prop="created_time" label="创建日期" align="center"></el-table-column>
+                <el-table-column prop="created_time" label="创建日期" align="center">
+                    <template
+                        slot-scope="scope"
+                    >{{+scope.row.created_time | convertTimee('YYYY-MM-DD HH:mm')}}</template>
+                </el-table-column>
                 <!-- 操作 -->
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
@@ -125,7 +129,7 @@ export default {
         // 获取数据
         getData() {
             this.$axios
-                .get('/FaultType')
+                .get('/dataSettings/FaultType')
                 .then(res => {
                     console.log(res.data);
                     this.tableData = res.data;
@@ -141,7 +145,7 @@ export default {
                 let query = {
                     keyword: value
                 };
-                this.$axios.post('SearchFaultType', query).then(res => {
+                this.$axios.post('/dataSettings/SearchFaultType', query).then(res => {
                     if (res) {
                         this.tableData = res.data;
                         this.pageTotal = this.tableData.length;
@@ -161,7 +165,7 @@ export default {
                     let query = {
                         id: this.tableData[index + this.pageSize * (this.pageIndex - 1)].id
                     };
-                    this.$axios.post('DeleteFaultType', query).then(res => {
+                    this.$axios.post('/dataSettings/DeleteFaultType', query).then(res => {
                         //console.log(res);
                         this.pageIndex = 1;
                         this.getData();
@@ -181,9 +185,9 @@ export default {
         AddData() {
             this.editVisible = true;
             this.isAdd = true;
-            this.form={
-                is_deleted:0
-            }
+            this.form = {
+                is_deleted: 0
+            };
         },
         //添加确认
         Confirm() {
@@ -199,12 +203,12 @@ export default {
             } else if (this.form.fault_phenomenon.length > 1024) {
                 this.$message.error(`故障现象过长`);
             } else {
-                if (this.isAdd) {                
+                if (this.isAdd) {
                     let date = new Date();
                     this.form.created_time = date.getTime();
                     // console.log(date);
                     this.$axios
-                        .post('/AddFaultType', this.form)
+                        .post('/dataSettings/AddFaultType', this.form)
                         .then(res => {
                             console.log(res.data);
                             this.getData();
@@ -214,11 +218,11 @@ export default {
                         });
                 } else {
                     this.form.id = this.idx;
-                    delete this.form['created_time']
+                    delete this.form['created_time'];
                     //  let date =new Date(this.form.created_time )
                     // this.form.created_time =  date.getTime();
                     this.$axios
-                        .post('/updateFaultType', this.form)
+                        .post('/dataSettings/updateFaultType', this.form)
                         .then(res => {
                             console.log(res.data);
                             this.getData();

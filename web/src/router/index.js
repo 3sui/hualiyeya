@@ -18,40 +18,47 @@ export default new Router({
                     path: '/dashboard',
                     component: () => import( /* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
                     meta: {
-                        title: '系统首页'
+                        title: '系统首页',
+                        auth: []
                     }
                 },
                 {
                     path: '/map',
                     component: () => import( /* webpackChunkName: "map" */ '../components/view/map.vue'),
                     meta: {
-                        title: '设备地图'
+                        title: '设备地图',
+                        auth: []
                     }
                 },
                 {
-                    path: '/productList',
-                    component: () => import( /* webpackChunkName: "ProductList" */ '../components/view/ProductList.vue'),
+                    path: '/DeviceList',
+                    component: () => import( /* webpackChunkName: "DeviceList" */ '../components/deviceRecord/DeviceList.vue'),
                     meta: {
-                        title: '设备列表'
+                        title: '设备列表',
+                        auth: []
+
                     }
                 },
                 {
                     path: '/productDetails',
                     component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/view/ProductDetails.vue'),
                     meta: {
-                        title: '设备详情'
+                        title: '设备详情',
+                        auth: []
+
                     }
                 },
                 {
                     path: '/addnewproduct',
                     component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/view/AddNewProduct.vue'),
                     meta: {
-                        title: '添加设备'
+                        title: '添加设备',
+                        auth: [3]
                     }
                 },
                 {
                     path: '/maintenancerecords',
-                    component: () => import( /* webpackChunkName: "MaintenanceRecords" */ '../components/view/MaintenanceRecords.vue'),
+                    component: () => import( /* webpackChunkName: "MaintenanceRecords" */ '../components/deviceRecord/MaintenanceRecords.vue'),
                     meta: {
                         title: '维修记录'
                     }
@@ -140,7 +147,7 @@ export default new Router({
                     }
 
                 },
-             
+
                 //企业管理
                 {
                     path: '/Enterprise',
@@ -149,7 +156,7 @@ export default new Router({
                         title: '企业管理'
                     }
                 },
-              
+
                 //用户信息
                 {
                     path: '/UserInfo',
@@ -170,6 +177,13 @@ export default new Router({
                     component: () => import( /* webpackChunkName: "FaultType" */ '../components/DataSettings/FaultType.vue'),
                     meta: {
                         title: '故障种类'
+                    }
+                },
+                {
+                    path: '/Authority',
+                    component: () => import( /* webpackChunkName: "Authority" */ '../components/DataSettings/Authority.vue'),
+                    meta: {
+                        title: '用户管理'
                     }
                 },
 
@@ -316,19 +330,12 @@ export default new Router({
                     meta: {
                         title: '403'
                     }
-                },
-                {
-                    path: '/donate',
-                    component: () => import( /* webpackChunkName: "donate" */ '../components/page/Donate.vue'),
-                    meta: {
-                        title: '支持作者'
-                    }
                 }
             ]
         },
         {
             path: '/login',
-            component: () => import( /* webpackChunkName: "login" */ '../components/page/Login.vue'),
+            component: () => import( /* webpackChunkName: "login" */ '../components/login/Login.vue'),
             meta: {
                 title: '登录'
             }

@@ -145,7 +145,7 @@ export default {
                         },
                         {
                             id: 5,
-                            label: '产品档案'
+                            label: '设备档案'
                         },
                         {
                             id: 6,

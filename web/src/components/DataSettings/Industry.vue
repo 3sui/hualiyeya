@@ -48,7 +48,11 @@
                 <!-- 行业名称 -->
                 <el-table-column prop="industry_name" label="行业名称" align="center"></el-table-column>
                 <!-- 创建日期 -->
-                <el-table-column prop="created_time" label="创建日期" align="center"></el-table-column>
+                <el-table-column prop="created_time" label="创建日期" align="center">
+                    <template
+                        slot-scope="scope"
+                    >{{+scope.row.created_time | convertTimee('YYYY-MM-DD HH:mm')}}</template>
+                </el-table-column>
                 <!-- 操作 -->
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
@@ -120,7 +124,7 @@ export default {
         // 获取数据
         getData() {
             this.$axios
-                .get('/Industry')
+                .get('/dataSettings/Industry')
                 .then(res => {
                     console.log(res.data);
                     this.tableData = res.data;
@@ -136,10 +140,13 @@ export default {
                 let query = {
                     keyword: value
                 };
-                this.$axios.post('SearchIndustry', query).then(res => {
-                    if (res) {
+                this.$axios.post('/dataSettings/SearchIndustry', query).then(res => {
+                    if (res.data) {
                         this.tableData = res.data;
                         this.pageTotal = this.tableData.length;
+                        window.console.log(res);
+                    } else {
+                        window.console.log('数据库异常');
                     }
                 });
             } else {
@@ -159,22 +166,20 @@ export default {
                         id: this.tableData[index + this.pageSize * (this.pageIndex - 1)].id
                     };
                     this.$axios
-                    .post('DeleteIndustry', query)
-                    .then(res => {
-                    // console.log(res);
-                    this.pageIndex=1
-                    this.getData();
-                    this.$message.success('删除成功');
-                    })
-                    .catch(err=>{
-                        console.log(err)
-                    })
-                    
+                        .post('/dataSettings/DeleteIndustry', query)
+                        .then(res => {
+                            // console.log(res);
+                            this.pageIndex = 1;
+                            this.getData();
+                            this.$message.success('删除成功');
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
                 })
                 .catch(err => {
                     console.log(err);
-                }); 
-                
+                });
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -185,9 +190,9 @@ export default {
         AddData() {
             this.editVisible = true;
             this.isAdd = true;
-            this.form={
-                is_deleted:0
-            }
+            this.form = {
+                is_deleted: 0
+            };
         },
         //添加确认
         Confirm() {
@@ -202,7 +207,7 @@ export default {
                     this.form.created_time = date.getTime();
                     console.log(date);
                     this.$axios
-                        .post('/AddIndustry', this.form)
+                        .post('/dataSettings/AddIndustry', this.form)
                         .then(res => {
                             console.log(res.data);
                             this.getData();
@@ -212,11 +217,11 @@ export default {
                         });
                 } else {
                     this.form.id = this.idx;
-                    delete this.form['created_time']
+                    delete this.form['created_time'];
                     //  let date =new Date(this.form.created_time)
                     // this.form.created_time =  date.getTime();
                     this.$axios
-                        .post('/updateIndustry', this.form)
+                        .post('/dataSettings/updateIndustry', this.form)
                         .then(res => {
                             console.log(res.data);
                             this.getData();

@@ -12,7 +12,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-copy"></i> 产品档案
+                    <i class="el-icon-lx-copy"></i> 设备档案
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>维修详情</el-breadcrumb-item>
             </el-breadcrumb>

@@ -1,19 +1,19 @@
 <!--
  * @Author: your name
- * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-05-17 17:15:49
+ * @Date: 2020-05-06 15:04:18
+ * @LastEditTime: 2020-06-08 01:05:49
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
- * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
+ * @FilePath: \vue-manage-system\src\components\view\MaintenanceRecords.vue
  -->
 <template>
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 产品档案
+                    <i class="el-icon-lx-cascades"></i> 设备档案
                 </el-breadcrumb-item>
-                <el-breadcrumb-item>产品列表</el-breadcrumb-item>
+                <el-breadcrumb-item>维修记录</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
@@ -25,7 +25,7 @@
                                 type="primary"
                                 icon="el-icon-lx-add"
                                 class="handle-del mr10"
-                                @click="$router.push('./addnewproduct')"
+                                @click="$router.push('./addNewMaintenance')"
                             >新增</el-button>
                             <el-button
                                 type="primary"
@@ -37,59 +37,15 @@
                         <div></div>
                     </el-col>
                     <el-col :span="18">
-                        <!-- <div class="product-status">
-                            <el-select
-                                v-model="query.province"
-                                placeholder="请选择省"
-                                class="handle-select mr10"
-                            >
-                                <el-option key="1" label="江苏省" value="江苏省"></el-option>
-                            </el-select>
-                            <el-select
-                                v-model="query.city"
-                                placeholder="请选择市"
-                                class="handle-select mr10"
-                            >
-                                <el-option key="1" label="常州市" value="常州市"></el-option>
-                            </el-select>
-                            <el-select
-                                v-model="query.county"
-                                placeholder="请选择区"
-                                class="handle-select mr10"
-                            >
-                                <el-option key="1" label="天宁区" value="天宁区"></el-option>
-                            </el-select>
-                            <el-select
-                                v-model="query.kind"
-                                placeholder="设备种类"
-                                class="handle-select mr10"
-                            >
-                                <el-option key="1" label="干燥设备" value="干燥设备"></el-option>
-                            </el-select>
-                            <el-select
-                                v-model="query.status"
-                                placeholder="工作状态"
-                                class="handle-select mr10"
-                            >
-                                <el-option key="1" label="运行中" value="运行中"></el-option>
-                            </el-select>
-                            <el-select
-                                v-model="query.switch"
-                                placeholder="开关机"
-                                class="handle-select"
-                            >
-                                <el-option key="1" label="开机" value="开机"></el-option>
-                            </el-select>
-                        </div>-->
                         <div class="product-status">
                             <el-input
-                                v-model="query.msg"
+                                v-model="query.name"
                                 placeholder="请输入关键字"
                                 class="handle-input mr10"
                             ></el-input>
                             <!-- <div class="block">
                                 <el-date-picker
-                                    v-model="query.date"
+                                    v-model="value2"
                                     type="daterange"
                                     align="right"
                                     unlink-panels
@@ -111,7 +67,7 @@
                 </el-row>
             </div>
             <el-table
-                :data="tableData"
+                :data="tableData.slice((pageIndex-1)*pageSize,pageIndex*pageSize)"
                 border
                 class="table"
                 ref="multipleTable"
@@ -119,65 +75,32 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="序号" width="55" align="center" type="index"></el-table-column>
-                <el-table-column prop="DeviceID" label="设备ID"></el-table-column>
-                <el-table-column prop="DeviceName" label="设备名称"></el-table-column>
-                <el-table-column prop="DeviceClass" label="设备种类"></el-table-column>
-                <el-table-column prop="Model" label="型号描述"></el-table-column>
-                <el-table-column prop="SerialNumber" label="出厂编号"></el-table-column>
-                <el-table-column prop="CustomerName" label="客户名称"></el-table-column>
-                <el-table-column prop="CustomerIndustry" label="客户行业"></el-table-column>
-                <el-table-column prop="Province" label="安装地址(省)"></el-table-column>
-                <el-table-column prop="City" label="安装地址(市)"></el-table-column>
-                <el-table-column prop="District" label="安装地址(区)"></el-table-column>
-                <el-table-column prop="Address" label="安装地址(详情)"></el-table-column>
-                <el-table-column prop="Duration" label="运行时长(h)"></el-table-column>
+                <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
+                <el-table-column prop="enterprise_name" label="客户名称"></el-table-column>
 
-                <!-- <el-table-column label="账户余额">
-                    <template slot-scope="scope">￥{{scope.row.money}}</template>
+                <el-table-column prop="eq" label="设备ID"></el-table-column>
+                <el-table-column prop="typename" label="设备种类"></el-table-column>
+                <el-table-column prop="device_name" label="设备名称"></el-table-column>
+                <!-- <el-table-column prop="Model" label="型号描述"></el-table-column>
+                <el-table-column prop="SerialNumber" label="出厂编号"></el-table-column>
+                <el-table-column prop="StartTime" label="服务提出日期"></el-table-column>-->
+
+                <el-table-column prop="type" label="故障类型"></el-table-column>
+                <el-table-column prop="phenomenon" label="故障现象"></el-table-column>
+                <!-- <el-table-column prop="LastSupplier" label="故障部件供应商"></el-table-column>
+                <el-table-column prop="IsReplace" label="是否更换零部件"></el-table-column>
+                <el-table-column prop="NewSupplier" label="更换部件供应商"></el-table-column>
+                <el-table-column prop="Price" label="维修费用（元）"></el-table-column>-->
+                <el-table-column prop="cause" label="原因"></el-table-column>
+
+                <el-table-column prop="repair_person" label="维修人"></el-table-column>
+                <el-table-column prop="created_time" label="维修时间123">
+                    <template
+                        slot-scope="scope"
+                    >{{scope.row.created_time | convertTime('YYYY-MM-DD HH:mm')}}</template>
                 </el-table-column>
-                <el-table-column label="头像(查看大图)" align="center">
+                <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-image
-                            class="table-td-thumb"
-                            :src="scope.row.thumb"
-                            :preview-src-list="[scope.row.thumb]"
-                        ></el-image>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>-->
-                <el-table-column label="状态" align="center">
-                    <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.status==='正常'?'success':(scope.row.status==='报警'?'danger':'')"
-                        >{{scope.row.status}}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column label="开关机" align="center">
-                    <template slot-scope="scope">
-                        <el-tag
-                            :type="scope.row.switch==='开机'?'success':(scope.row.switch==='关机'?'danger':'')"
-                        >{{scope.row.switch}}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="AlarmTimes" label="报警次数"></el-table-column>
-                <el-table-column prop="LastMaintenance:" label="上次维修日期">
-                    <template slot-scope="scope">
-                        <span>{{formateTimeStamp(scope.row.LastMaintenance)}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="Createtime" label="建档日期">
-                    <template slot-scope="scope">
-                        <span>{{formateTimeStamp(scope.row.Createtime)}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="操作" width="120" align="center">
-                    <template slot-scope="scope">
-                        <!-- <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >编辑</el-button>-->
                         <el-button
                             type="text"
                             icon="el-icon-view"
@@ -205,7 +128,7 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+        <!-- <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
                 <el-form-item label="用户名">
                     <el-input v-model="form.name"></el-input>
@@ -218,13 +141,13 @@
                 <el-button @click="editVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
-        </el-dialog>
+        </el-dialog>-->
     </div>
 </template>
 
 <script>
 export default {
-    name: 'basetable',
+    name: 'MaintenanceRecords',
     data() {
         return {
             pickerOptions: {
@@ -258,19 +181,13 @@ export default {
                     }
                 ]
             },
-            query: {
-                province: '', //省份
-                city: '', //市
-                county: '', //区县
-                kind: '', //种类
-                status: '', //状态
-                switch: '', //开关机
-                msg: '', //关键字
-                date: '', //筛选日期
-                pageIndex: 1, //当前页数
-                pageSize: 10 //每页显示个数选择器的选项设置
-            },
-            tableData: [], //设备列表的数据
+            tableData: [],
+            query: {},
+            value1: '',
+            value2: '',
+            pageIndex: 1,
+            pageSize: 10,
+
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -283,25 +200,24 @@ export default {
     created() {
         this.getData();
     },
-    computed: {},
     methods: {
         //吧时间戳转化为想要的时间格式
-        formateTimeStamp(time) {
-            var date = new Date();
-            date.setTime(time);
-            var year = date.getFullYear();
-            var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
-            var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-            var hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
-            var minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-            var second = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-            return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
-        },
+        // formateTimeStamp(time) {
+        //     var date = new Date();
+        //     date.setTime(time);
+        //     var year = date.getFullYear();
+        //     var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+        //     var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+        //     var hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+        //     var minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+        //     var second = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+        //     return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+        // },
 
         // 获取设备列表数据
         getData() {
             axios
-                .get('/getProductList')
+                .get('/Repair')
                 .then(res => {
                     window.console.log(res);
                     if (res.status === 200) {
@@ -313,6 +229,16 @@ export default {
                     }
                 })
                 .catch();
+        },
+
+        // 查看详情
+        handleDetail(index, row) {
+            this.$router.push({
+                path: './MaintenanceDetails',
+                query: {
+                    id: row.id
+                }
+            });
         },
 
         // 触发搜索按钮
@@ -337,7 +263,7 @@ export default {
         // 删除操作
         handleDelete(index, row) {
             let idArr = [];
-            idArr.push(row.DeviceID);
+            idArr.push(row.id);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
@@ -345,7 +271,7 @@ export default {
                 .then(() => {
                     axios({
                         method: 'get',
-                        url: '/deleteProducts',
+                        url: '/deleteMaintenance',
                         params: {
                             id: idArr
                         }
@@ -358,16 +284,6 @@ export default {
                         .catch();
                 })
                 .catch(() => {});
-        },
-
-        // 查看详情
-        handleDetail(index, row) {
-            this.$router.push({
-                path: './ProductDetails',
-                query: {
-                    id: row.DeviceID
-                }
-            });
         },
 
         // 多选操作
@@ -392,7 +308,7 @@ export default {
                 .then(() => {
                     axios({
                         method: 'get',
-                        url: '/deleteProducts',
+                        url: '/deleteMaintenance',
                         params: {
                             id: idArr
                         }
@@ -422,7 +338,7 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
+            this.pageIndex = val;
             this.getData();
         }
     }

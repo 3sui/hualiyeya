@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 15:04:18
- * @LastEditTime: 2020-05-16 12:38:14
+ * @LastEditTime: 2020-06-08 00:43:58
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\MaintenanceRecords.vue
@@ -11,7 +11,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 产品档案
+                    <i class="el-icon-lx-cascades"></i> 设备档案
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>维修记录</el-breadcrumb-item>
             </el-breadcrumb>
@@ -94,7 +94,7 @@
                 <el-table-column prop="cause" label="原因"></el-table-column>
 
                 <el-table-column prop="repair_person" label="维修人"></el-table-column>
-                <el-table-column prop="created_time" label="维修时间"></el-table-column>
+                <el-table-column prop="created_time" label="维修时间123"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button

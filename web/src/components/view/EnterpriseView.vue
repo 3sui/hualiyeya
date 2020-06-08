@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-07 15:48:38
- * @LastEditTime: 2020-05-19 14:01:10
+ * @LastEditTime: 2020-06-03 14:05:12
  * @LastEditors: Please set LastEditors
  * @Description: 企业视图
  * @FilePath: \vue-manage-system\src\components\view\EnterpriseView.vue
@@ -126,7 +126,6 @@
  
  <script>
 import Schart from 'vue-schart';
-import { fetchData } from '../../api/index';
 
 export default {
     name: 'EnterpriseView',
@@ -240,11 +239,7 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            fetchData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.list;
-                this.pageTotal = res.pageTotal || 50;
-            });
+          
         },
         // 触发搜索按钮
         handleSearch() {

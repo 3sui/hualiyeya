@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-07 15:48:38
- * @LastEditTime: 2020-05-07 16:38:34
+ * @LastEditTime: 2020-06-03 14:05:31
  * @LastEditors: Please set LastEditors
  * @Description: 管理员视图
  * @FilePath: \vue-manage-system\src\components\view\EnterpriseView.vue
@@ -124,7 +124,6 @@
  
  <script>
 import Schart from 'vue-schart';
-import { fetchData } from '../../api/index';
 
 export default {
     name: 'EnterpriseView',
