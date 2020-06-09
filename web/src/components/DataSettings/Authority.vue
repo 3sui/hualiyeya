@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-03 15:08:38
- * @LastEditTime: 2020-06-08 00:28:00
+ * @LastEditTime: 2020-06-08 17:13:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \web\src\components\DataSettings\Authority.vue
@@ -49,7 +49,7 @@
                 <!-- 创建日期 -->
                 <el-table-column label="修改日期" align="center">
                     <template slot-scope="scope">
-                        <div>{{scope.row.created_time | convertTimee('YYYY-MM-DD HH:mm')}}</div>
+                        <div>{{scope.row.created_time | convertTime('YYYY-MM-DD HH:mm')}}</div>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -138,7 +138,21 @@
                     <el-input v-model="newUser.email"></el-input>
                 </el-form-item>
                 <el-form-item label="头像">
-                    <el-input v-model="newUser.avatar"></el-input>
+                    <el-upload
+                        class="avatar-uploader"
+                        ref="uploadAvatar"
+                        :data="{id:addNewUserId}"
+                        :action="axios.defaults.baseURL + '/dataSettings/addNewUserAvatar'"
+                        :headers="getAuthHeaders()"
+                        :show-file-list="false"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload"
+                        :auto-upload="false"
+                        :on-change="clickAvatarUpload"
+                    >
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -174,6 +188,7 @@ export default {
     name: 'Authority',
     data() {
         return {
+            addNewUserId: '',
             roles: [],
             enterprises: [],
             keyword: '',
@@ -199,7 +214,9 @@ export default {
             },
 
             isAdd: true,
-            idx: 1
+            idx: 1,
+            imageUrl: '',
+            url: ''
         };
     },
     created() {
@@ -269,6 +286,7 @@ export default {
                             type: 'success',
                             message: res.data.message
                         });
+                        this.addNewUserId = res.data.id;
                         this.editVisible = false;
                         this.getData();
                     } else {
@@ -277,6 +295,9 @@ export default {
                             message: res.data.message
                         });
                     }
+                })
+                .then(res => {
+                    this.$refs.uploadAvatar.submit();
                 })
                 .catch(err => {});
         },
@@ -382,6 +403,28 @@ export default {
                 .catch(err => {
                     console.log(err);
                 });
+        },
+
+        //
+        handleAvatarSuccess(res, file) {
+            this.imageUrl = URL.createObjectURL(file.raw);
+        },
+        clickAvatarUpload(file) {
+            console.log(file);
+            this.imageUrl = URL.createObjectURL(file.raw);
+            this.newUser.avatar = file.name;
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG) {
+                this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
         }
     }
 };
@@ -417,5 +460,30 @@ export default {
 }
 .datechoose {
     float: right;
+}
+</style>
+<style>
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9 !important;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+}
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
 }
 </style>

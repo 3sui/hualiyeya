@@ -54,6 +54,7 @@ export default {
                         localStorage.ms_username = res.data.ms_username;
                         localStorage.token = res.data.token;
                         localStorage.role = res.data.role;
+                        localStorage.avatar = res.data.avatar;
 
                         this.$router.push('/');
                         console.log(res.data);

@@ -164,7 +164,7 @@
                 </el-table-column>
                 <el-table-column prop="Createtime" label="建档日期">
                     <template slot-scope="scope">
-                        <span>{{scope.row.Createtime | convertTimee('YYYY-MM-DD HH:mm')}}</span>
+                        <span>{{scope.row.Createtime | convertTime('YYYY-MM-DD HH:mm')}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="120" align="center">

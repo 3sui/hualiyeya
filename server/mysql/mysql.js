@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:46:57
- * @LastEditTime: 2020-06-03 09:38:03
+ * @LastEditTime: 2020-06-08 10:51:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\mysql\mysql.js
@@ -13,9 +13,9 @@ module.exports = app => {
         host: '58.216.47.104',
         port: '3309',
         user: 'root',
-        password: 'htyw2019',
+        password: 'fL2!76KuRr4$md#87zf2hkWnPrDD359p',
         database: 'hlyy',
-        dateStrings:true
+        dateStrings: true
     }
     let connection = mysql.createPool(options)
 

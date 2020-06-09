@@ -61,7 +61,7 @@
                 <el-table-column prop="created_time" label="创建日期" align="center">
                     <template
                         slot-scope="scope"
-                    >{{+scope.row.created_time | convertTimee('YYYY-MM-DD HH:mm')}}</template>
+                    >{{scope.row.created_time | convertTime('YYYY-MM-DD HH:mm')}}</template>
                 </el-table-column>
                 <!-- 操作 -->
                 <el-table-column label="操作" width="180" align="center">
@@ -110,7 +110,7 @@
                             v-for="industry in industrys"
                             :label="industry.industry_name"
                             :value="industry.id"
-                            :key="industry"
+                            :key="industry.id"
                         ></el-option>
                     </el-select>
                 </el-form-item>

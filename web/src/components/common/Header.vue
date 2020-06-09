@@ -29,7 +29,7 @@
                 </div>
                 <!-- 用户头像 -->
                 <div class="user-avator">
-                    <img src="../../assets/img/img.jpg" />
+                    <img :src="userAvatar" />
                 </div>
                 <!-- 用户名下拉菜单 -->
                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
@@ -40,7 +40,7 @@
                     <el-dropdown-menu slot="dropdown">
                         <!-- <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
                             <el-dropdown-item>项目仓库</el-dropdown-item>
-                        </a> -->
+                        </a>-->
                         <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -50,6 +50,7 @@
 </template>
 <script>
 import bus from '../common/bus';
+import imgUrl from '../../assets/img/img.jpg';
 export default {
     data() {
         return {
@@ -63,6 +64,14 @@ export default {
         username() {
             let username = localStorage.getItem('ms_username');
             return username ? username : this.name;
+        },
+        userAvatar() {
+            let userAvatar = axios.defaults.baseURL.slice(0, -4) + localStorage.getItem('avatar');
+            console.log(localStorage.avatar == null);
+            console.log(imgUrl);
+            console.log(userAvatar);
+
+            return localStorage.avatar == null ? imgUrl : userAvatar;
         }
     },
     methods: {

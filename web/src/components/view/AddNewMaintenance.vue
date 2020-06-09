@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 14:19:13
- * @LastEditTime: 2020-06-05 10:41:48
+ * @LastEditTime: 2020-06-08 09:31:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\AddNewProduct.vue
@@ -54,6 +54,7 @@
                                 v-for="(type,index) in faultType"
                                 :label="type.fault_type"
                                 :value="type.fault_type"
+                                :key="index"
                             ></el-option>
                         </el-select>
                     </el-form-item>
@@ -63,6 +64,7 @@
                                 v-for="phenomenon in choosefault"
                                 :label="phenomenon"
                                 :value="phenomenon"
+                                :key="phenomenon"
                             ></el-option>
                         </el-select>
                     </el-form-item>
