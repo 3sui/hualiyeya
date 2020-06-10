@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-08 10:16:55
- * @LastEditTime: 2020-06-08 10:25:05
+ * @LastEditTime: 2020-06-10 19:05:29
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\mobile\vue.config.js
