@@ -50,7 +50,7 @@ export default new Router({
                 },
                 {
                     path: '/addnewproduct',
-                    component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/view/AddNewProduct.vue'),
+                    component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/deviceRecord/AddNewProduct.vue'),
                     meta: {
                         title: '添加设备',
                         auth: [3]

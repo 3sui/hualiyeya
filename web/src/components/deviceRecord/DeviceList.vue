@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-08 01:07:08
+ * @LastEditTime: 2020-06-10 10:04:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -156,15 +156,15 @@
                         >{{scope.row.is_on === 0? '开机' : '关机'}}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="AlarmTimes" label="报警次数"></el-table-column>
-                <el-table-column prop="LastMaintenance:" label="上次维修日期">
+                <!-- <el-table-column prop="AlarmTimes" label="报警次数"></el-table-column> -->
+                <!-- <el-table-column prop="LastMaintenance:" label="上次维修日期">
                     <template slot-scope="scope">
                         <span>{{scope.row.LastMaintenance | convertTime('YYYY-MM-DD')}}</span>
                     </template>
-                </el-table-column>
-                <el-table-column prop="Createtime" label="建档日期">
+                </el-table-column>-->
+                <el-table-column prop="created_time" label="建档日期">
                     <template slot-scope="scope">
-                        <span>{{scope.row.Createtime | convertTime('YYYY-MM-DD HH:mm')}}</span>
+                        <span>{{scope.row.created_time | convertTime('YYYY-MM-DD HH:mm')}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="120" align="center">
@@ -322,7 +322,8 @@ export default {
         // 删除操作
         handleDelete(index, row) {
             let idArr = [];
-            idArr.push(row.DeviceID);
+            idArr.push(row.did);
+            window.console.log(idArr);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
@@ -330,7 +331,7 @@ export default {
                 .then(() => {
                     axios({
                         method: 'get',
-                        url: '/deleteProducts',
+                        url: '/device/deleteProducts',
                         params: {
                             id: idArr
                         }
@@ -358,13 +359,14 @@ export default {
         // 多选操作
         handleSelectionChange(val) {
             this.multipleSelection = val;
+            window.console.log(val);
         },
 
         //批量删除
         delAllSelection() {
             let idArr = [];
             for (let i = 0; i < this.multipleSelection.length; i++) {
-                idArr.push(this.multipleSelection[i].DeviceID);
+                idArr.push(this.multipleSelection[i].did);
             }
             window.console.log(idArr);
             if (this.multipleSelection.length === 0) {
@@ -377,7 +379,7 @@ export default {
                 .then(() => {
                     axios({
                         method: 'get',
-                        url: '/deleteProducts',
+                        url: '/device/deleteProducts',
                         params: {
                             id: idArr
                         }

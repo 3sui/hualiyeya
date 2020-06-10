@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-03 15:08:38
- * @LastEditTime: 2020-06-08 17:13:20
+ * @LastEditTime: 2020-06-09 17:29:56
  * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
+ * @Description: 用户管理
  * @FilePath: \web\src\components\DataSettings\Authority.vue
 --> 
 <!--  -->
@@ -14,7 +14,7 @@
                 <el-breadcrumb-item>
                     <i class="el-icon-lx-cascades"></i> 基础数据管理
                 </el-breadcrumb-item>
-                <el-breadcrumb-item>权限管理</el-breadcrumb-item>
+                <el-breadcrumb-item>用户管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
@@ -71,6 +71,12 @@
                         >修改权限</el-button>
                         <el-button
                             type="text"
+                            icon="el-icon-delete"
+                            class="red"
+                            @click="handleDealing(scope.$index, scope.row)"
+                        >分配设备</el-button>
+                        <el-button
+                            type="text"
                             icon="el-icon-refresh"
                             @click="handleReset(scope.$index, scope.row)"
                         >重置密码</el-button>
@@ -104,9 +110,13 @@
 
         <!-- 新增弹出框 -->
         <el-dialog title="新增" :visible.sync="editVisible" width="30%" class="demo-ruleForm">
-            <el-form ref="add" :model="newUser" label-width="100px">
+            <el-form ref="add" :rules="rules" :model="newUser" label-width="100px">
                 <el-form-item label="所属企业">
-                    <el-select v-model="newUser.enterprise_id" placeholder="请选择所属企业">
+                    <el-select
+                        v-model="newUser.enterprise_id"
+                        placeholder="请选择所属企业"
+                        prop="enterprise_id"
+                    >
                         <el-option
                             v-for="item in enterprises"
                             :label="item.enterprise_name"
@@ -115,13 +125,13 @@
                         ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="账号">
+                <el-form-item label="账号" prop="username">
                     <el-input v-model="newUser.username"></el-input>
                 </el-form-item>
                 <el-form-item label="用户名">
                     <el-input v-model="newUser.nickname"></el-input>
                 </el-form-item>
-                <el-form-item label="权限">
+                <el-form-item label="权限" prop="role">
                     <el-select v-model="newUser.role" placeholder="请选择权限角色">
                         <el-option
                             v-for="item in roles"
@@ -131,10 +141,10 @@
                         ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="手机">
-                    <el-input v-model="newUser.phone"></el-input>
+                <el-form-item label="手机" prop="phone">
+                    <el-input v-model.number="newUser.phone"></el-input>
                 </el-form-item>
-                <el-form-item label="邮箱">
+                <el-form-item label="邮箱" prop="email">
                     <el-input v-model="newUser.email"></el-input>
                 </el-form-item>
                 <el-form-item label="头像">
@@ -145,10 +155,10 @@
                         :action="axios.defaults.baseURL + '/dataSettings/addNewUserAvatar'"
                         :headers="getAuthHeaders()"
                         :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
                         :before-upload="beforeAvatarUpload"
                         :auto-upload="false"
                         :on-change="clickAvatarUpload"
+                        accept=".jpg, .png, .jpeg"
                     >
                         <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -180,6 +190,30 @@
                 <el-button type="primary" @click="ConfirmAuth">确 定</el-button>
             </span>
         </el-dialog>
+
+        <!-- 分配设备弹出框 -->
+        <el-dialog
+            title="分配设备"
+            :visible.sync="editVisibleDealing"
+            width="40%"
+            class="demo-ruleForm"
+            center
+            style="text-align: center;width: 100%"
+        >
+            <el-transfer
+                :titles="['可分配设备', '已分配设备']"
+                filterable
+                :filter-method="filterMethod"
+                filter-placeholder="请输入设备名称/id"
+                v-model="value"
+                :data="data"
+                style="text-align: left; display: inline-block;"
+            ></el-transfer>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="Cancel">取 消</el-button>
+                <el-button type="primary" @click="ConfirmDealing">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -188,6 +222,19 @@ export default {
     name: 'Authority',
     data() {
         return {
+            data: [],
+            value: [
+                {
+                    eq: '111115',
+                    key: 0,
+                    label: '设备6'
+                }
+            ],
+            filterMethod(query, item) {
+                return item.eq.indexOf(query) > -1 || item.label.indexOf(query) > -1;
+            },
+            dealingInfo: {},
+
             addNewUserId: '',
             roles: [],
             enterprises: [],
@@ -195,6 +242,7 @@ export default {
             tableData: [],
             editVisible: false,
             editVisibleAuth: false,
+            editVisibleDealing: false,
             pageTotal: 0,
             pageIndex: 1,
             pageSize: 10,
@@ -216,7 +264,45 @@ export default {
             isAdd: true,
             idx: 1,
             imageUrl: '',
-            url: ''
+            url: '',
+            rules: {
+                enterprise_id: [
+                    {
+                        required: true,
+                        message: '请选择企业',
+                        trigger: 'change'
+                    }
+                ],
+                username: [{ required: true, message: '请输入账号', trigger: 'blur' }, {}],
+                role: [
+                    {
+                        required: true,
+                        message: '请选择权限',
+                        trigger: 'change'
+                    }
+                ],
+                email: [
+                    {
+                        type: 'email',
+                        required: true,
+                        message: '请输入正确的email地址',
+                        trigger: 'blur'
+                    }
+                ],
+                phone: [
+                    {
+                        type: 'regexp',
+                        required: true,
+                        message: '请输入正确的手机号',
+                        trigger: 'blur'
+                    },
+                    {
+                        length: 11,
+                        message: '请输入正确的手机号1',
+                        trigger: 'blur'
+                    }
+                ]
+            }
         };
     },
     created() {
@@ -227,6 +313,7 @@ export default {
     computed: {},
 
     methods: {
+        //获取页面所需数据
         getData() {
             axios({
                 method: 'get',
@@ -243,6 +330,8 @@ export default {
                 })
                 .catch(err => {});
         },
+
+        //修改权限操作
         handleEdit(index, row) {
             this.editVisibleAuth = true;
             this.role.name = row.name;
@@ -250,15 +339,39 @@ export default {
             this.role.user_id = row.id;
             window.console.log(index, row);
         },
-        handlePageChange() {},
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
+
+        //权限弹窗确定按钮
+        ConfirmAuth() {
+            axios({
+                method: 'post',
+                url: '/dataSettings/changeAuth',
+                data: this.role
+            })
+                .then(res => {
+                    if (res.data.success) {
+                        this.$message({
+                            type: 'success',
+                            message: res.data.message
+                        });
+                        this.editVisibleAuth = false;
+                        this.getData();
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: res.data.message
+                        });
+                    }
+                })
+                .catch(err => {});
         },
+
         //弹窗取消按钮
         Cancel() {
             this.editVisible = false;
             this.editVisibleAuth = false;
+            this.editVisibleDealing = false;
         },
+
         //新增操作
         AddData() {
             this.editVisible = true;
@@ -271,6 +384,7 @@ export default {
                 email: '',
                 avatar: ''
             };
+            this.imageUrl = '';
         },
 
         //新增弹窗确定按钮
@@ -302,46 +416,55 @@ export default {
                 .catch(err => {});
         },
 
-        //权限弹窗确定按钮
-        ConfirmAuth() {
+        //分配设备按钮
+        handleDealing(index, row) {
+            window.console.log(index, row);
+            this.editVisibleDealing = true;
+            this.data = [];
+            this.value = [];
+            this.dealingInfo = row;
             axios({
-                method: 'post',
-                url: '/dataSettings/changeAuth',
-                data: this.role
+                method: 'get',
+                url: '/dataSettings/fetchDealing',
+                params: {
+                    id: row.id,
+                    eid: row.enterprise_id
+                }
             })
                 .then(res => {
-                    if (res.data.success) {
-                        this.$message({
-                            type: 'success',
-                            message: res.data.message
+                    res.data.all.forEach((item, index) => {
+                        this.data.push({
+                            label: item.device_name,
+                            key: item.id,
+                            eq: item.eq
                         });
-                        this.editVisibleAuth = false;
-                        this.getData();
-                    } else {
-                        this.$message({
-                            type: 'error',
-                            message: res.data.message
-                        });
-                    }
+                    });
+                    res.data.old.forEach((item, index) => {
+                        this.value.push(item.id);
+                    });
+                    console.log(res.data);
                 })
                 .catch(err => {});
         },
-        //根据权限角色筛选
-        filterRole(value, row) {
-            return row.name === value;
-        },
 
-        // 触发搜索按钮
-        handleSearch() {
-            this.tableData = this.tableData.filter((item, index) => {
-                // return item.Address == '竹林北路256号';
-                for (let key in item) {
-                    // window.console.log(i, item[i]);
-                    if ((item[key] + '').includes(this.keyword)) {
-                        return true;
-                    }
+        //分配弹窗确定
+        ConfirmDealing() {
+            console.log(this.dealingInfo);
+            axios({
+                method: 'post',
+                url: '/dataSettings/dealingDevice',
+                data: {
+                    ids: this.value,
+                    id: this.dealingInfo.id
                 }
-            });
+            })
+                .then(res => {
+                    if (res.data.success) {
+                        this.$message.success(res.data.message);
+                        this.editVisibleDealing = false;
+                    }
+                })
+                .catch(err => {});
         },
 
         // 触发重置按钮
@@ -379,6 +502,7 @@ export default {
                     console.log(err);
                 });
         },
+
         //重置密码
         handleReset(index, row) {
             this.$confirm('确定要重置吗？', '提示', {
@@ -405,15 +529,14 @@ export default {
                 });
         },
 
-        //
-        handleAvatarSuccess(res, file) {
-            this.imageUrl = URL.createObjectURL(file.raw);
-        },
+        //点击上传图片
         clickAvatarUpload(file) {
             console.log(file);
             this.imageUrl = URL.createObjectURL(file.raw);
             this.newUser.avatar = file.name;
         },
+
+        //文件上传前
         beforeAvatarUpload(file) {
             const isJPG = file.type === 'image/jpeg';
             const isLt2M = file.size / 1024 / 1024 < 2;
@@ -425,6 +548,29 @@ export default {
                 this.$message.error('上传头像图片大小不能超过 2MB!');
             }
             return isJPG && isLt2M;
+        },
+
+        //根据权限角色筛选
+        filterRole(value, row) {
+            return row.name === value;
+        },
+
+        // 触发搜索按钮
+        handleSearch() {
+            this.tableData = this.tableData.filter((item, index) => {
+                // return item.Address == '竹林北路256号';
+                for (let key in item) {
+                    // window.console.log(i, item[i]);
+                    if ((item[key] + '').includes(this.keyword)) {
+                        return true;
+                    }
+                }
+            });
+        },
+
+        handlePageChange() {},
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
         }
     }
 };
@@ -485,5 +631,8 @@ export default {
     width: 178px;
     height: 178px;
     display: block;
+}
+.demo-ruleForm .el-dialog__body {
+    text-align: center;
 }
 </style>

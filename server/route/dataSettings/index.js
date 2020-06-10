@@ -244,6 +244,8 @@ module.exports = app => {
 
 
 
+    //用户管理页面-----------------------------------------------------------------------------
+
     //获取用户表信息
     router.get('/UserInfo', authMiddle, async (req, res) => {
         assert(req.user.role < 3, 403, '您无权访问')
@@ -436,6 +438,62 @@ module.exports = app => {
         results.results = await connection(sql)
         results.success = true
         results.message = '数据修改成功'
+        res.send(results)
+
+    })
+
+    //获取分配设备信息
+    router.get('/fetchDealing', authMiddle, async (req, res) => {
+        assert(req.user.role < 3, 403, '没有权限')
+
+        console.log(req.query)
+        let {
+            id,
+            eid
+        } = req.query
+        let results = {}
+        let sql = 'select * from user_device where user_id =' + id
+        results.with = await connection(sql)
+        let oldId = []
+        results.with.forEach(item => {
+            oldId.push(item.device_id)
+        })
+
+        sql = 'select * from device where is_deleted = 0 and enterprise_id = ' + eid
+        results.all = await connection(sql)
+        if (oldId.length) {
+            sql = 'select * from device where id in (' + oldId + ') and  is_deleted = 0'
+            console.log(sql)
+            results.old = await connection(sql)
+        } else {
+            results.old = []
+        }
+        // console.log(results);
+        res.send(results)
+    })
+
+    //获得修改设备权限的值
+    router.post('/dealingDevice', authMiddle, async (req, res) => {
+        assert(req.user.role < 3, 403, '没有权限')
+
+        console.log(req.body)
+        let {
+            ids,
+            id
+        } = req.body
+        let sql = 'delete from user_device where user_id = ' + id
+        await connection(sql)
+        if (ids.length) {
+            ids.forEach(async (item) => {
+                sql = `insert into user_device (user_id, device_id) values (${id}, ${item})`
+                console.log(sql);
+                await connection(sql)
+            })
+        }
+        let results = {
+            success: true,
+            message: '分配成功'
+        }
         res.send(results)
 
     })
