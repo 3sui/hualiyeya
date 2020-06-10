@@ -1,8 +1,8 @@
 <template>
   <div class="login">
     <div class="title">登录</div>
-    <van-divider style="margin:0" />
     <div class="content">
+      <van-divider style="margin:0" />
       <div class="vactor">
         <div class="icon_container">
           <van-icon class="icon_vactor" size="5rem" color="#CCCCCC" name="manager" />
@@ -11,7 +11,7 @@
       <van-form @submit="onSubmit">
         <van-field
           left-icon="phone"
-          v-model="username"
+          v-model="query.username"
           name="用户名"
           label="用户名"
           placeholder="用户名"
@@ -19,16 +19,16 @@
         />
         <van-field
           left-icon="lock"
-          v-model="password"
+          v-model="query.password"
           type="password"
           name="密码"
           label="密码"
           placeholder="密码"
           :rules="[{ required: true, message: '请填写密码' }]"
         />
-         
+
         <div style="margin: 16px;">
-          <van-button round block type="info" native-type="submit">登录</van-button>
+          <van-button round block type="info" native-type="submitForm">登录</van-button>
         </div>
       </van-form>
     </div>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { Form,Field , Button, Icon, Divider } from "vant";
+import { Form, Field, Button, Icon, Divider } from "vant";
 export default {
   name: "Login",
   components: {
@@ -44,23 +44,51 @@ export default {
     [Button.name]: Button,
     [Icon.name]: Icon,
     [Divider.name]: Divider,
-    [Field.name]:Field 
+    [Field.name]: Field
+    // [Toast.name]:Toast
   },
   data() {
     return {
-      username: "",
-      password: ""
+      query: {
+        username: "",
+        password: ""
+      }
     };
   },
   methods: {
-    onSubmit(values) {
-      console.log("submit", values);
+    onSubmit() {
+      if (this.query.username && this.query.password) {
+        axios({
+          method: "post",
+          url: "/mobilelogin",
+          data: this.query
+        })
+          .then(res => {
+            if (res.data.length) {
+              // console.log(res.data);
+              this.$router.push("/DeviceManage");
+             
+            } else {
+              this.query = {};
+              return;
+            }
+          })
+          .catch(err => {
+            window.console.log(err);
+          });
+      } else {
+        this.$toast("不能为空");
+      }
     }
   }
 };
 </script>
 
-<style>
+<style scoped>
+.login {
+  height: 100vh;
+}
+
 .title {
   text-align: center;
   line-height: 8vh;
@@ -75,9 +103,9 @@ export default {
 }
 
 .vactor {
-  padding: 30% 25%;
-  margin: auto;
-  width: 26%;
+  padding: 30% 0;
+
+  height: 6rem;
 
   /* border-radius: 50%;
   background-color: white; */
@@ -86,9 +114,12 @@ export default {
 .icon_container {
   border-radius: 50%;
   background-color: white;
+  width: 6rem;
+  height: 6rem;
+  margin: auto;
 }
 
-.icon_vactor{
-  margin-left:0.5rem ;
+.icon_vactor {
+  margin-left: 0.5rem;
 }
 </style>

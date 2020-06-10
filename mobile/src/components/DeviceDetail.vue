@@ -145,11 +145,13 @@ export default {
 <style >
 .devicemanage {
   background-color: #f0f0f0;
+  /* height: 95vh; */
+   /* padding: 0 0 2rem 0;  */
 }
 .header {
   background-color: white;
   height: 8vh;
-  margin-bottom: 0.5vh;
+  margin-bottom: 0.5rem;
 }
 .title {
   font-size: 1.2rem;

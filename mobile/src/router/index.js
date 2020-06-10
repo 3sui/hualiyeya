@@ -65,6 +65,14 @@ const routes = [{
       meta: {
         title: '新建工单'
       }
+    },
+    {
+      path: '/Settings',
+      name: 'Settings',
+      component: () => import('../components/Settings'),
+      meta: {
+        title: '设置'
+      }
     }
 
   ]

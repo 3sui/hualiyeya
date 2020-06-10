@@ -60,7 +60,13 @@ export default {
           index: "NewRepairRecord",
           title: "新建工单",
           icon: "plus",
-          show: false
+          show: true
+        },
+         {
+          index: "Settings",
+          title: "设置",
+          icon: "setting-o",
+          show: true
         }
       ]
     };
