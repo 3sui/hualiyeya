@@ -1,9 +1,9 @@
 <template>
-  <div class="newrepairrecord">
+  <div class="editrepairrecord">
     <div class="header">
       <van-row>
         <van-col span="12">
-          <span class="title">新建工单</span>
+          <span class="title">工单编辑</span>
         </van-col>
         <van-col span="3" offset="9">
           <span class="alarm">
@@ -18,7 +18,7 @@
         readonly
         clickable
         name="picker"
-        :value="enterprise_id"
+        :value="enterprise"
         label="企业名称"
         placeholder="点击选择企业名称"
         @click="showPicker_enterprise = true"
@@ -26,10 +26,9 @@
       <van-popup v-model="showPicker_enterprise" position="bottom">
         <van-picker
           show-toolbar
-          :columns="enterprises"
+          :columns="enterpriselist"
           @confirm="onConfirm"
           @cancel="showPicker_enterprise = false"
-          @change="onChange"
         />
       </van-popup>
       <van-field
@@ -130,7 +129,7 @@
       </van-popup>
 
       <van-field
-        class="area"
+      class="area"
         v-model="cause"
         rows="2"
         autosize
@@ -142,7 +141,7 @@
       />
 
       <van-field
-        class="area"
+       class="area"
         v-model="methods"
         rows="2"
         autosize
@@ -156,7 +155,7 @@
         <van-button round block type="info" native-type="submit">提交</van-button>
         <!-- <van-button round block type="default" native-type="cancel">返回</van-button> -->
       </div>
-      <div class="sub">
+       <div class="sub">
         <!-- <van-button round block type="info" native-type="submit">提交</van-button> -->
         <van-button round block type="default" native-type="cancel" @click="back">返回</van-button>
       </div>
@@ -192,7 +191,7 @@ export default {
   },
   data() {
     return {
-      enterprises: [],
+      enterpriselist: ["华立液压", "远方动力", "天地自动化", "阿里巴巴"],
       showPicker_enterprise: false,
       eqlist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
       showPicker_eq: false,
@@ -208,81 +207,31 @@ export default {
       statelist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
       showPicker_state: false,
 
-      enterprise_id: "",
-      query: {
-        device_id: "",
-        type: "",
-        phenomenon: "",
-        repair_person: "",
-        repair_person_phone: "",
-        date: "",
-        state: "",
-
-        cause: "",
-        methods: ""
-      }
+      enterprise: "",
+      eq: "",
+      fault_type: "",
+      phenomenon: "",
+      person: "",
+      time: "",
+      state: "",
+      tel: "",
+      cause: "",
+      methods: ""
     };
-  },
-  created() {
-    this.getEnterprises();
-    this.getDevices();
   },
   methods: {
     onSubmit() {},
-    //选择确认
-    onConfirm(value, index) {
-console.log(value)
-console.log(index)
-      
-      // Toast(`当前值：${value}, 当前索引：${index}`);
-    },
 
-    //选择变更
-
-    onChange(value, index) {
-      Toast(`当前值：${value}, 当前索引：${index}`);
-    },
-    //返回
-    back() {
-      this.$router.push("/DeviceManage");
-    },
-
-    //获取企业选项
-    getEnterprises() {
-      this.$axios
-        .get("/dataSettings/Enterprise")
-        .then(res => {
-          console.log(res.data);
-          let list = res.data;
-          list.forEach(element => {
-            this.enterprises.push(element.enterprise_name);
-          });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
-    //获取设备ID
-    getDevices(value) {
-      // console.log(value);
-
-      this.$axios
-        .post("/Devices", { enterprise_id: value })
-        .then(res => {
-          console.log(res);
-          this.devices = res.data;
-          console.log(this.devices);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    onConfirm() {},
+     back(){
+      this.$router.push('/DeviceManage')
     }
   }
 };
 </script>
 
 <style scoped>
-.newrepairrecord {
+.editrepairrecord {
   background-color: #f0f0f0;
   padding: 0 0 1rem 0;
 }
@@ -306,11 +255,12 @@ console.log(index)
   color: #1989fa;
 }
 
-.area {
-  margin: 1rem 0;
+.area{
+    margin: 1rem 0 ;
+    
 }
 
-.sub {
+.sub{
   width: 80%;
   margin: 1rem auto;
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div id="conten-box">
+    <div id="content-box">
       <router-view></router-view>
     </div>
     <Menu></Menu>
@@ -13,7 +13,7 @@ import Menu from "./Menu.vue";
 export default {
   name: "Home",
   components: {
-    // Header,
+    
     Menu
   }
 };
@@ -21,7 +21,9 @@ export default {
 
 <style>
 
-
+.home{
+  background: #f0f0f0;
+}
 
 
 .content-box {

@@ -12,6 +12,7 @@ module.exports = option => {
     const assert = require('http-assert')
 
     return async (req, res, next) => {
+        
         let token = req.headers.authorization.split(' ').pop()
         //token不存在
         assert(token, 401, '请登录')

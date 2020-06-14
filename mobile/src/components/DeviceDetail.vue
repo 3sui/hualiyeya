@@ -49,7 +49,7 @@
               <div class="point-detail">
                   <p><van-icon color="#E54323" name="points" size="1rem" /> <span class="point-name">{{point.point_name}}</span></p>
                    <p><span class="limit"><van-icon color="blue" size="1rem" name="arrow-up" /> 上限值</span>{{point.up_limit}}</p>
-                    <p><span class="limit"><van-icon color="blue" size="1rem"  name="arrow-down" /> 下限值</span>{{point.dowm_limit}}</p>
+                    <p><span class="limit"><van-icon color="blue" size="1rem"  name="arrow-down" /> 下限值</span>{{point.down_limit}}</p>
               </div>
           </van-col>
           <van-col span="14">
@@ -61,8 +61,8 @@
           </van-col>
         </van-row>
       </div>
-
-      <van-button type="info" class="look" round  block>查看设备手册</van-button>
+<div class="sub"><van-button type="info" class="look" round  block>查看设备手册</van-button></div>
+      
     </div>
   </div>
 </template>
@@ -102,7 +102,7 @@ export default {
           id:1,
           point_name:'电压',
           up_limit:24,
-          dowm_limit:0,
+          down_limit:0,
           current:12,
           timestemp:'2020年6月9日 15:30:30',
       },
@@ -110,7 +110,7 @@ export default {
           id:1,
           point_name:'电压',
           up_limit:24,
-          dowm_limit:0,
+          down_limit:0,
           current:12,
           timestemp:'2020年6月9日 15:30:30',
       },
@@ -118,14 +118,14 @@ export default {
           id:1,
           point_name:'电压',
           up_limit:24,
-          dowm_limit:0,
+          down_limit:0,
           current:12,
           timestemp:'2020年6月9日 15:30:30',
       },{
           id:1,
           point_name:'电压',
           up_limit:24,
-          dowm_limit:0,
+          down_limit:0,
           current:12,
           timestemp:'2020年6月9日 15:30:30',
       }]
@@ -237,7 +237,7 @@ export default {
 .point-item
 {background: white;
 border-bottom: 1px solid #e4e4e4;
-padding: 1rem 0.5rem;
+padding: 1rem 1rem;
 }
 
 .point-detail p{
@@ -275,7 +275,13 @@ padding: 1rem 0.5rem;
     color: black;
     font-weight: bold;
 }
+
 .look{
     margin: 1rem 0;
+}
+
+.sub{
+  width: 80%;
+  margin: auto;
 }
 </style>

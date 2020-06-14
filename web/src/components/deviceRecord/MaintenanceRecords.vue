@@ -94,7 +94,7 @@
                 <el-table-column prop="cause" label="原因"></el-table-column>
 
                 <el-table-column prop="repair_person" label="维修人"></el-table-column>
-                <el-table-column prop="created_time" label="维修时间123">
+                <el-table-column prop="created_time" label="维修时间">
                     <template
                         slot-scope="scope"
                     >{{scope.row.created_time | convertTime('YYYY-MM-DD HH:mm')}}</template>

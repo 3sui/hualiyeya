@@ -1,14 +1,12 @@
 <template>
   <div class="menu">
-    <van-tabbar v-model="active" >
+    <van-tabbar v-model="active" fixed>
       <van-tabbar-item
         v-for="item,index in items"
-     
         :key="index"
         :icon="item.icon"
         :to="item.index"
         v-if="item.show"
-        
       >{{item.title}}</van-tabbar-item>
       <!-- <van-tabbar-item icon="bell" v-if="true">设备报警</van-tabbar-item>
       <van-tabbar-item icon="notes-o" v-if="true">维修记录</van-tabbar-item>
@@ -25,15 +23,15 @@ export default {
     [TabbarItem.name]: TabbarItem,
     [Notify.name]: Notify
   },
-  methods: {
-   
-  },
+
   watch: {
     //监听路由变化
-    // $route(to) {
-    //   this.tabbarActive(to.index);
-    // }
+    $route(to) {
+      this.tabbarActive(to.index);
+    }
   },
+
+ 
   data() {
     return {
       active: 0,
@@ -62,7 +60,7 @@ export default {
           icon: "plus",
           show: true
         },
-         {
+        {
           index: "Settings",
           title: "设置",
           icon: "setting-o",
@@ -71,14 +69,14 @@ export default {
       ]
     };
   },
-  methods:{
-    // tabbarActive(path) {
-    //   var index = this.tabbars.map(item => item.path).indexOf(path);
-    //   if (index != -1) {
-    //     this.active = index;
-    //   }
-    // }
-
+  methods: {
+    tabbarActive(path) {
+      var index = this.items.map(item => item.index).indexOf(path);
+      if (index != -1) {
+        this.active = index;
+      }
+    },
+    
   }
 };
 </script>
