@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-10 10:04:08
+ * @LastEditTime: 2020-06-14 10:31:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -178,7 +178,12 @@
                             type="text"
                             icon="el-icon-view"
                             @click="handleDetail(scope.$index, scope.row)"
-                        >详情</el-button>
+                        >设备详情</el-button>
+                        <el-button
+                            type="text"
+                            icon="el-icon-setting"
+                            @click="handleSetting(scope.$index, scope.row)"
+                        >测点配置</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-delete"
@@ -201,18 +206,57 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+        <el-dialog title="编辑设备" :visible.sync="editVisibleDevice" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item label="设备名称">
+                    <el-input v-model="form.device_name"></el-input>
                 </el-form-item>
-                <el-form-item label="地址">
+                <el-form-item label="地址" prop="address">
                     <el-input v-model="form.address"></el-input>
+                </el-form-item>
+                <el-form-item label="设备厂家" prop="device_supplier">
+                    <el-input v-model="form.device_supplier"></el-input>
+                </el-form-item>
+                <el-form-item label="设备描述" prop="device_description">
+                    <el-input v-model="form.device_description"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
+                <el-button @click="editVisibleDevice = false">取 消</el-button>
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
+            </span>
+        </el-dialog>
+
+        <!-- 配置测点弹出框 -->
+        <el-dialog title="配置测点" :visible.sync="editVisibleSetting" width="50%">
+            <el-form ref="setting" :model="formSetting" label-width="120px">
+                <div v-for="(item, index) in formSetting.point" :key="index" class="point">
+                    <p class="point-title">测点{{index +1}}</p>
+                    <el-form-item label="测点标识号">
+                        <el-input v-model="item.cp_id" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="测点名称">
+                        <el-input v-model="item.cp_name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="测点单位">
+                        <el-input v-model="item.unit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="计算系数值">
+                        <el-input v-model="item.k"></el-input>
+                    </el-form-item>
+                    <el-form-item label="上限值">
+                        <el-input v-model="item.limit_up"></el-input>
+                    </el-form-item>
+                    <el-form-item label="下限值">
+                        <el-input v-model="item.limit_down"></el-input>
+                    </el-form-item>
+                </div>
+                <el-button style="width: 100%" type="button" @click="addNewPoint">添加</el-button>
+                <el-button style="width: 100%;margin:0" type="button" @click="deletePoint">删除</el-button>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editVisibleSetting = false">取 消</el-button>
+                <el-button type="primary" @click="saveSetting">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -220,7 +264,7 @@
 
 <script>
 export default {
-    name: 'basetable',
+    name: 'DeviceList',
     data() {
         return {
             pickerOptions: {
@@ -269,9 +313,15 @@ export default {
             tableData: [], //设备列表的数据
             multipleSelection: [],
             delList: [],
-            editVisible: false,
+            editVisibleDevice: false,
+            editVisibleSetting: false,
             pageTotal: 0,
             form: {},
+            formSetting: {
+                point: [],
+                eq: ''
+            }, //配置测点数据
+
             idx: -1,
             id: -1
         };
@@ -351,7 +401,7 @@ export default {
             this.$router.push({
                 path: './ProductDetails',
                 query: {
-                    id: row.DeviceID
+                    id: row.id
                 }
             });
         },
@@ -397,16 +447,102 @@ export default {
 
         // 编辑操作
         handleEdit(index, row) {
+            window.console.log(row);
             this.idx = index;
             this.form = row;
-            this.editVisible = true;
+            this.editVisibleDevice = true;
         },
         // 保存编辑
         saveEdit() {
-            this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+            axios({
+                method: 'post',
+                url: '/device/saveEdit',
+                data: this.form
+            })
+                .then(res => {
+                    if (res.data.success) {
+                        this.editVisibleDevice = false;
+                        this.$message.success(res.data.message);
+                        this.getData();
+                    }
+                })
+                .catch(err => {});
         },
+        // 配置测点
+        handleSetting(index, row) {
+            window.console.log(row.eq);
+            this.editVisibleSetting = true;
+            this.formSetting.eq = row.eq;
+            axios({
+                method: 'get',
+                url: '/device/fetchSetting',
+                params: {
+                    eq: row.eq
+                }
+            })
+                .then(res => {
+                    window.console.log(this.formSetting);
+
+                    console.log(res.data);
+                    if (res.data.success) {
+                        this.$set(this.formSetting, 'point', res.data.data);
+                        window.console.log(this.formSetting);
+                    }
+                    window.console.log(this.formSetting);
+                })
+                .catch(err => {});
+        },
+
+        //
+        addNewPoint() {
+            if (this.formSetting.point.length > 5) {
+                this.$message.error('最多创建6个测点');
+                return;
+            }
+            this.formSetting.point.push({
+                cp_id: 'cp' + (this.formSetting.point.length + 1),
+                cp_name: '',
+                unit: '',
+                k: '',
+                limit_up: '',
+                limit_down: ''
+            });
+        },
+        deletePoint() {
+            if (this.formSetting.point.length == 1) {
+                return;
+            }
+            this.formSetting.point.pop();
+        },
+
+        //确认修改配置
+        saveSetting() {
+            console.log(this.formSetting);
+            this.$confirm('是否确认修改?', '提示', {
+                type: 'warning'
+            })
+                .then(() => {
+                    axios({
+                        method: 'post',
+                        url: '/device/saveSetting',
+                        data: this.formSetting
+                    })
+                        .then(res => {
+                            window.console.log(res.data);
+                            if (res.data.success) {
+                                this.$message.success(res.data.message);
+                                this.formSetting = false;
+                            }
+                        })
+                        .catch(err => {
+                            throw err;
+                        });
+                })
+                .catch(err => {
+                    throw err;
+                });
+        },
+
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);

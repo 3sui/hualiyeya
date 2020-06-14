@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-03 10:44:43
- * @LastEditTime: 2020-06-08 16:20:42
+ * @LastEditTime: 2020-06-10 19:21:34
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\middleware\auth.js
@@ -12,6 +12,8 @@ module.exports = option => {
     const assert = require('http-assert')
 
     return async (req, res, next) => {
+        assert(req.headers.authorization, 401, '请登录')
+
         let token = req.headers.authorization.split(' ').pop()
         //token不存在
         assert(token, 401, '请登录')

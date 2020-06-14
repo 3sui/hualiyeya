@@ -41,7 +41,7 @@ export default new Router({
                 },
                 {
                     path: '/productDetails',
-                    component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/view/ProductDetails.vue'),
+                    component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/deviceRecord/ProductDetails.vue'),
                     meta: {
                         title: '设备详情',
                         auth: []
@@ -53,6 +53,14 @@ export default new Router({
                     component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/deviceRecord/AddNewProduct.vue'),
                     meta: {
                         title: '添加设备',
+                        auth: [3]
+                    }
+                },
+                {
+                    path: '/deviceSettings',
+                    component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/deviceRecord/DeviceSettings.vue'),
+                    meta: {
+                        title: '测点配置',
                         auth: [3]
                     }
                 },
@@ -79,14 +87,14 @@ export default new Router({
                 },
                 {
                     path: '/EquipmentMonitoring',
-                    component: () => import( /* webpackChunkName: "EquipmentMonitoring" */ '../components/view/EquipmentMonitoring.vue'),
+                    component: () => import( /* webpackChunkName: "EquipmentMonitoring" */ '../components/maintain/EquipmentMonitoring.vue'),
                     meta: {
                         title: '设备监控'
                     }
                 },
                 {
                     path: '/MeasuringPointDetails',
-                    component: () => import( /* webpackChunkName: "MeasuringPointDetails" */ '../components/view/MeasuringPointDetails.vue'),
+                    component: () => import( /* webpackChunkName: "MeasuringPointDetails" */ '../components/maintain/MeasuringPointDetails.vue'),
                     meta: {
                         title: '测点详情'
                     }

@@ -1,0 +1,164 @@
+<!--
+ * @Author: your name
+ * @Date: 2020-06-12 09:13:08
+ * @LastEditTime: 2020-06-12 15:05:37
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \web\src\components\deviceRecord\DeviceSettings.vue
+--> 
+<template>
+    <div>
+        <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>
+                    <i class="el-icon-lx-calendar"></i> 设备档案
+                </el-breadcrumb-item>
+                <el-breadcrumb-item>测点配置</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div class="container">
+            <div class="form-box">
+                <el-form ref="form" :model="form" label-width="120px">
+                    <div v-for="(item, index) in form.point" :key="index" class="point">
+                        <p class="point-title">测点{{index +1}}</p>
+                        <el-form-item label="测点标识号">
+                            <el-input v-model="item.cp_id" disabled></el-input>
+                        </el-form-item>
+                        <el-form-item label="测点名称">
+                            <el-input v-model="item.cp_name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="测点单位">
+                            <el-input v-model="item.unit"></el-input>
+                        </el-form-item>
+                        <el-form-item label="计算系数值">
+                            <el-input v-model="item.k"></el-input>
+                        </el-form-item>
+                        <el-form-item label="上限值">
+                            <el-input v-model="item.limit_up"></el-input>
+                        </el-form-item>
+                        <el-form-item label="下限值">
+                            <el-input v-model="item.limit_down"></el-input>
+                        </el-form-item>
+                    </div>
+                    <div style="text-align: right">
+                        <el-button @click="submitForm('form')">提交</el-button>
+                        <el-button @click="addNewPoint">新增</el-button>
+                        <el-button @click="deletePoint">删除</el-button>
+                    </div>
+                </el-form>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'AddNewProduct',
+    data() {
+        return {
+            // options: regionData,
+            form: {
+                point: [
+                    {
+                        cp_id: 'cp1',
+                        cp_name: '',
+                        unit: '',
+                        k: '',
+                        limit_up: '',
+                        limit_down: ''
+                    }
+                ],
+                eq: ''
+            }
+        };
+    },
+    created() {
+        // this.fetchCaseInfo();
+    },
+    methods: {
+        addNewPoint() {
+            if (this.form.point.length > 5) {
+                this.$message.error('最多创建6个测点');
+                return;
+            }
+            this.form.point.push({
+                cp_id: 'cp' + (this.form.point.length + 1),
+                cp_name: '',
+                unit: '',
+                k: '',
+                limit_up: '',
+                limit_down: ''
+            });
+        },
+        deletePoint() {
+            if (this.form.point.length == 1) {
+                return;
+            }
+            this.form.point.pop();
+        },
+        submitForm(formName) {
+            this.form.eq = this.$route.query;
+            window.console.log(this.form.eq);
+            // this.$refs[formName].validate(valid => {
+            //     if (valid) {
+            //         alert('submit!');
+            //     } else {
+            //         console.log('error submit!!');
+            //         return false;
+            //     }
+            // });
+            axios({
+                method: 'post',
+                url: '/device/settings',
+                data: this.form
+            })
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.success) {
+                        this.$message.success(res.data.message);
+                        this.$router.push('/deviceList');
+                    }
+                })
+                .catch(err => {});
+        }
+    }
+};
+</script>
+<style scoped>
+.form-box {
+    margin: 0 auto;
+}
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+}
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+}
+.point {
+    padding: 20px 25px 20px 0;
+    border: 1px solid #ebeef5;
+    border-radius: 4px;
+}
+.point-title {
+    font-size: 16px;
+    margin: 10px 0;
+    padding-left: 20px;
+}
+</style>

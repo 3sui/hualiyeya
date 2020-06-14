@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 14:19:13
- * @LastEditTime: 2020-06-10 17:29:58
+ * @LastEditTime: 2020-06-12 16:01:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\AddNewProduct.vue
@@ -28,7 +28,7 @@
                     <el-form-item label="设备名称" prop="device_name">
                         <el-input v-model="form.device_name" placeholder="例: 设备一"></el-input>
                     </el-form-item>
-                    <el-form-item label="设备型号" prop="device_description">
+                    <el-form-item label="设备型号" prop="device_model">
                         <el-input v-model="form.device_model" placeholder="例: iphone11"></el-input>
                     </el-form-item>
                     <el-form-item label="型号描述" prop="device_description">
@@ -82,22 +82,20 @@
                     <el-form-item label="上传图片">
                         <el-upload
                             multiple
-                            :data="newDeviceId"
+                            :data="{id: newDeviceId,
+                            type: 'img'}"
                             :headers="getAuthHeaders()"
                             class="upload-demo"
                             ref="uploadImg"
                             :action="axios.defaults.baseURL + '/device/upload'"
-                            :on-remove="handleRemove"
                             :file-list="form.fileListImg"
                             list-type="picture-card"
                             :limit="6"
-                            :on-exceed="handleExceed"
+                            :on-exceed="handleExceed6"
                             :before-remove="beforeRemove"
                             :before-upload="beforeAvatarUpload"
-                            :on-success="handleAvatarSuccess"
                             accept=".png, .jpg, .jpeg"
                             :auto-upload="false"
-                            :on-change="clickImgUpload"
                         >
                             <i class="el-icon-plus"></i>
                             <div
@@ -111,18 +109,19 @@
                     </el-form-item>
                     <el-form-item label="上传文档">
                         <el-upload
+                            multiple
+                            :data="{id: newDeviceId,
+                            type: 'word'}"
+                            :headers="getAuthHeaders()"
                             class="upload-demo"
                             ref="uploadWord"
-                            :action="axios.defaults.baseURL + '/upload'"
-                            :on-preview="handlePreview"
-                            :on-remove="handleRemove"
+                            :action="axios.defaults.baseURL + '/device/upload'"
                             :file-list="form.fileListWord"
                             list-type="text"
                             :limit="3"
-                            :on-exceed="handleExceed"
+                            :on-exceed="handleExceed3"
                             :before-remove="beforeRemove"
                             :before-upload="beforeAvatarUpload"
-                            :on-success="handleAvatarSuccess"
                             accept=".pdf, .doc, .docx"
                             :auto-upload="false"
                         >
@@ -169,7 +168,7 @@ export default {
             user_e: '',
             dialogImageUrl: '',
             dialogVisible: false,
-            newDeviceId: { id: 1 }
+            newDeviceId: 1
         };
     },
     created() {
@@ -197,46 +196,60 @@ export default {
             window.console.log(e);
         },
 
+        //提交表单
         onSubmit() {
-            // let newDeviceId;
-            // axios({
-            //     method: 'post',
-            //     url: '/device/addNewProduct',
-            //     data: this.form
-            // })
-            //     .then(res => {
-            //         window.console.log(res.data);
-            //         if (res.data.success) {
-            //             this.$message.success(res.data.message);
-            //             newDeviceId = res.data.insertId;
-            //             this.$refs.form.resetFields();
-            //         }
-            //     })
-            //     .then(res => {
-            //         window.console.log(res.data);
-            //     })
-            //     .catch(err => {});
-            this.$refs.uploadImg.submit();
-        },
-        //文件列表移除文件时的钩子
-        handleRemove(file, fileList) {
             axios({
-                url: '/remove',
                 method: 'post',
-                data: {
-                    file: file
-                }
+                url: '/device/addNewProduct',
+                data: this.form
             })
                 .then(res => {
+                    console.log(1);
+
                     window.console.log(res.data);
+                    if (res.data.success) {
+                        this.$message.success(res.data.message);
+                        this.newDeviceId = res.data.insertId;
+                        this.$refs.form.resetFields();
+                    }
+                })
+                .then(() => {
+                    console.log(2);
+
+                    this.$refs.uploadImg.submit();
+                    this.$refs.uploadWord.submit();
+                    // window.console.log(res.data);
+                })
+                .then(() => {
+                    console.log(this.newDeviceId);
+                    this.$router.push({
+                        path: '/deviceSettings',
+                        query: {
+                            id: this.newDeviceId
+                        }
+                    });
+                    // this.$refs.uploadImg.clearFiles();
+                    // this.$refs.uploadWord.clearFiles();
                 })
                 .catch(err => {});
-            window.console.log(file, fileList);
         },
+
+        //取消
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+            this.$refs.uploadImg.clearFiles();
+            this.$refs.uploadWord.clearFiles();
+        },
+
         //文件超出个数限制时的钩子
-        handleExceed(files, fileList) {
+        handleExceed6(files, fileList) {
             this.$message.warning(
-                `当前限制选择 6 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`
+                `当前限制选择 6 个图片，本次选择了 ${files.length} 个图片，共选择了 ${files.length + fileList.length} 个图片`
+            );
+        },
+        handleExceed3(files, fileList) {
+            this.$message.warning(
+                `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`
             );
         },
         //删除文件之前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止删除。
@@ -244,21 +257,18 @@ export default {
             return this.$confirm(`确定移除 ${file.name}？`);
         },
         //文件上传成功时的钩子
-        handleAvatarSuccess(response, file, fileList) {
-            window.console.log(response, file, fileList);
-            this.form.fileListImg = fileList;
-        },
+        // handleAvatarSuccess(response, file, fileList) {
+        //     window.console.log(response, file, fileList);
+        //     this.form.fileListImg = fileList;
+        // },
         beforeAvatarUpload(file) {
             const isLt2M = file.size / 1024 / 1024 < 2;
 
             if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!');
+                this.$message.error('上传图片,文件大小不能超过 2MB!');
             }
             return isLt2M;
-        },
-
-        //文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
-        clickImgUpload(file, fileList) {}
+        }
     }
 };
 </script>

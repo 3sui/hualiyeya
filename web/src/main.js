@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-04-28 15:28:09
- * @LastEditTime: 2020-06-08 16:23:14
+ * @LastEditTime: 2020-06-14 17:46:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\main.js
@@ -76,7 +76,9 @@ router.beforeEach((to, from, next) => {
 Vue.filter('convertTime', function (data, formatStr) {
     return Moment(data, "YYYY-MM-DD HH:mm:ss").format(formatStr);
 });
-
+Vue.filter('convertTime2', function (data, formatStr) {
+    return Moment(+data).format(formatStr)
+})
 Vue.mixin({
     methods: {
         getAuthHeaders() {
