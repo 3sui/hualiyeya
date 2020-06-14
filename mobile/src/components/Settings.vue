@@ -2,15 +2,20 @@
   <div class="settings">
     <div class="login">
       <div class="title">设置</div>
-    
-      <div class="content"> 
-           <van-divider style="margin:0" />
+
+      <div class="content">
+        <van-divider style="margin:0" />
         <div class="vactor">
           <div class="icon_container">
-            <van-icon class="icon_vactor" size="5rem" color="#CCCCCC" name="manager" />
+            <van-image round width="6rem" height="6rem" :src="userAvatar" />
+            <!-- <van-icon class="icon_vactor" size="5rem" color="#CCCCCC" name="manager" /> -->
           </div>
         </div>
-        <van-button round block type="danger" class="quit" @click="quit">退出</van-button>
+
+        <div class="user">{{user}}</div>
+        <div class="sub">
+          <van-button round block type="danger" class="quit" @click="quit">退出</van-button>
+        </div>
       </div>
     </div>
   </div>
@@ -18,19 +23,38 @@
 
 
 <script>
-import { Button, Icon, Divider } from "vant";
+import imgUrl from "../assets/img/img.jpg";
+import { Button, Icon, Divider, Image as VanImage } from "vant";
 export default {
   name: "Settings",
   components: {
     [Button.name]: Button,
     [Icon.name]: Icon,
-    [Divider.name]: Divider
+    [Divider.name]: Divider,
+    [VanImage.name]: VanImage
   },
-  methods:{
-    quit(){
+  data() {
+    return {
+      user: ""
+    };
+  },
+  computed: {
+    userAvatar() {
+      let userAvatar =
+        axios.defaults.baseURL.slice(0, -4) + localStorage.getItem("avatar");
+      // console.log(localStorage.avatar == null);
+      // console.log(imgUrl);
+      console.log(userAvatar);
+      return localStorage.avatar == null ? imgUrl : userAvatar;
+    }
+  },
+  mounted() {
+    this.user = localStorage.ms_username;
+  },
+  methods: {
+    quit() {
       // console.log();
-      
-      this.$router.push('/Login')
+      this.$router.push("/Login");
     }
   }
 };
@@ -51,30 +75,39 @@ export default {
   background-color: #f0f0f0;
   width: 100%;
   height: 87vh;
- 
 }
 .vactor {
-  padding: 30% 0;
+  padding: 30% 0 10% 0;
 
   height: 6rem;
-
-  
 }
 
 .icon_container {
-  border-radius: 50%;
-  background-color: white;
+  /* border-radius: 50%; */
+  /* background-color: white; */
   width: 6rem;
   height: 6rem;
   margin: auto;
 }
 
-.icon_vactor {
+/* .icon_vactor {
   margin-left: 0.5rem;
+} */
+
+.quit {
+  width: 95%;
+  margin: 20% auto 0 auto;
 }
 
-.quit{
-    width: 95%;
-    margin: auto;
+.user {
+  text-align: center;
+  font-size: 1rem;
+  color: #cccccc;
+  /* margin: 1rem; */
+}
+
+.sub{
+  width: 80%;
+  margin: auto;
 }
 </style>

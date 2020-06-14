@@ -49,6 +49,15 @@ export default new Router({
                     }
                 },
                 {
+                    path: '/DevicePointSet',
+                    component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/deviceRecord/DevicePointSet.vue'),
+                    meta: {
+                        title: '测点设置',
+                        auth: [3]
+
+                    }
+                },
+                {
                     path: '/addnewproduct',
                     component: () => import( /* webpackChunkName: "ProductDetails" */ '../components/deviceRecord/AddNewProduct.vue'),
                     meta: {

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 10:34:44
- * @LastEditTime: 2020-06-14 11:50:35
+ * @LastEditTime: 2020-06-14 18:00:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\deviceRecord\index.js
@@ -239,6 +239,31 @@ module.exports = app => {
         results.repair = await connection(sql) //维修记录
         results.success = true
         res.send(results)
+    })
+
+//手机端
+    //获取设备列表
+    router.get('/fetchDevices', authMiddle, async (req, res) => {
+
+        if (req.user.role === 1) {
+            console.log('超级');
+            sql = "select * from device where is_deleted = 0"
+        } else if (req.user.role === 2) {
+            console.log('企业');
+            sql = `select * from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
+        } else {
+            console.log('普通');
+            sql = `select ud.user_id uid, ud.device_id did, d.eq, d.device_name,d.created_time, d.device_type, d.device_supplier, d.address,d.device_description,d.is_on,d.status from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
+            console.log(sql);
+
+        }
+        let row = await connection(sql)
+        let data = {
+            success: true,
+            data: row
+        }
+        res.send(data)
+
     })
 
 

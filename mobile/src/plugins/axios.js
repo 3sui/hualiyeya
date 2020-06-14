@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-10 19:04:15
- * @LastEditTime: 2020-06-10 19:51:40
+ * @LastEditTime: 2020-06-14 17:59:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\mobile\src\plugins\axios.js
@@ -29,6 +29,9 @@ const _axios = axios.create(config);
 _axios.interceptors.request.use(
   function (config) {
     // Do something before request is sent
+    if (localStorage.token) {
+      config.headers.Authorization = 'Bearer ' + localStorage.token
+    }
     return config;
   },
   function (error) {

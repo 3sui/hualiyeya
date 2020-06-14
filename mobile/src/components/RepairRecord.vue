@@ -43,7 +43,7 @@
     </van-row>-->
     <van-search v-model="value" shape="round" background="#F0F0F0" placeholder="请输入搜索关键词" />
     <div class="record_container">
-      <div class="record_item" v-for="record in recordlist" @click="goRecordDetail">
+      <div class="record_item" v-for="record in recordlist" @click="user_role==4 ? goEditRepairRecord:goRecordDetail">
         <div class="item-title">
           <van-row :gutter="20">
             <van-col span="4"><div class="record-icon"><van-icon size="2rem"  name="records" /></div></van-col>
@@ -149,24 +149,46 @@ export default {
           date: "2020-06-11",
            state:'已处理'
         }
-      ]
+      ],
+      user_role:-1
     };
+  },
+
+  created(){
+    this.getRole()
   },
   methods: {
     onSearch(val) {
       Toast(val);
     },
-    onCancel() {
-      Toast("取消");
-    },
-    goDeviceDetail() {
+  //获取用户权限
+
+  getRole(){
+    if(localStorage){
+      this.user_role=localStorage.role
+    }
+    
+  },
+    //企业用户进入维修记录详情，只能查看
+    goRecordDetail() {
       this.$router.push({
-        path: "/DeviceDetail",
+        path: "/RepairDetail",
+        query: {
+          id: 1
+        }
+      });
+    },
+
+    //维修工进入编辑页面
+    goEditRepairRecord(){
+ this.$router.push({
+        path: "/EditRepairRecord",
         query: {
           id: 1
         }
       });
     }
+
   }
 };
 </script>

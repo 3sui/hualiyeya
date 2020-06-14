@@ -8,13 +8,13 @@
           <van-icon class="icon_vactor" size="5rem" color="#CCCCCC" name="manager" />
         </div>
       </div>
-      <van-form @submit="onSubmit">
+      <van-form @submit="onSubmit" class="loginform">
         <van-field
           left-icon="phone"
           v-model="query.username"
           name="用户名"
           label="用户名"
-          placeholder="用户名"
+         placeholder="用户名"
           :rules="[{ required: true, message: '请填写用户名' }]"
         />
         <van-field
@@ -23,11 +23,11 @@
           type="password"
           name="密码"
           label="密码"
-          placeholder="密码"
+         placeholder="密码"
           :rules="[{ required: true, message: '请填写密码' }]"
         />
 
-        <div style="margin: 16px;">
+        <div class="sub">
           <van-button round block type="info" native-type="submitForm">登录</van-button>
         </div>
       </van-form>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { Form, Field, Button, Icon, Divider } from "vant";
+import { Form, Field, Button, Icon, Divider,Toast } from "vant";
 export default {
   name: "Login",
   components: {
@@ -44,8 +44,8 @@ export default {
     [Button.name]: Button,
     [Icon.name]: Icon,
     [Divider.name]: Divider,
-    [Field.name]: Field
-    // [Toast.name]:Toast
+    [Field.name]: Field,
+    [Toast.name]:Toast
   },
   data() {
     return {
@@ -60,14 +60,20 @@ export default {
       if (this.query.username && this.query.password) {
         axios({
           method: "post",
-          url: "/mobilelogin",
+          url: "/login",
           data: this.query
         })
           .then(res => {
-            if (res.data.length) {
-              // console.log(res.data);
+            if (res.data.success) {
+              // this.$message.success('登录成功');
+              localStorage.ms_username = res.data.ms_username;
+              localStorage.token = res.data.token;
+              localStorage.role = res.data.role;
+              localStorage.avatar = res.data.avatar;
+
+              console.log(res.data);
+
               this.$router.push("/DeviceManage");
-             
             } else {
               this.query = {};
               return;
@@ -121,5 +127,14 @@ export default {
 
 .icon_vactor {
   margin-left: 0.5rem;
+}
+
+.loginform{
+  padding: 0 1rem;
+}
+
+.sub{
+  width: 80%;
+  margin: 1rem auto;
 }
 </style>

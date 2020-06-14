@@ -122,8 +122,12 @@ export default {
           state: '故障',
           pointnum:  5
         }
-      ]
+      ],
+      devices:[]
     };
+  },
+  created(){
+    this.getData()
   },
   methods: {
     onSearch(val) {
@@ -138,7 +142,28 @@ export default {
         query:{
           id:1
         }})
-    }
+    },
+         // 获取设备列表数据
+        getData() {
+            axios({
+                method: 'get',
+                url: '/device/fetchDevices'
+            })
+                .then(res => {
+                  console.log(res);
+                    if (res.data.success) {
+                        this.devices = res.data.data;
+                        this.devicelist=res.data.data;
+                        // this.pageTotal = res.data.data.length;
+                       console.log(res.data);
+                    } else {
+                       console.log('服务器错误');
+                    }
+                })
+                .catch(err =>{
+                  console.log(err);
+                });
+        },
   }
 };
 </script>

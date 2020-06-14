@@ -51,6 +51,14 @@ const routes = [{
       }
     },
     {
+      path: '/AlarmHandle',
+      name: 'AlarmHandle',
+      component: () => import('../components/AlarmHandle'),
+      meta: {
+        title: '报警处理'
+      }
+    },
+    {
       path: '/RepairRecord',
       name: 'RepairRecord',
       component: () => import('../components/RepairRecord'),
@@ -59,11 +67,27 @@ const routes = [{
       }
     },
     {
+      path: '/RepairDetail',
+      name: 'RepairDetail',
+      component: () => import('../components/RepairDetail'),
+      meta: {
+        title: '维修记录详情'
+      }
+    },
+    {
       path: '/NewRepairRecord',
       name: 'NewRepairRecord',
       component: () => import('../components/NewRepairRecord'),
       meta: {
         title: '新建工单'
+      }
+    },
+    {
+      path: '/EditRepairRecord',
+      name: 'EditRepairRecord',
+      component: () => import('../components/EditRepairRecord'),
+      meta: {
+        title: '工单编辑'
       }
     },
     {
