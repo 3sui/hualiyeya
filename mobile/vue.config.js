@@ -7,7 +7,9 @@
  * @FilePath: \远程监控平台\mobile\vue.config.js
  */
 module.exports = {
+    // publicPath: './',
     publicPath: './',
+    
     // baseUrl: 'http://localhost:8085/',
     assetsDir: 'static',
     productionSourceMap: false,

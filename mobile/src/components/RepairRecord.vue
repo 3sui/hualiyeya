@@ -41,29 +41,49 @@
         <p>报警数</p>
       </van-col>
     </van-row>-->
-    <van-search v-model="value" shape="round" background="#F0F0F0" placeholder="请输入搜索关键词" />
+    <van-search
+      v-model="value" 
+      shape="round"
+      background="#F0F0F0"
+      placeholder="请输入搜索关键词"
+      show-action
+      @search="onSearch"
+      @cancel="onCancel"
+    />
     <div class="record_container">
-      <div class="record_item" v-for="record in recordlist" @click="user_role==4 ? goEditRepairRecord:goRecordDetail">
+    
+      <div class="record_item" v-for="record in recordlist" @click="goRecordDetail(record.id)">  <van-swipe-cell> 
         <div class="item-title">
           <van-row :gutter="20">
-            <van-col span="4"><div class="record-icon"><van-icon size="2rem"  name="records" /></div></van-col>
-            <van-col span="8"><div class="record-title">{{record.device_name}}</div>
+            <van-col span="2">
+              <div class="record-icon">
+                <van-icon size="2rem" name="records" />
+              </div>
             </van-col>
-            <van-col span="12"><div class="record-date">维修时间：{{record.date}}</div></van-col>
+            <van-col span="10">
+              <div class="record-title">{{record.eq}}</div>
+            </van-col>
+            <van-col span="12">
+              <div class="record-date">维修时间：{{record.date}}</div>
+            </van-col>
           </van-row>
         </div>
         <div class="item-content">
           <van-row :gutter="20">
             <van-col span="16">
-                <p>维修人员：{{record.person}}</p>
-                <p>故障类型：{{record.fault_type}}</p>
+              <p>维修人员：{{record.repair_person}}</p>
+              <p>故障类型：{{record.type}}</p>
             </van-col>
             <van-col span="8">
-                <div class="mark">{{record.state}}</div>
+              <div class="mark" :style="{'color':getColor(record.state)}">{{record.state}}</div>
             </van-col>
           </van-row>
-        </div>
+        </div> <template #right>
+    <van-button square text="编辑" type="danger" class="edit-button"  @click="goEditRepairRecord(record.id)"/>
+  </template>
+  </van-swipe-cell>
       </div>
+       
     </div>
     <!-- <div class="footer"></div> -->
   </div>
@@ -77,7 +97,9 @@ import {
   Divider,
   Form,
   Search,
-  Image as VanImage
+  Button,
+  Image as VanImage,
+  SwipeCell 
 } from "vant";
 export default {
   name: "RepairRecord",
@@ -89,106 +111,121 @@ export default {
     [Divider.name]: Divider,
     [Form.name]: Form,
     [Search.name]: Search,
-    [VanImage.name]: VanImage
+    [VanImage.name]: VanImage,
+    [SwipeCell.name]:SwipeCell ,
+    [Button.name]:Button
   },
   data() {
     return {
       value: "",
-      recordlist: [
-        {
-          id: 1,
-          device_name: "设备1",
-          eq: "12345",
-          person: "张三",
-          fault_type: "液压设备",
-          date: "2020-06-10",
-          state:'已处理'
-        },
-        {
-          id: 2,
-          device_name: "设备1",
-          eq: "12345",
-          person: "张三",
-          fault_type: "液压设备",
-          date: "2020-06-10",
-           state:'已处理'
-        },
-        {
-          id: 3,
-          device_name: "设备1",
-          eq: "12345",
-          person: "张三",
-          fault_type: "液压设备",
-          date: "2020-06-10",
-           state:'已处理'
-        },
-        {
-          id: 4,
-          device_name: "设备1",
-          eq: "12345",
-          person: "张三",
-          fault_type: "液压设备",
-          date: "2020-06-10",
-           state:'已处理'
-        },
-        {
-          id: 5,
-          device_name: "设备1",
-          eq: "12345",
-          person: "张三",
-          fault_type: "液压设备",
-          date: "2020-06-11",
-           state:'已处理'
-        },
-        {
-          id: 6,
-          device_name: "设备1",
-          eq: "12345",
-          person: "张三",
-          fault_type: "液压设备",
-          date: "2020-06-11",
-           state:'已处理'
-        }
+      recordlist: [],
+      user_role: -1,
+      colors: [
+        "#85144b",
+        "#129646",
+        "#FF851B",
+        "#FFDC00",
+        "#01FF70",
+        "#0074D9",
+        "#39CCCC"
       ],
-      user_role:-1
+      state: []
     };
   },
 
-  created(){
-    this.getRole()
+  created() {
+    this.getData();
+
+    // this.getRole();
   },
   methods: {
-    onSearch(val) {
-      Toast(val);
+    //获取列表数据
+    getData() {
+      this.$axios
+        .get("/mobile/Repair")
+        .then(res => {
+          if (res.status === 200) {
+            this.recordlist = res.data;
+            // console.log(this.recordlist);
+          }
+        })
+        // .then(err => {
+        //   console.log(err);
+        // })
+        .then(() => {
+          this.paint();
+        });
     },
-  //获取用户权限
+    paint() {
+      this.$axios.get("/mobile/states").then(res => {
+        if (res) {
+          let result = res.data;
+          console.log(result);
 
-  getRole(){
-    if(localStorage){
-      this.user_role=localStorage.role
-    }
+          for (let i = 0; i < result.length; i++) {
+            let typeItem = {};
+            typeItem["color"] = this.colors[i];
+
+            typeItem["state"] = result[i].state;
+
+            this.state.push(typeItem);
+          }
+        }
+      });
+    },
+
+    //返回状态的颜色
+    getColor(value) {
+      // console.log(this.state.indexOf(value));
+      for (let i = 0; i < this.state.length; i++) {
+        if (value === this.state[i].state) {
+          return this.state[i].color;
+          break;
+        }
+      }
+
+      //  return 'black'
+    },
+    //搜索
+    onSearch(val) {
+     this.recordlist=this.recordlist.filter(array=>{
+      return  array.repair_person.match(val) || array.state.match(val) || array.type.match(val) || array.eq.match(val)
+     })
+    },
+
+    //取消
+    onCancel() {
+      this.value="",
+      this.getData()
+    },
     
-  },
+    //获取用户权限
+
+    getRole() {
+      if (localStorage) {
+        this.user_role = localStorage.role;
+      }
+    },
     //企业用户进入维修记录详情，只能查看
-    goRecordDetail() {
+    goRecordDetail(id) {
       this.$router.push({
         path: "/RepairDetail",
         query: {
-          id: 1
+          id: id
         }
       });
     },
 
     //维修工进入编辑页面
-    goEditRepairRecord(){
- this.$router.push({
+    goEditRepairRecord(id) {
+      this.$router.push({
         path: "/EditRepairRecord",
         query: {
-          id: 1
+          id: id
+          
         }
       });
     }
-
   }
 };
 </script>
@@ -218,52 +255,48 @@ export default {
   color: #1989fa;
 }
 
-
 .record_container {
   padding: 0.5rem 1rem;
   /* background-color: white; */
   /* margin-bottom: 1rem; */
   /* height: 6rem; */
 }
-.record_item{
-    margin-bottom: 1rem;
+.record_item {
+  margin-bottom: 1rem;
 }
 
-.item-title{
-    height: 3rem ;
-    /* border: 1px solid #f0f0f0; */
-    background: white;
-    color: #CCCCCC;
-    margin-bottom: 0.1rem;
-    padding: 0 0.5rem;
-
+.item-title {
+  height: 3rem;
+  /* border: 1px solid #f0f0f0; */
+  background: white;
+  color: #cccccc;
+  margin-bottom: 0.1rem;
+  padding: 0 0.5rem;
 }
-.item-title .record-icon{
-    width: 2rem;
-    height: 3rem;
-    margin: auto;
-    padding: 0.5rem 0;
-    
-} 
-.item-title .record-title{
-height: 3rem;
-line-height: 3rem;
-font-size: 1.2rem;
-font-weight: bold;
+.item-title .record-icon {
+  width: 2rem;
+  height: 3rem;
+  margin: auto;
+  padding: 0.5rem 0;
+}
+.item-title .record-title {
+  height: 3rem;
+  line-height: 3rem;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
-.item-title .record-date{
-height: 3rem;
-line-height: 3rem;
-font-size: 0.8rem;
-text-align: right;
+.item-title .record-date {
+  height: 3rem;
+  line-height: 3rem;
+  font-size: 0.8rem;
+  text-align: right;
 }
 
-.item-content{
-    height: 4rem;
-    background-color: white;
-    padding: 1rem
-
+.item-content {
+  height: 4rem;
+  background-color: white;
+  padding: 1rem;
 }
 .record_item p {
   color: #747474;
@@ -271,7 +304,7 @@ text-align: right;
   height: 2rem;
   line-height: 2rem;
   margin: 0;
-} 
+}
 /* .item-content p{
     margin: 0;
     height: 4rem;
@@ -279,13 +312,15 @@ text-align: right;
     font-size: 1.2rem;
     
 } */
-.item-content .mark{
-    height: 4rem;
-    line-height: 4rem;
-    color: red;
-    font-size:1.3rem;
-    font-weight: bold;
+.item-content .mark {
+  height: 4rem;
+  line-height: 4rem;
+  color: #747474;
+  font-size: 1.3rem;
+  font-weight: bold;
 }
 
-
+.edit-button{
+  height: 100%;
+}
 </style>

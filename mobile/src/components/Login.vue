@@ -70,6 +70,7 @@ export default {
               localStorage.token = res.data.token;
               localStorage.role = res.data.role;
               localStorage.avatar = res.data.avatar;
+              // localStorage.enterprise_id = res.data.enterprise_id;
 
               console.log(res.data);
 

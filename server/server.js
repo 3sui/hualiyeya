@@ -27,6 +27,7 @@ require('./route/analysis/index')(app)
 require('./route/product/repair')(app)
 require('./route/maintain/index')(app)
 
+require('./route/mobile/index')(app)
 
 app.set('secret', 'password')
 
