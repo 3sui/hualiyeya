@@ -145,8 +145,7 @@ export default {
 <style >
 .devicemanage {
   background-color: #f0f0f0;
-  /* height: 95vh; */
-   /* padding: 0 0 2rem 0;  */
+  min-height:95vh ;
 }
 .header {
   background-color: white;

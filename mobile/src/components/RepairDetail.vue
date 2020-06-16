@@ -12,16 +12,16 @@
         </van-col>
       </van-row>
     </div>
-    <van-cell title="企业名称" :value="query.enterprise" size="large" />
-    <van-cell title="设备编号" :value="query.eq" size="large" />
-    <van-cell title="故障类型" :value="query.fault_type" size="large" />
-    <van-cell title="故障现象" :value="query.phenomenon" size="large" />
-    <van-cell title="维修人员" :value="query.person" size="large" />
-    <van-cell title="手机号" :value="query.tel" size="large" />
-    <van-cell title="维修日期" :value="query.time" size="large" />
-    <van-cell title="维修状态" :value="query.state" size="large" />
-    <van-field v-model="query.cause" rows="4" autosize label="故障原因" type="textarea" readonly />
-    <van-field v-model="query.methods" rows="4" autosize label="排除办法" type="textarea" readonly />
+    <van-cell title="企业名称" :value="query.enterprise_name" size="large" title-class="titleclass" value-class="valueclass"/>
+    <van-cell title="设备编号" :value="query.eq" size="large" title-class="titleclass" value-class="valueclass" />
+    <van-cell title="故障类型" :value="query.type" size="large" title-class="titleclass" value-class="valueclass" />
+    <van-cell title="故障现象" :value="query.phenomenon" size="large"  title-class="titleclass" value-class="valueclass" />
+    <van-cell title="维修人员" :value="query.repair_person" size="large" title-class="titleclass" value-class="valueclass"  />
+    <van-cell title="手机号" :value="query.repair_person_phone" size="large" title-class="titleclass" value-class="valueclass" />
+    <van-cell title="维修日期" :value="query.date" size="large" title-class="titleclass" value-class="valueclass"  />
+    <van-cell title="维修状态" :value="query.state" size="large" title-class="titleclass" value-class="valueclass"  />
+    <van-field v-model="query.cause" rows="4" autosize label="故障原因" type="textarea" readonly label-class="valueclass" class="titleclass"/>
+    <van-field v-model="query.methods" rows="4" autosize label="排除办法" type="textarea" readonly label-class="valueclass" class="titleclass"/>
 <div class="sub"> <van-button round block type="info" native-type="cancel" style="margin-top:1rem"  @click="back">返回</van-button></div>
    
   </div>
@@ -58,39 +58,36 @@ export default {
   },
   data() {
     return {
-    //   enterpriselist: ["华立液压", "远方动力", "天地自动化", "阿里巴巴"],
-    //   showPicker_enterprise: false,
-    //   eqlist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
-    //   showPicker_eq: false,
-    //   fault_typelist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
-    //   showPicker_fault_type: false,
-    //   phenomenonlist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
-    //   showPicker_phenomenon: false,
-
-    //   personlist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
-    //   showPicker_person: false,
-
-    //   showPicker_time: false,
-    //   statelist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
-    //   showPicker_state: false,
+   
       query: {
-        enterprise: "11",
-        eq: "11",
-        fault_type: "11",
-        phenomenon: "11",
-        person: "11",
-        time: "11",
-        state: "11",
-        tel: "11",
-        cause: "11",
-        methods: "11"
+      //   enterprise_name: "1111",
+      //   eq: "",
+      //   type: "",
+      //   phenomenon: "",
+      //   repair_person: "",
+      //   date: "",
+      //   state: "",
+      //  repair_person_phone: "",
+      //   cause: "",
+      //   methods: ""
       }
     };
   },
+  mounted(){
+    this.getData();
+  },
   methods: {
-    onSubmit() {},
-
-    onConfirm() {},
+    getData(){
+     
+      this.$axios.get('mobile/RepairInfo',{params:{ "id":this.$route.query.id}})
+      .then(res=>{
+        console.log(res.data)
+        if(res.status===200){
+          this.query=res.data[0]
+        }
+      })
+    },
+   
     back(){
       this.$router.push('/RepairRecord')
     }
@@ -102,6 +99,7 @@ export default {
 .repairdetail {
   background-color: #f0f0f0;
   padding: 0 0 1rem 0;
+   min-height:95vh ;
 }
 .header {
   background-color: white;
@@ -126,9 +124,16 @@ export default {
 .area {
   margin: 1rem 0;
 }
+.repairdetail .titleclass{
+font-size: 1rem;
+}
+.repairdetail .valueclass{
+  font-size: 1rem;
+  color: #747474;
+}
 
 .sub{
   width: 80%;
-  margin: auto;
+  margin: 1rem auto;
 }
 </style>

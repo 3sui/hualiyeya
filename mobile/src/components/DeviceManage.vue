@@ -19,7 +19,7 @@
             <van-icon size="1.5rem" name="bar-chart-o" />
           </div>
         </div>
-        <h3>4</h3>
+        <h3>{{deviceNum}}</h3>
         <p>设备数</p>
       </van-col>
       <van-col span="8" class="second">
@@ -28,7 +28,7 @@
             <van-icon size="1.5rem" name="bar-chart-o" />
           </div>
         </div>
-        <h3>2</h3>
+        <h3>{{device_isonNum}}</h3>
         <p>运行数</p>
       </van-col>
       <van-col span="8">
@@ -37,27 +37,40 @@
             <van-icon size="1.5rem" name="bar-chart-o" />
           </div>
         </div>
-        <h3>2</h3>
+        <h3>{{device_alarmNum}}</h3>
         <p>报警数</p>
       </van-col>
     </van-row>
 
-    <van-search v-model="value" shape="round" background="#F0F0F0" placeholder="请输入搜索关键词" />
+    <van-search
+      v-model="value"
+      shape="round"
+      background="white"
+      placeholder="请输入搜索关键词"
+      show-action
+      @search="onSearch(value)"
+      @cancel="onCancel"
+    />
 
     <div class="device_container">
       <div class="device_item" v-for="device in devicelist" @click="goDeviceDetail">
         <van-row :gutter="20">
           <van-col span="10">
             <div class="img">
-              <van-image width="100%" height="100%" fit="cover" :src="device.img_url" />
+              <van-image width="100%" height="100%" fit="cover" :src="Iamge(device.file_path)" />
             </div>
           </van-col>
           <van-col span="10">
-            <h3><van-icon color="#007ACC" size="1.2rem" name="user-circle-o" /> {{device.device_name}}</h3>
+            <h3>
+              <van-icon color="#007ACC" size="1.2rem" name="user-circle-o" />
+              {{device.device_name}}
+            </h3>
             <p>出厂编号:{{device.eq}}</p>
-            <p>测点数:{{device.pointnum}}</p>
+            <p>测点数:{{device.count}}</p>
           </van-col>
-          <van-col span="4"><div class="state">{{device.state}}</div></van-col>
+          <van-col span="4">
+            <div class="state">{{device.state}}</div>
+          </van-col>
         </van-row>
       </div>
     </div>
@@ -65,6 +78,7 @@
   </div>
 </template>
 <script>
+import imgUrl from "../assets/img/img.jpg";
 import {
   Col,
   Row,
@@ -89,81 +103,99 @@ export default {
   },
   data() {
     return {
+      enterprise_id: 1,
       value: "",
-      devicelist: [
-        {
-          id: 1,
-          device_name: "设备1",
-          eq: "12345",
-          img_url: "https://img.yzcdn.cn/vant/cat.jpeg",
-          state: '正常',
-          pointnum: 4
-        },
-        {
-          id: 2,
-          device_name: "设备1",
-          eq: "12345",
-          img_url: "https://img.yzcdn.cn/vant/cat.jpeg",
-          state: '正常',
-          pointnum: 4
-        },
-        {
-          id: 3,
-          device_name: "设备1",
-          eq: "12345",
-          img_url: "https://img.yzcdn.cn/vant/cat.jpeg",
-          state: '故障',
-          pointnum:  5
-        },{
-          id: 3,
-          device_name: "设备1",
-          eq: "12345",
-          img_url: "https://img.yzcdn.cn/vant/cat.jpeg",
-          state: '故障',
-          pointnum:  5
-        }
-      ],
-      devices:[]
+      devicelist: [],
+      deviceNum:0,
+      device_isonNum:0,
+      device_alarmNum:0,
+      
     };
   },
-  created(){
-    this.getData()
+  created() {
+    this.getEnterprise();
   },
+  mounted() {
+    this.getData();
+  },
+
   methods: {
+    Iamge(path) {
+      let userAvatar =''
+      if(path){
+        userAvatar =axios.defaults.baseURL.slice(0, -4)+ path.slice(0, -4) ;
+      }
+      
+      // console.log(localStorage.avatar == null);
+      // console.log(imgUrl);
+      // console.log(userAvatar);
+      return path == null ? imgUrl : userAvatar;
+    },
+    //获取企业id
+    getEnterprise() {
+      let username = localStorage.getItem("ms_username");
+      console.log(username);
+    },
+
+    // 获取设备列表数据
+    getData() {
+      axios({
+        method: "get",
+        url: "/mobile/devicelist",
+        params: {
+          enterprise_id: this.enterprise_id
+        }
+      })
+        .then(res => {
+          console.log(res);
+          if (res.data.length) {
+            this.devicelist = res.data;
+
+            // console.log(res.data);
+          } else {
+            console.log("服务器错误");
+          }
+        })
+        .then(()=>{
+          this.devicelist.forEach(element => {
+            this.deviceNum ++;
+            if(element.is_on==='1'){
+              this.device_isonNum++
+            }
+            if(element.status!=='正常'){
+              this.device_alarmNum++
+            }
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    //搜索
     onSearch(val) {
-      Toast(val);
+      this.devicelist=this.devicelist.filter(array=>{
+      return  array.device_name.match(val) || array.eq.match(val) 
+     })
     },
+
+    //取消
     onCancel() {
-      Toast("取消");
+      this.value="",
+      this.getData()
     },
-    goDeviceDetail(){
-      this.$router.push(
-        {path:'/DeviceDetail',
-        query:{
-          id:1
-        }})
+
+    //查看设备详情
+    goDeviceDetail() {
+      this.$router.push({
+        path: "/DeviceDetail",
+        query: {
+          id: 1
+        }
+      });
     },
-         // 获取设备列表数据
-        getData() {
-            axios({
-                method: 'get',
-                url: '/device/fetchDevices'
-            })
-                .then(res => {
-                  console.log(res);
-                    if (res.data.success) {
-                        this.devices = res.data.data;
-                        this.devicelist=res.data.data;
-                        // this.pageTotal = res.data.data.length;
-                       console.log(res.data);
-                    } else {
-                       console.log('服务器错误');
-                    }
-                })
-                .catch(err =>{
-                  console.log(err);
-                });
-        },
+
+
   }
 };
 </script>
@@ -171,105 +203,103 @@ export default {
 <style scoped>
 .devicemanage {
   background-color: #f0f0f0;
-  
-  
+  min-height:95vh ;
 }
-.header {
+ .devicemanage .header {
   background-color: white;
   height: 8vh;
   margin-bottom: 0.5vh;
 }
-.title {
+.devicemanage .title {
   font-size: 1.2rem;
   font-weight: bold;
   padding-left: 1rem;
   line-height: 8vh;
 }
 
-.alarm {
+.devicemanage .alarm {
   font-size: 1.5rem;
   font-weight: bold;
   padding-right: 1rem;
   line-height: 8vh;
   color: #1989fa;
 }
-.main {
- 
+.devicemanage .main {
   background-color: white;
   margin-bottom: 0.5vh;
   padding: 1rem 0;
 }
-.main img {
+.devicemanage .main img {
   width: 20%;
   margin: auto;
   text-align: center;
-   
 }
 
-.main h3 {
+.devicemanage .main h3 {
   font-weight: normal;
   text-align: center;
   margin: 0.3rem auto;
   font-size: 1.5rem;
 }
 
-.main p {
+.devicemanage .main p {
   text-align: center;
   margin: 0.2rem auto;
 }
 
-.main .img{
+.devicemanage .main .img {
   height: 1.5rem;
 }
-.main .second {
+.devicemanage .main .second {
   border-left: 1px solid #f0f0f0;
   border-right: 1px solid #f0f0f0;
 }
 
-.main .img_icon {
+.devicemanage .main .img_icon {
   width: 1.5rem;
   margin: 1rem auto;
   line-height: 1rem;
   text-align: center;
 }
-.device_container{
+.devicemanage .device_container {
   padding: 0 0 2rem 0;
+  
 }
 
-.device_item {
+.devicemanage .device_item {
   padding: 0.5rem;
   background-color: white;
   margin-bottom: 1rem;
   height: 6rem;
 }
 
-.device_item img {
+.devicemanage .device_item .img {
   width: 85%;
-  height: 7rem;
+  height: 6rem;
   margin: auto;
   /* padding: 2rem 0; */
 }
 
-.device_item h3 {
+.devicemanage .device_item h3 {
   height: 3rem;
   line-height: 3rem;
   margin: 0;
 }
 
-.device_item p {
+.devicemanage .device_item p {
   color: #747474;
   font-size: 0.8rem;
   height: 1.5rem;
   line-height: 1.5rem;
   margin: 0;
 }
-.device_item .state{
+.devicemanage .device_item .state {
   text-align: center;
   font-size: 1.3rem;
   height: 7rem;
   line-height: 7rem;
   word-wrap: break-word;
-  color: #0DBC79;
+  color: #0dbc79;
   font-weight: bold;
 }
 

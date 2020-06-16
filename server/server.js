@@ -25,6 +25,7 @@ require('./route/admin/productProfile/index')(app)
 require('./route/dataSettings/index')(app)
 require('./route/analysis/index')(app)
 require('./route/product/repair')(app)
+require('./route/mobile/index')(app)
 
 app.set('secret', 'password')
 
