@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 10:56:10
- * @LastEditTime: 2020-06-14 11:57:17
+ * @LastEditTime: 2020-06-15 17:42:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\ProductDetails.vue
@@ -49,7 +49,7 @@
                         <div class="demo-image__preview">
                             <el-image
                                 style="width: 100px; height: 100px"
-                                :src="axios.defaults.baseURL.slice(0, -4) + tableData.imgList[0].file_path.split('.').shift()"
+                                :src="axios.defaults.baseURL.slice(0, -4) + tableData.imgList[0].file_path.split('.').shift() || ''"
                                 :preview-src-list="srcList"
                             ></el-image>
                         </div>
@@ -156,7 +156,7 @@ export default {
                         this.$set(this.tableData, 'repair', res.data.repair);
 
                         res.data.imgList.forEach(item => {
-                            this.srcList.push(axios.defaults.baseURL.slice(0, -4) + item.file_path.split('.').shift());
+                            this.srcList.push(axios.defaults.baseURL.slice(0, -4) + item.file_path.split('.').shift() || '');
                         });
                         // this.tableData.info = res.data.info[0];
                         window.console.log(this.tableData);

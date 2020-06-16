@@ -16,7 +16,7 @@ export default new Router({
             },
             children: [{
                     path: '/dashboard',
-                    component: () => import( /* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
+                    component: () => import( /* webpackChunkName: "dashboard" */ '../components/home/Dashboard.vue'),
                     meta: {
                         title: '系统首页',
                         auth: []
@@ -24,7 +24,7 @@ export default new Router({
                 },
                 {
                     path: '/map',
-                    component: () => import( /* webpackChunkName: "map" */ '../components/view/map.vue'),
+                    component: () => import( /* webpackChunkName: "map" */ '../components/Map/map.vue'),
                     meta: {
                         title: '设备地图',
                         auth: []

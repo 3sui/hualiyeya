@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-07 10:52:41
- * @LastEditTime: 2020-06-14 17:55:46
+ * @LastEditTime: 2020-06-15 14:44:23
  * @LastEditors: Please set LastEditors
  * @Description: 测点详情
  * @FilePath: \vue-manage-system\src\components\view\MeasuringPointDetails.vue
@@ -17,12 +17,34 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-button
-                type="primary"
-                icon="el-icon-delete"
-                class="handle-del mr10 mb-30"
-                @click="$router.go(-1)"
-            >返回</el-button>
+            <div>
+                <el-button
+                    type="primary"
+                    icon="el-icon-delete"
+                    class="handle-del mr10 mb-30"
+                    @click="$router.go(-1)"
+                >返回</el-button>
+
+                <el-button
+                    type="primary"
+                    class="handle-del mr10 mb-30"
+                    @click="getData(7)"
+                    style="float: right"
+                >七天数据</el-button>
+                <el-button
+                    type="primary"
+                    class="handle-del mr10 mb-30"
+                    @click="getData(3)"
+                    style="float: right"
+                >三天数据</el-button>
+                <el-button
+                    type="primary"
+                    class="handle-del mr10 mb-30"
+                    @click="getData()"
+                    style="float: right"
+                >实时数据</el-button>
+            </div>
+
             <div class="schart-container">
                 <div class="schart-box" v-for="(item, index) in schart" :key="index">
                     <!-- <div class="content-title">折线图</div> -->
@@ -161,7 +183,7 @@ export default {
             schart: [],
             value1: '',
             value2: '',
-            limit: []
+            limit: {}
         };
     },
 
@@ -173,15 +195,18 @@ export default {
     created() {
         this.getData();
     },
+    mounted() {
+    },
     methods: {
-        getData() {
+        getData(date) {
             let eq = this.$route.query.eq;
             window.console.log(eq);
             axios({
                 method: 'get',
                 url: '/maintain/fetchPointInfo',
                 params: {
-                    eq
+                    eq,
+                    date
                 }
             })
                 .then(res => {
@@ -189,6 +214,7 @@ export default {
                     this.tableData = res.data;
                     let data = res.data;
                     let arr = {};
+                    this.schart = [];
                     for (let i = 1; i < data.delimit.length + 1; i++) {
                         let a = 'cp' + i;
                         let b = 'option' + i;
@@ -223,7 +249,7 @@ export default {
                         });
                     }
                     this.limit = arr;
-                    window.console.log(this.schart);
+                    window.console.log(arr);
                 })
                 .catch(err => {});
         },
@@ -278,17 +304,13 @@ export default {
 };
 </script>
 <style scoped>
-.schart-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
 .schart-box {
     /* display: inline-block; */
-    width: 49%;
+    margin: 10px 0;
+
+    width: 100%;
     background-color: #eee;
 
-    margin: 10px 0;
     /* width: 100%; */
 }
 .schart {

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 10:34:44
- * @LastEditTime: 2020-06-14 18:00:20
+ * @LastEditTime: 2020-06-15 15:04:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\deviceRecord\index.js
@@ -42,6 +42,7 @@ module.exports = app => {
     })
 
     //产品列表点击删除
+    //企业用户没有权限
     router.get('/deleteProducts', authMiddle, async (req, res) => {
         assert(req.user.role < 3, 405, '您没有权限进行删除操作')
         let body = req.query
@@ -80,7 +81,7 @@ module.exports = app => {
     })
 
     //获取设备配置信息
-    router.get('/fetchSetting', async (req, res) => {
+    router.get('/fetchSetting', authMiddle, async (req, res) => {
         console.log(123)
 
         console.log(req.query)
@@ -96,8 +97,8 @@ module.exports = app => {
     })
 
     //保存配置更新
-    router.post('/saveSetting', async (req, res) => {
-        // console.log(req.body)
+    router.post('/saveSetting', authMiddle, async (req, res) => {
+        console.log(req.body)
         let eq = req.body.eq
         let point = req.body.point
         let sql = `delete from devicedata_limit where eq = '${eq}'`
@@ -147,6 +148,7 @@ module.exports = app => {
     router.post('/addNewProduct', authMiddle, async (req, res) => {
         assert(req.user.role < 3, 405, '您没有权限进行添加操作')
         console.log(req.body);
+        req.body.created_by = req.user.username
         let {
             eq
         } = req.body
@@ -179,33 +181,38 @@ module.exports = app => {
         const id = req.body.id
         const type = req.body.type
         let url
-
+        let results = {}
         if (type == 'img') {
             url = '/uploads/' + file.filename + '.' + file.originalname.split('.').pop()
             sql = `insert into file_store (file_name, file_path,device_id, file, type) values ('${file.originalname}', '${url}', '${id}', '${file.filename}', 'img')`
 
             let a = await connection(sql)
+
         } else {
             url = '/uploads/' + file.filename + '.' + file.originalname.split('.').pop()
             sql = `insert into file_store (file_name, file_path,device_id, file, type) values ('${file.originalname}', '${url}', '${id}', '${file.filename}', 'word')`
 
             let a = await connection(sql)
         }
-        let results = {
+        results = {
             success: true,
-            message: '图片上传完成'
+            message: '上传完成'
         }
         res.send(results)
 
     })
 
     //配置设备阈值-------------------------------------------
-    router.post('/settings', async (req, res) => {
+    router.post('/settings', authMiddle, async (req, res) => {
+        assert(req.user.role < 3, 405, '您没有权限进行添加操作')
+
         console.log(req.body);
-        let eq = req.body.eq
+        let eq = req.body.eq.id
         let point = req.body.point
         point.forEach(async item => {
             item.eq = eq
+            console.log(item);
+
             let sql = `insert into devicedata_limit set ?`
             await connection(sql, item)
             // let {
@@ -241,7 +248,7 @@ module.exports = app => {
         res.send(results)
     })
 
-//手机端
+    //手机端
     //获取设备列表
     router.get('/fetchDevices', authMiddle, async (req, res) => {
 

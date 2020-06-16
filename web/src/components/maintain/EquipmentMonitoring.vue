@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 16:21:18
- * @LastEditTime: 2020-06-14 15:11:29
+ * @LastEditTime: 2020-06-15 14:44:51
  * @LastEditors: Please set LastEditors
  * @Description: 设备监控
  * @FilePath: \vue-manage-system\src\components\view\EquipmentMonitoring.vue

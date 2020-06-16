@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-03 15:08:38
- * @LastEditTime: 2020-06-09 17:29:56
+ * @LastEditTime: 2020-06-15 15:12:31
  * @LastEditors: Please set LastEditors
  * @Description: 用户管理
  * @FilePath: \web\src\components\DataSettings\Authority.vue
@@ -56,7 +56,7 @@
                     prop="name"
                     label="权限等级"
                     align="center"
-                    :filters="[{ text: '超级管理员', value: '超级管理员' }, { text: '企业管理员', value: '企业管理员' }, { text: '企业用户', value: '企业用户' }]"
+                    :filters="[{ text: '超级管理员', value: '超级管理员' }, { text: '企业管理员', value: '企业管理员' }, { text: '企业用户', value: '企业用户' }, { text: '维修工', value: '维修工' }]"
                     :filter-method="filterRole"
                     filter-placement="bottom-end"
                 ></el-table-column>
@@ -174,8 +174,8 @@
         <!-- 权限弹出框 -->
         <el-dialog title="修改权限" :visible.sync="editVisibleAuth" width="30%" class="demo-ruleForm">
             <el-form ref="auth" :model="role" label-width="100px">
-                <el-form-item label="所属企业">
-                    <el-select v-model="role.id" placeholder="请选择所属企业">
+                <el-form-item label="权限等级">
+                    <el-select v-model="role.id" placeholder="请选择修改权限">
                         <el-option
                             v-for="item in roles"
                             :label="item.name"

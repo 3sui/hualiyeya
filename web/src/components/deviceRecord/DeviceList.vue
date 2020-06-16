@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-14 10:31:14
+ * @LastEditTime: 2020-06-15 17:40:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -372,7 +372,7 @@ export default {
         // 删除操作
         handleDelete(index, row) {
             let idArr = [];
-            idArr.push(row.did);
+            idArr.push(row.id);
             window.console.log(idArr);
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
@@ -470,7 +470,7 @@ export default {
         },
         // 配置测点
         handleSetting(index, row) {
-            window.console.log(row.eq);
+            window.console.log(row);
             this.editVisibleSetting = true;
             this.formSetting.eq = row.eq;
             axios({
@@ -531,7 +531,7 @@ export default {
                             window.console.log(res.data);
                             if (res.data.success) {
                                 this.$message.success(res.data.message);
-                                this.formSetting = false;
+                                this.editVisibleSetting = false;
                             }
                         })
                         .catch(err => {

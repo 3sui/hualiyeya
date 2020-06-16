@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 14:19:13
- * @LastEditTime: 2020-06-12 16:01:46
+ * @LastEditTime: 2020-06-15 16:49:35
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\AddNewProduct.vue
@@ -210,22 +210,20 @@ export default {
                     if (res.data.success) {
                         this.$message.success(res.data.message);
                         this.newDeviceId = res.data.insertId;
-                        this.$refs.form.resetFields();
+                        // this.$refs.form.resetFields();
                     }
                 })
                 .then(() => {
-                    console.log(2);
-
                     this.$refs.uploadImg.submit();
                     this.$refs.uploadWord.submit();
                     // window.console.log(res.data);
                 })
                 .then(() => {
-                    console.log(this.newDeviceId);
+                    console.log(this.form);
                     this.$router.push({
                         path: '/deviceSettings',
                         query: {
-                            id: this.newDeviceId
+                            id: this.form.eq
                         }
                     });
                     // this.$refs.uploadImg.clearFiles();

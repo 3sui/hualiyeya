@@ -67,11 +67,11 @@ export default {
         },
         userAvatar() {
             let userAvatar = axios.defaults.baseURL.slice(0, -4) + localStorage.getItem('avatar');
-            console.log(localStorage.avatar == null);
+            console.log(localStorage.avatar);
             console.log(imgUrl);
             console.log(userAvatar);
 
-            return localStorage.avatar == null ? imgUrl : userAvatar;
+            return localStorage.avatar == 0 ? userAvatar : imgUrl;
         }
     },
     methods: {
