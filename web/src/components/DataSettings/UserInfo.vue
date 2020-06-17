@@ -53,6 +53,8 @@
                 <el-table-column prop="nickname" label="昵称" align="center"></el-table-column>
                 <!-- 用户权限 -->
                 <el-table-column prop="permission" label="用户权限" align="center"></el-table-column>
+            
+
                 <!-- 创建日期 -->
                 <el-table-column prop="created_time" label="创建日期" align="center">
                     <template

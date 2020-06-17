@@ -110,7 +110,7 @@ export default new Router({
                 },
                 {
                     path: '/AlarmRecord',
-                    component: () => import( /* webpackChunkName: "AlarmRecord" */ '../components/view/AlarmRecord.vue'),
+                    component: () => import( /* webpackChunkName: "AlarmRecord" */ '../components/maintain/AlarmRecord.vue'),
                     meta: {
                         title: '报警记录'
                     }
