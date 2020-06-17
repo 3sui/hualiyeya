@@ -14,11 +14,13 @@
     </div>
 
     <van-form @submit="onSubmit">
+      <!-- 选择企业 -->
       <van-field
         readonly
         clickable
-        name="picker"
-        :value="enterprise_id"
+        required
+        name="picker_enterprise"
+        :value="enterprise_name"
         label="企业名称"
         placeholder="点击选择企业名称"
         @click="showPicker_enterprise = true"
@@ -27,15 +29,18 @@
         <van-picker
           show-toolbar
           :columns="enterprises"
-          @confirm="onConfirm"
+          @confirm="EnterpriseonConfirm"
           @cancel="showPicker_enterprise = false"
-          @change="onChange"
+          @change="EnterpriseonChange"
         />
       </van-popup>
+
+      <!-- 选择设备编号 -->
       <van-field
         readonly
         clickable
-        name="picker"
+        required
+        name="picker_eq"
         :value="eq"
         label="设备编号"
         placeholder="点击选择设备编号"
@@ -45,15 +50,16 @@
         <van-picker
           show-toolbar
           :columns="eqlist"
-          @confirm="onConfirm"
+          @confirm="eqonConfirm"
           @cancel="showPicker_eq = false"
         />
       </van-popup>
       <van-field
         readonly
         clickable
-        name="picker"
-        :value="fault_type"
+        required
+        name="picker_faultType"
+        :value="query.type"
         label="故障类型"
         placeholder="点击选择故障类型"
         @click="showPicker_fault_type = true"
@@ -61,16 +67,17 @@
       <van-popup v-model="showPicker_fault_type" position="bottom">
         <van-picker
           show-toolbar
-          :columns="fault_typelist"
-          @confirm="onConfirm"
+          :columns="faultType"
+          @confirm="faultTypeonConfirm"
           @cancel="showPicker_fault_type = false"
         />
       </van-popup>
       <van-field
         readonly
         clickable
-        name="picker"
-        :value="phenomenon"
+        required
+        name="picker_phenomenon"
+        :value="query.phenomenon"
         label="故障现象"
         placeholder="点击选择故障现象"
         @click="showPicker_phenomenon = true"
@@ -78,16 +85,17 @@
       <van-popup v-model="showPicker_phenomenon" position="bottom">
         <van-picker
           show-toolbar
-          :columns="fault_typelist"
-          @confirm="onConfirm"
+          :columns="phenomenons"
+          @confirm="phenomenononConfirm"
           @cancel="showPicker_phenomenon = false"
         />
       </van-popup>
       <van-field
         readonly
         clickable
-        name="picker"
-        :value="person"
+        required
+        name="picker_person"
+        :value="query.repair_person"
         label="维修人员"
         placeholder="点击选择维修人员"
         @click="showPicker_person = true"
@@ -96,26 +104,32 @@
         <van-picker
           show-toolbar
           :columns="personlist"
-          @confirm="onConfirm"
+          @confirm="persononConfirm"
           @cancel="showPicker_person = false"
         />
       </van-popup>
-      <van-field v-model="tel" type="tel" label="手机号" />
+      <van-field v-model="query.repair_person_phone" type="tel" required label="手机号" />
       <van-field
         readonly
         clickable
+        required
         name="calendar"
-        :value="time"
+        :value="query.date"
         label="维修日期"
         placeholder="点击选择维修日期"
         @click="showPicker_time = true"
       />
-      <van-calendar v-model="showPicker_time" @confirm="onConfirm" />
+      <van-calendar
+        v-model="showPicker_time"
+        @confirm="dateonConfirm"
+        :min-date="new Date(2020,0,1)"
+      />
       <van-field
         readonly
         clickable
-        name="picker"
-        :value="state"
+        required
+        name="picker_state"
+        :value="query.state"
         label="维修状态"
         placeholder="点击选择维修状态"
         @click="showPicker_state = true"
@@ -124,14 +138,15 @@
         <van-picker
           show-toolbar
           :columns="statelist"
-          @confirm="onConfirm"
+          @confirm="stateonConfirm"
           @cancel="showPicker_state = false"
         />
       </van-popup>
 
       <van-field
+        required
         class="area"
-        v-model="cause"
+        v-model="query.cause"
         rows="2"
         autosize
         label="故障原因"
@@ -142,8 +157,9 @@
       />
 
       <van-field
+        required
         class="area"
-        v-model="methods"
+        v-model="query.methods"
         rows="2"
         autosize
         label="排除办法"
@@ -174,7 +190,8 @@ import {
   Picker,
   Field,
   Popup,
-  Calendar
+  Calendar,
+  Toast
 } from "vant";
 export default {
   name: "NewRepairRecord",
@@ -187,28 +204,47 @@ export default {
     [Picker.name]: Picker,
     [Field.name]: Field,
     [Popup.name]: Popup,
-    [Calendar.name]: Calendar
+    [Calendar.name]: Calendar,
+    [Toast.name]: Toast
     // [Tag.name]:Tag
   },
   data() {
     return {
+      //企业
       enterprises: [],
+      enterprises_id: [],
       showPicker_enterprise: false,
-      eqlist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
+      enterprise_id: "",
+      enterprise_name: "",
+      //设备
+      eqlist: [],
+      eq: "",
+      devices_id: [],
+      // device_id: "",
       showPicker_eq: false,
-      fault_typelist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
+      //故障及原因
+      faultType: [],
+      // type: "",
+      choosefault: [],
+      phenomenons: [],
+      // phenomenon: "",
       showPicker_fault_type: false,
-      phenomenonlist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
       showPicker_phenomenon: false,
 
-      personlist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
+      //维修人员
+      personlist: [],
+      phonelist: [],
+      // repair_person: "",
       showPicker_person: false,
 
+      //时间
+      // time: "",
       showPicker_time: false,
-      statelist: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
+
+      //状态
+      statelist: [],
       showPicker_state: false,
 
-      enterprise_id: "",
       query: {
         device_id: "",
         type: "",
@@ -217,7 +253,6 @@ export default {
         repair_person_phone: "",
         date: "",
         state: "",
-
         cause: "",
         methods: ""
       }
@@ -225,23 +260,41 @@ export default {
   },
   created() {
     this.getEnterprises();
-    this.getDevices();
+    this.getFaultType();
+    this.getPersons();
+    this.getStates();
   },
   methods: {
-    onSubmit() {},
-    //选择确认
-    onConfirm(value, index) {
-console.log(value)
-console.log(index)
-      
-      // Toast(`当前值：${value}, 当前索引：${index}`);
+    onSubmit() {
+      if (
+        !this.enterprise_name ||
+        !this.query.device_id ||
+        !this.query.type ||
+        !this.query.phenomenon ||
+        !this.query.repair_person ||
+        !this.query.repair_person_phone ||
+        !this.query.date ||
+        !this.query.state ||
+        !this.query.cause ||
+        !this.query.methods
+      ) {
+        Toast.fail("请输入必填项");
+      } else {
+        this.$axios
+          .post("/mobile/AddRepair", this.query)
+          .then(res => {
+            if (res.status === 200) {
+              
+              Toast.success("添加成功");
+                this.$router.push("/RepairRecord");
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
     },
 
-    //选择变更
-
-    onChange(value, index) {
-      Toast(`当前值：${value}, 当前索引：${index}`);
-    },
     //返回
     back() {
       this.$router.push("/DeviceManage");
@@ -255,6 +308,7 @@ console.log(index)
           console.log(res.data);
           let list = res.data;
           list.forEach(element => {
+            this.enterprises_id.push(element.id);
             this.enterprises.push(element.enterprise_name);
           });
         })
@@ -262,20 +316,120 @@ console.log(index)
           console.log(err);
         });
     },
-    //获取设备ID
-    getDevices(value) {
-      // console.log(value);
 
+    //选择企业确认
+    EnterpriseonConfirm(value) {
+      this.enterprise_name = value;
+      let index = this.enterprises.indexOf(value);
+      this.enterprise_id = this.enterprises_id[index];
+      this.showPicker_enterprise = false;
+      this.getDevices();
+      this.eq = "";
+    },
+
+    //企业选择改变
+    EnterpriseonChange() {},
+
+    //获取设备ID
+    getDevices() {
       this.$axios
-        .post("/Devices", { enterprise_id: value })
+        .post("/mobile/Devices", { enterprise_id: this.enterprise_id })
         .then(res => {
-          console.log(res);
-          this.devices = res.data;
-          console.log(this.devices);
+          console.log(res.data);
+          let results = res.data;
+          results.forEach(item => {
+            this.eqlist.push(item.value);
+            this.devices_id.push(item.id);
+          });
         })
         .catch(err => {
           console.log(err);
         });
+    },
+
+    //获取维修人员
+    getPersons() {
+      this.$axios.get("/mobile/persons").then(res => {
+        let results = res.data;
+        results.forEach(item => {
+          this.personlist.push(item.nickname);
+          this.phonelist.push(item.phone);
+        });
+      });
+    },
+
+    //获取维修状态
+    getStates() {
+      this.$axios.get("/mobile/states").then(res => {
+        let results = res.data;
+        results.forEach(item => {
+          this.statelist.push(item.state);
+        });
+      });
+    },
+
+    //选择设备编号确认
+    eqonConfirm(value) {
+      this.eq = value;
+
+      let index = this.eqlist.indexOf(value);
+      this.query.device_id = this.devices_id[index];
+      this.showPicker_eq = false;
+    },
+
+    //获取故障类型、故障现象选项
+    getFaultType() {
+      this.$axios
+        .get("/mobile/FaultTypeChoose")
+        .then(res => {
+          console.log(res.data);
+          let results = res.data;
+          results.forEach(item => {
+            this.faultType.push(item.types);
+            this.choosefault.push(item.phenomenons);
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+
+    //选择故障类型确认
+    faultTypeonConfirm(value) {
+      this.query.type = value;
+      let index = this.faultType.indexOf(value);
+      this.phenomenons = this.choosefault[index];
+      this.showPicker_fault_type = false;
+      this.phenomenon = "";
+    },
+    //选择故障现象确认
+    phenomenononConfirm(value) {
+      this.query.phenomenon = value;
+      this.showPicker_phenomenon = false;
+    },
+    //选择维修人员确认
+    persononConfirm(value) {
+      this.query.repair_person = value;
+      this.showPicker_person = false;
+      let index = this.personlist.indexOf(value);
+      this.query.repair_person_phone = this.phonelist[index];
+    },
+
+    //日期格式化
+    formatDate(date) {
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    },
+
+    //选择日期确认
+    dateonConfirm(date) {
+      this.showPicker_time = false;
+      this.query.date = this.formatDate(date);
+    },
+
+    //选择维修状态确认
+    stateonConfirm(value) {
+      this.query.state = value;
+      this.showPicker_state = false;
     }
   }
 };
@@ -285,6 +439,7 @@ console.log(index)
 .newrepairrecord {
   background-color: #f0f0f0;
   padding: 0 0 1rem 0;
+   min-height:95vh ;
 }
 .header {
   background-color: white;

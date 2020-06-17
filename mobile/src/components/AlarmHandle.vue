@@ -122,7 +122,7 @@ export default {
 .alarmhandle {
   background-color: #f0f0f0;
   /* padding: 0 0 1rem 0; */
-  height: 95vh;
+ min-height:95vh ;
 }
 .header {
   background-color: white;
