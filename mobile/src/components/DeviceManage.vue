@@ -53,7 +53,7 @@
     />
 
     <div class="device_container">
-      <div class="device_item" v-for="device in devicelist" @click="goDeviceDetail">
+      <div class="device_item" v-for="device in devicelist" @click="goDeviceDetail(device.device_id)">
         <van-row :gutter="20">
           <van-col span="10">
             <div class="img">
@@ -129,7 +129,7 @@ export default {
       // console.log(localStorage.avatar == null);
       // console.log(imgUrl);
       // console.log(userAvatar);
-      return path == null ? imgUrl : userAvatar;
+      return path !== null ?  userAvatar: imgUrl;
     },
     //获取企业id
     getEnterprise() {
@@ -142,9 +142,9 @@ export default {
       axios({
         method: "get",
         url: "/mobile/devicelist",
-        params: {
-          enterprise_id: this.enterprise_id
-        }
+        // params: {
+        //   enterprise_id: this.enterprise_id
+        // }
       })
         .then(res => {
           console.log(res);
@@ -181,16 +181,16 @@ export default {
 
     //取消
     onCancel() {
-      this.value="",
+      this.value="";
       this.getData()
     },
 
     //查看设备详情
-    goDeviceDetail() {
+    goDeviceDetail(id) {
       this.$router.push({
         path: "/DeviceDetail",
         query: {
-          id: 1
+          id:id 
         }
       });
     },

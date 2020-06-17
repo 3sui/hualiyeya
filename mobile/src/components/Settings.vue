@@ -54,6 +54,7 @@ export default {
   methods: {
     quit() {
       // console.log();
+      localStorage.clear();
       this.$router.push("/Login");
     }
   }
@@ -67,6 +68,7 @@ export default {
 .title {
   text-align: center;
   line-height: 8vh;
+  background-color: white;
 }
 .divider {
   margin: 0;

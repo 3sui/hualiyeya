@@ -11,7 +11,9 @@
     "core-js": "^3.6.5",
     "vant": "^2.0.5",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-pdf": "^4.0.12",
+    "vue-router": "^3.2.0",
+    "vux-loader": "^1.2.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.4.0",

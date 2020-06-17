@@ -13,10 +13,18 @@
       </van-row>
     </div>
 
-    <van-search v-model="value" shape="round" background="#F0F0F0" placeholder="请输入搜索关键词" />
+     <van-search
+      v-model="value"
+      shape="round"
+      background="white"
+      placeholder="请输入搜索关键词"
+      show-action
+      @search="onSearch(value)"
+      @cancel="onCancel"
+    />
    
         <div class="record_container">
-          <div class="record_item" v-for="(record) in recordlist" @click="handel(record.id)">
+          <div class="record_item" v-for="record in recordlist" @click="handel(record.id)">
             <div class="item-title">
               <van-row :gutter="20">
                 <van-col span="2">
@@ -28,20 +36,20 @@
                   <div class="record-title">{{record.device_name}}</div>
                 </van-col>
                 <van-col span="16">
-                  <div class="record-date">1小时前</div>
+                  <div class="record-date">{{record.timebefore}}前</div>
                 </van-col>
               </van-row>
             </div>
             <div class="item-content">
               <van-row :gutter="20">
                 <van-col span="16">
-                  <p>设备型号：{{record.person}}</p>
+                  <p>设备编号：{{record.device_eq}}</p>
                   <p>测点名称：{{record.cp_name}}</p>
                   <p>测点值：{{record.cp_value}}</p>
-                  <p>报警时间：{{record.date}}</p>
+                  <p>报警时间：{{record.created_time}}</p>
                 </van-col>
                 <van-col span="8">
-                  <div class="mark">{{record.state}}</div>
+                  <div class="mark" :class="record.is_handled?'success':'danger'">{{record.is_handled?'已处理':'未处理'}}</div>
                 </van-col>
               </van-row>
             </div>
@@ -116,51 +124,66 @@ export default {
   data() {
     return {
       value: "",
-      recordlist: [
-        {
-          id: 1,
-          device_name: "设备1",
-          eq: "12345",
-          cp_name: "张三",
-          cp_value: "液压设备",
-          date: "2020-06-10 10:10:10",
-          state: "未处理"
-        },
-        {
-          id: 4,
-          device_name: "设备1",
-          eq: "12345",
-          cp_name: "张三",
-          cp_value: "液压设备",
-          date: "2020-06-10 10:10:10",
-          state: "未处理"
-        },
-        {
-          id: 3,
-          device_name: "设备1",
-          eq: "12345",
-          cp_name: "张三",
-          cp_value: "液压设备",
-          date: "2020-06-10 10:10:10",
-          state: "未处理"
-        }
-      ],
+      list:[],
+      recordlist: [],
    
     };
   },
+  created(){
+    this.getData()
+  },
   methods: {
-    onSearch(val) {
-      Toast(val);
-    },
-    onCancel() {
-      Toast("取消");
-    },
+   
     handel(id) {
-      let param = {
-        id: id
-      };
-      this.$router.push("/AlarmHandle", param);
-    }
+    
+      this.$router.push({
+        path:"/AlarmHandle",  
+        query: {
+          id:id 
+        }
+      });
+    },
+    //获取报警信息
+    getData(){
+      this.$axios.get('/mobile/AlarmRecord')
+      .then(res=>{
+        console.log(res.data);
+        if(res.data!==null || res.data.length>0){
+          this.list=res.data
+        }
+        
+      })
+      .then(()=>{
+        this.list.forEach(element => {
+          let timebefore='';
+          let datenow=new Date().getTime();
+          let datealarm=new Date(element.created_time).getTime()
+          // console.log(datenow)
+          // console.log(datealarm)
+          let minites=parseInt((datenow-datealarm)/60000);
+          let hours=parseInt((datenow-datealarm)/3600000);
+          let days=parseInt((datenow-datealarm)/(3600000*24))
+          timebefore=days>=1?days+'天':(hours>=1?hours+'小时':(minites>=1?minites+'分钟':'1分钟'))
+          // console.log(timebefore);
+         element.timebefore=timebefore
+         this.recordlist.push(element)
+        });
+      })
+
+    },
+
+     //搜索
+    onSearch(val) {
+      this.recordlist=this.recordlist.filter(array=>{
+      return  array.device_name.match(val) || array.device_eq.match(val) ||array.created_time.match(val)
+     })
+    },
+
+     //取消
+    onCancel() {
+      this.value="";
+      this.getData()
+    },
   }
 };
 </script>
@@ -253,5 +276,12 @@ export default {
   color: red;
   font-size: 1.3rem;
   font-weight: bold;
+}
+
+.item-content .success{
+  color: #0dbc79;
+}
+.item-content .danger{
+ color: #DD4F42;
 }
 </style>

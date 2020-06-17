@@ -7,7 +7,7 @@
  * @FilePath: \远程监控平台\mobile\vue.config.js
  */
 module.exports = {
-    // publicPath: './',
+   
     publicPath: './',
     
     // baseUrl: 'http://localhost:8085/',
@@ -15,16 +15,16 @@ module.exports = {
     productionSourceMap: false,
     lintOnSave: false,
     // devServer: {
-    //     host: 'localhost',
+    //     host: '10.255.91.177',
     //     port: 8080,
-    //     proxy: {
-    //         '/api':{
-    //             target:'http://localhost:3000/',
-    //             changeOrigin:true,
-    //             pathRewrite:{
-    //                 '^/api':''
-    //             }
-    //         }
-    //     }
+        // proxy: {
+        //     '/api':{
+        //         target:'http://localhost:3000/',
+        //         changeOrigin:true,
+        //         pathRewrite:{
+        //             '^/api':''
+        //         }
+        //     }
+        // }
     // }
 }
