@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 10:56:10
- * @LastEditTime: 2020-06-15 17:42:35
+ * @LastEditTime: 2020-06-16 17:09:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\ProductDetails.vue
@@ -27,7 +27,7 @@
             <!-- <el-button type="primary" icon="el-icon-edit" class="handle-del mr10 mb-30">编辑</el-button> -->
 
             <div class="plugins-tips">设备信息</div>
-            <el-row :gutter="20" class="mb-30" v-if="tableData.info.eq">
+            <el-row :gutter="20" class="mb-30" v-if="tableData.info">
                 <el-col :span="12">
                     <div class="ml-50">
                         <p>设备ID: {{tableData.info.eq}}</p>
@@ -49,7 +49,7 @@
                         <div class="demo-image__preview">
                             <el-image
                                 style="width: 100px; height: 100px"
-                                :src="axios.defaults.baseURL.slice(0, -4) + tableData.imgList[0].file_path.split('.').shift() || ''"
+                                :src="tableData.imgList[0]?(axios.defaults.baseURL.slice(0, -4) + tableData.imgList[0].file_path.split('.').shift()):''"
                                 :preview-src-list="srcList"
                             ></el-image>
                         </div>
@@ -89,7 +89,7 @@
                                 </tr>
                             </thead>
                         </table>
-                        <p class="mt-10">备注: {{More}}</p>
+                        <p class="mt-10">备注: {{item.More}}</p>
                         <!-- <div class="annex">
                             附件:
                             <img

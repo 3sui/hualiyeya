@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-15 17:40:20
+ * @LastEditTime: 2020-06-16 13:45:39
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -152,8 +152,8 @@
                 <el-table-column label="开关机" align="center">
                     <template slot-scope="scope">
                         <el-tag
-                            :type="scope.row.is_on==='0'?'success':(scope.row.is_on==='1'?'danger':'')"
-                        >{{scope.row.is_on === 0? '开机' : '关机'}}</el-tag>
+                            :type="scope.row.is_on==='0'?'danger':(scope.row.is_on=='1'?'success':'')"
+                        >{{scope.row.is_on == '0'? '关机' : '开机'}}</el-tag>
                     </template>
                 </el-table-column>
                 <!-- <el-table-column prop="AlarmTimes" label="报警次数"></el-table-column> -->

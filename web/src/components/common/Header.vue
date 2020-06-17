@@ -71,7 +71,7 @@ export default {
             console.log(imgUrl);
             console.log(userAvatar);
 
-            return localStorage.avatar == 0 ? userAvatar : imgUrl;
+            return localStorage.avatar == 0 ? imgUrl : userAvatar;
         }
     },
     methods: {

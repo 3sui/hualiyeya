@@ -82,7 +82,7 @@ export default new Router({
                 },
                 {
                     path: '/maintenancedetails',
-                    component: () => import( /* webpackChunkName: "MaintenanceDetails" */ '../components/view/MaintenanceDetails.vue'),
+                    component: () => import( /* webpackChunkName: "MaintenanceDetails" */ '../components/deviceRecord/MaintenanceDetails.vue'),
                     meta: {
                         title: '维修详情'
                     }
