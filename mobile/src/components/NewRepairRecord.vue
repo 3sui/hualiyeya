@@ -417,7 +417,8 @@ export default {
 
     //日期格式化
     formatDate(date) {
-      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
+      return `${date.getFullYear()}-${date.getMonth() + 1>=10?date.getMonth() + 1: '0'+ (date.getMonth() + 1)}-${date.getDate()>=10?date.getDate() : '0'+ date.getDate() }`;
     },
 
     //选择日期确认
@@ -439,7 +440,7 @@ export default {
 .newrepairrecord {
   background-color: #f0f0f0;
   padding: 0 0 1rem 0;
-   min-height:95vh ;
+  min-height:95vh ;
 }
 .header {
   background-color: white;

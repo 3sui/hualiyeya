@@ -14,36 +14,37 @@
     </div>
     <div class="container">
       <van-cell-group title="报警信息">
-        <van-cell title="设备名称" value="内容" />
-        <van-cell title="报警时间" value="内容" />
+        <van-cell title="设备名称" :value="point.device_name" />
+        <van-cell title="设备编号" :value="point.device_eq" />
+        <van-cell title="报警时间" :value="point.created_time" />
       </van-cell-group>
 
       <div class="point-title">报警测点</div>
-      <div class="point-item" >
+      <div class="point-item">
         <van-row>
           <van-col span="10">
             <div class="point-detail">
               <p>
                 <van-icon color="#E54323" name="points" size="1rem" />
-                <span class="point-name">{{point.point_name}}</span>
+                <span class="point-name"> {{point.cp_name}}</span>
               </p>
               <p>
                 <span class="limit">
                   <van-icon color="blue" size="1rem" name="arrow-up" />上限值
                 </span>
-                {{point.up_limit}}
+                {{point.limit_up}}
               </p>
               <p>
                 <span class="limit">
                   <van-icon color="blue" size="1rem" name="arrow-down" />下限值
                 </span>
-                {{point.down_limit}}
+                {{point.limit_down}}
               </p>
             </div>
           </van-col>
           <van-col span="14">
             <div class="point-detail">
-              <p class="current">{{point.current}}</p>
+              <p class="current">{{point.cp_value}}</p>
               <p class="current-label">实际值</p>
               <p style="text-align:center">
                 <span class="timestemp"></span>
@@ -60,28 +61,37 @@
         round
         block
         type="info"
-        native-type="cancel"
+     v-if="!point.is_handled"
+        style="margin-top:1rem"
+        @click="handle(point.id,'1')"
+      >处理报警信息</van-button>
+   
+      <van-button
+        round
+        block
+        type="info"
+       v-if="point.is_handled"
+        style="margin-top:1rem"
+        @click="handle(point.id,'0')"
+      >标记为未处理</van-button>   
+      
+      <van-button
+        round
+        block
+        type="default"
+
         style="margin-top:1rem"
         @click="back"
-      >处理报警信息</van-button>
+      >返回</van-button>
+    </div>
+
+ 
     </div>
   </div>
 </template>
 
 <script>
-import {
-  Form,
-  Icon,
-  Col,
-  Row,
-  Button,
-  Picker,
-  Field,
-  Popup,
-  Calendar,
-  Cell,
-  CellGroup
-} from "vant";
+import { Icon, Col, Row, Button, Cell, CellGroup, Dialog, Toast } from "vant";
 export default {
   name: "AlarmHandle",
   components: {
@@ -90,29 +100,69 @@ export default {
     [Row.name]: Row,
     [Button.name]: Button,
     [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup
+    [CellGroup.name]: CellGroup,
+    [Toast.name]: Toast,
+    [Dialog.name]: Dialog
 
     // [Tag.name]:Tag
   },
   data() {
     return {
-        point:{
-            point_name:'电压',
-            up_limit:24,
-            down_limit:10,
-            current:26,
-            timestemp:'2020-06-12 15:30:30'
-
-        }
+      point: {}
     };
   },
+  created() {
+    this.getData();
+  },
   methods: {
-   
-    back() {
-    //将未处理变为已处理
+    getData() {
+      let id = this.$route.query.id;
+      let query = {
+        id: id
+      };
+      this.$axios.post("/mobile/AlarmRecordDetail", query).then(res => {
+        if (res.data !== null || res.data.length0) {
+          this.point = res.data[0];
+        }
+      });
+    },
 
-    //跳转回报警记录页面
-      this.$router.push("/RepairRecord");
+    //修改处理状态
+    Updatestate(query) {
+      
+      this.$axios.post("/mobile/UpdateAlarmRecord",query).then(res => {
+        if (res.data != null || res.data.length > 0) {
+          Toast.success("成功");
+        }
+      });
+    },
+
+    handle(id ,state) {
+      //将未处理变为已处理
+      Dialog.confirm({
+        title: "提示",
+        message: "请确认？"
+      })
+        .then(() => {
+          let query={
+            id:id,
+            state:state
+          }
+          // on confirm
+          this.Updatestate(query);
+          console.log(123);
+          
+        })
+        .catch(() => {
+          // on cancel
+        });
+      //跳转回报警记录页面
+      // this.$router.push("/DeviceAlarm");
+    },
+
+    back(){
+        //跳转回报警记录页面
+      this.$router.push("/DeviceAlarm");
     }
   }
 };
@@ -122,7 +172,7 @@ export default {
 .alarmhandle {
   background-color: #f0f0f0;
   /* padding: 0 0 1rem 0; */
- min-height:95vh ;
+  min-height: 95vh;
 }
 .header {
   background-color: white;
@@ -169,7 +219,6 @@ export default {
 } */
 
 .point-item {
-   
   background: white;
   border-bottom: 1px solid #e4e4e4;
   padding: 1rem 1rem;
@@ -187,7 +236,7 @@ export default {
   /* font-size: 1rem; */
 }
 .point-detail .current {
-  color: #A30014;
+  color: #a30014;
   text-align: center;
   font-size: 2rem;
   font-weight: bold;

@@ -14,7 +14,7 @@
           v-model="query.username"
           name="用户名"
           label="用户名"
-         placeholder="用户名"
+          placeholder="用户名"
           :rules="[{ required: true, message: '请填写用户名' }]"
         />
         <van-field
@@ -23,7 +23,7 @@
           type="password"
           name="密码"
           label="密码"
-         placeholder="密码"
+          placeholder="密码"
           :rules="[{ required: true, message: '请填写密码' }]"
         />
 
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { Form, Field, Button, Icon, Divider,Toast } from "vant";
+import { Form, Field, Button, Icon, Divider, Toast } from "vant";
 export default {
   name: "Login",
   components: {
@@ -45,7 +45,7 @@ export default {
     [Icon.name]: Icon,
     [Divider.name]: Divider,
     [Field.name]: Field,
-    [Toast.name]:Toast
+    [Toast.name]: Toast
   },
   data() {
     return {
@@ -73,8 +73,11 @@ export default {
               // localStorage.enterprise_id = res.data.enterprise_id;
 
               console.log(res.data);
-
-              this.$router.push("/DeviceManage");
+              if (localStorage.role === "2" || localStorage.role === "3") {
+                this.$router.push("/DeviceManage");
+              } else {
+                this.$router.push("/RepairRecord");
+              }
             } else {
               this.query = {};
               return;
@@ -130,11 +133,11 @@ export default {
   margin-left: 0.5rem;
 }
 
-.loginform{
+.loginform {
   padding: 0 1rem;
 }
 
-.sub{
+.sub {
   width: 80%;
   margin: 1rem auto;
 }

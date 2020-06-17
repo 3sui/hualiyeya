@@ -12,8 +12,7 @@
 import Menu from "./Menu.vue";
 export default {
   name: "Home",
-  components: {
-    
+  components: {   
     Menu
   }
 };

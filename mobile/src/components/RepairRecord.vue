@@ -79,7 +79,7 @@
             </van-col>
           </van-row>
         </div> <template #right>
-    <van-button square text="编辑" type="danger" class="edit-button"  @click="goEditRepairRecord(record.id)"/>
+    <van-button square text="编辑" type="danger" class="edit-button" v-if="rolecheck"  @click="goEditRepairRecord(record.id)"/>
   </template>
   </van-swipe-cell>
       </div>
@@ -117,9 +117,10 @@ export default {
   },
   data() {
     return {
+      rolecheck:false,
       value: "",
       recordlist: [],
-      user_role: -1,
+     
       colors: [
         "#85144b",
         "#129646",
@@ -136,7 +137,7 @@ export default {
   created() {
     this.getData();
 
-    // this.getRole();
+    this.getRole();
   },
   methods: {
     //获取列表数据
@@ -203,7 +204,14 @@ export default {
 
     getRole() {
       if (localStorage) {
-        this.user_role = localStorage.role;
+        let user_role = localStorage.getItem("role");
+        if(user_role==='4' || user_role==='1'){
+          this.rolecheck=true;
+        }else{
+          return ;
+        }
+      }else{
+        return ;
       }
     },
     //企业用户进入维修记录详情，只能查看
@@ -233,7 +241,7 @@ export default {
 <style scoped>
 .repairrecord {
   background-color: #f0f0f0;
-  /* height: 95vh; */
+  min-height: 95vh;
 }
 .header {
   background-color: white;

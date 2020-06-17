@@ -30,13 +30,20 @@
         <van-row>
           <van-col span="12">
             <p>出厂编号: {{device.eq}}</p>
-            <p>设备类型: {{device.devicetype}}</p>
-            <p>设备型号: {{device.devicemodel}}</p>
-            <p>设备状态: <van-tag round type="success" size="medium">{{device.state}}</van-tag></p>
+            <p>设备类型: {{device.typename}}</p>
+            <p>设备型号: {{device.device_model}}</p>
+            <p>
+              设备状态:
+              <van-tag
+                round
+                :type="device.status=='正常'?'success':'danger'"
+                size="medium"
+              >{{device.status}}</van-tag>
+            </p>
           </van-col>
           <van-col span="12">
             <div class="img">
-              <van-image width="100%" height="100%" fit="fill" :src="device.img_url" />
+              <van-image width="100%" height="100%" fit="fill" :src="Iamge(device.file_path)" />
             </div>
           </van-col>
         </van-row>
@@ -46,35 +53,46 @@
       <div class="point-item" v-for="point in pointlist">
         <van-row>
           <van-col span="10">
-              <div class="point-detail">
-                  <p><van-icon color="#E54323" name="points" size="1rem" /> <span class="point-name">{{point.point_name}}</span></p>
-                   <p><span class="limit"><van-icon color="blue" size="1rem" name="arrow-up" /> 上限值</span>{{point.up_limit}}</p>
-                    <p><span class="limit"><van-icon color="blue" size="1rem"  name="arrow-down" /> 下限值</span>{{point.down_limit}}</p>
-              </div>
+            <div class="point-detail">
+              <p>
+                <van-icon color="#E54323" name="points" size="1rem" />
+                <span class="point-name"> {{point.point_name}}</span>
+              </p>
+              <p>
+                <span class="limit">
+                  <van-icon color="blue" size="1rem" name="arrow-up" />上限值
+                </span>
+                {{point.up_limit}}
+              </p>
+              <p>
+                <span class="limit">
+                  <van-icon color="blue" size="1rem" name="arrow-down" />下限值
+                </span>
+                {{point.down_limit}}
+              </p>
+            </div>
           </van-col>
           <van-col span="14">
-               <div class="point-detail">
-                  <p class="current">{{point.current}}</p>
-                   <p class="current-label">实际值</p>
-                    <p style="text-align:center"><span class="timestemp"></span>{{point.timestemp}}</p>
-              </div>
+            <div class="point-detail">
+              <p class="current" :class="point.current>=point.down_limit&&point.current<=point.up_limit?'success':'danger'">{{point.current}}</p>
+              <p class="current-label">实际值</p>
+              <p style="text-align:center">
+                <span class="timestemp"></span>
+                {{point.timestemp}}
+              </p>
+            </div>
           </van-col>
         </van-row>
       </div>
-<div class="sub"><van-button type="info" class="look" round  block>查看设备手册</van-button></div>
-      
+      <div class="sub">
+        <van-button type="info" class="look" round block @click="review">查看设备手册</van-button>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import {
-  Tag,
-  Col,
-  Row,
-  Icon,
-  Button ,
-  Image as VanImage
-} from "vant";
+import imgUrl from "../assets/img/img.jpg";
+import { Tag, Col, Row, Icon, Button, Image as VanImage } from "vant";
 export default {
   name: "DeviceDetail",
   components: {
@@ -82,70 +100,162 @@ export default {
     [Row.name]: Row,
     [Icon.name]: Icon,
     [VanImage.name]: VanImage,
-    [Button.name]:Button,
-    [Tag.name]:Tag
+    [Button.name]: Button,
+    [Tag.name]: Tag
   },
   data() {
     return {
-      value: "",
-      device: {
-        id: 1,
-        device_name: "设备1",
-        eq: "12345",
-        img_url: "https://img.yzcdn.cn/vant/cat.jpeg",
-        state: "正常",
-        pointnum: 4,
-        devicetype:'液压设备',
-        devicemodel:'KSJD001'
-      },
-      pointlist:[{
-          id:1,
-          point_name:'电压',
-          up_limit:24,
-          down_limit:0,
-          current:12,
-          timestemp:'2020年6月9日 15:30:30',
-      },
-      {
-          id:1,
-          point_name:'电压',
-          up_limit:24,
-          down_limit:0,
-          current:12,
-          timestemp:'2020年6月9日 15:30:30',
-      },
-      {
-          id:1,
-          point_name:'电压',
-          up_limit:24,
-          down_limit:0,
-          current:12,
-          timestemp:'2020年6月9日 15:30:30',
-      },{
-          id:1,
-          point_name:'电压',
-          up_limit:24,
-          down_limit:0,
-          current:12,
-          timestemp:'2020年6月9日 15:30:30',
-      }]
-    }
+      device: {},
+      pointlist: [],
+      //   {
+      //     id: 1,
+      //     point_name: "电压",
+      //     up_limit: 24,
+      //     down_limit: 0,
+      //     current: 12,
+      //     timestemp: "2020年6月9日 15:30:30"
+      //   },
+      //   {
+      //     id: 1,
+      //     point_name: "电压",
+      //     up_limit: 24,
+      //     down_limit: 0,
+      //     current: 12,
+      //     timestemp: "2020年6月9日 15:30:30"
+      //   },
+      //   {
+      //     id: 1,
+      //     point_name: "电压",
+      //     up_limit: 24,
+      //     down_limit: 0,
+      //     current: 12,
+      //     timestemp: "2020年6月9日 15:30:30"
+      //   },
+      //   {
+      //     id: 1,
+      //     point_name: "电压",
+      //     up_limit: 24,
+      //     down_limit: 0,
+      //     current: 12,
+      //     timestemp: "2020年6月9日 15:30:30"
+      //   }
+      // ],
+      data: [],
+      list: []
+    };
   },
+  created() {
+    this.getData();
+  },
+  // mounted() {
+  //   this.getPoint();
+  //   this.getCurrentPoint();
+  // },
   methods: {
-    onSearch(val) {
-      Toast(val);
+    //获取设备详情
+    getData() {
+      let data = {
+        params: {
+          id: this.$route.query.id
+        }
+      };
+      this.$axios
+        .get("/mobile/devicedetail", data)
+        .then(res => {
+          if (res.data.length > 0) {
+            this.device = res.data[0];
+          }
+        })
+        .then(() => {
+          this.getPoint();
+        });
     },
-    onCancel() {
-      Toast("取消");
-    }
+
+    //获取测点
+    getPoint() {
+      this.$axios
+        .post("/mobile/devicedetailpoint", { eq: this.device.eq })
+        .then(res => {
+          if (res.data.length) {
+            this.list = res.data;
+            console.log(this.list);
+          }
+        })
+        .then(() => {
+          this.getCurrentPoint();
+        });
+    },
+    //获取最近一次的测点
+    getCurrentPoint() {
+      this.$axios
+        .post("/mobile/currentpoint", { eq: this.device.eq })
+        .then(res => {
+          // console.log(typeof(res.data));
+
+          if (res.data != null && res.data.length > 0) {
+            // console.log(res.data);
+
+            let result = res.data[0];
+            // console.log(result);
+            let array = Object.values(result);
+            let time = array.pop();
+            // console.log(time);
+            
+            this.data = array.slice(4, 4 + this.list.length);
+            this.data.push(time)
+            // console.log(this.data);
+          } else {
+            for (let i = 0; i < this.list.length; i++) {
+              this.data.push("-");
+            }
+            this.data.push("最近没有测点数据")
+          }
+          // console.log(this.data);
+        })
+        .then(()=>{
+          this.dispaly()
+        })
+    },
+
+    //整理数据
+    dispaly() {
+      this.list.forEach((element, index) => {
+        let item = {};
+        item.point_name = element.cp_name;
+        item.up_limit = element.limit_up;
+        item.down_limit = element.limit_down;
+        item.current=this.data[index]*element.k;
+        item.timestemp=this.data[this.data.length-1]
+        this.pointlist.push(item)
+      });
+    },
+
+    //获取图片路径
+    Iamge(path) {
+      let userAvatar = "";
+      if (path) {
+        userAvatar = axios.defaults.baseURL.slice(0, -4) + path.slice(0, -4);
+      }
+      return path !== null ? userAvatar : imgUrl;
+    },
+    
+    //查看手册
+  review(){
+    this.$router.push({
+      path:'/Review',
+      id:this.device.device_id
+    })
   }
+  }
+
+  
 };
 </script>
 
 <style >
 .devicemanage {
   background-color: #f0f0f0;
-  min-height:95vh ;
+  min-height: 95vh;
 }
 .header {
   background-color: white;
@@ -205,7 +315,7 @@ export default {
 }
 
 .device_item p {
-  color:#A3A3A3;
+  color: #a3a3a3;
   font-size: 0.9rem;
   height: 1.5rem;
   line-height: 1.5rem;
@@ -233,53 +343,57 @@ export default {
   font-weight: bold;
 }
 
-.point-item
-{background: white;
-border-bottom: 1px solid #e4e4e4;
-padding: 1rem 1rem;
+.point-item {
+  background: white;
+  border-bottom: 1px solid #e4e4e4;
+  padding: 1rem 1rem;
 }
 
-.point-detail p{
-    color: #A3A3A3;
-    margin:0.5rem 0;
-    font-size: 0.9rem;
-    padding: 0;
-    
-
+.point-detail p {
+  color: #a3a3a3;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  padding: 0;
 }
-.limit{
-    /* color: #A3A3A3; */
-    margin-right: 1rem;
-    /* font-size: 1rem; */
+.limit {
+  /* color: #A3A3A3; */
+  margin-right: 1rem;
+  /* font-size: 1rem; */
 }
-.point-detail .current{
-    color: #0DBC79;
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 1rem 0 0 0;
+.point-detail .current {
+  /* color: #0dbc79; */
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 1rem 0 0 0;
 }
-
-.point-detail .current-label{
-     text-align: center;
-    font-size: 1.2rem;
-     color: #7F7F7F;
-       font-weight: bold;
+.point-detail .success{
+  color: #0dbc79;
 }
-.point-detail .timestemp{
-      font-size: 0.8rem;
-}
-.point-name{
-    font-size: 1rem;
-    color: black;
-    font-weight: bold;
+.point-detail .danger{
+ color: #DD4F42;
 }
 
-.look{
-    margin: 1rem 0;
+.point-detail .current-label {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #7f7f7f;
+  font-weight: bold;
+}
+.point-detail .timestemp {
+  font-size: 0.8rem;
+}
+.point-name {
+  font-size: 1rem;
+  color: black;
+  font-weight: bold;
 }
 
-.sub{
+.look {
+  margin: 1rem 0;
+}
+
+.sub {
   width: 80%;
   margin: auto;
 }

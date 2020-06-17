@@ -30,8 +30,10 @@ export default {
       this.tabbarActive(to.index);
     }
   },
+  mounted() {
+    this.getRole();
+  },
 
- 
   data() {
     return {
       active: 0,
@@ -76,7 +78,26 @@ export default {
         this.active = index;
       }
     },
-    
+
+    //获取用户权限
+    getRole() {
+      if (localStorage) {
+        let user_role = localStorage.getItem("role");
+        // if(user_role === "1") {
+        //   this.items.forEach(element => {
+        //     element.show = true;
+        //   });
+        // }
+        // else
+         if (user_role === "2" || user_role === "3") {
+          // this.items[2].show = false;
+          this.items[3].show = false;
+        }else {
+        this.items[0].show = false;
+        this.items[1].show = false;
+      }
+      } 
+    }
   }
 };
 </script>
