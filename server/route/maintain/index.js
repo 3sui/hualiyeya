@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-14 14:08:41
- * @LastEditTime: 2020-06-15 14:45:24
+ * @LastEditTime: 2020-06-16 14:17:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\maintain\index.js
@@ -32,9 +32,14 @@ module.exports = app => {
     router.get('/fetchPointInfo', async (req, res) => {
         console.log(req.query);
         let eq = req.query.eq
+        let date = 10
+        if (req.query.date) {
+            date = req.query.date * 24 * 60 * 2
+
+        }
         let results = {}
         results.success = true
-        let sql = `select * from devicedata where eq = '${eq}' limit 10`
+        let sql = `select * from devicedata where eq = '${eq}' limit ${date}`
 
         results.info = await connection(sql)
         sql = `select * from devicedata_limit where eq = '${eq}'`

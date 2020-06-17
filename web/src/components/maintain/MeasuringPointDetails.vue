@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-07 10:52:41
- * @LastEditTime: 2020-06-15 14:44:23
+ * @LastEditTime: 2020-06-16 16:58:10
  * @LastEditors: Please set LastEditors
  * @Description: 测点详情
  * @FilePath: \vue-manage-system\src\components\view\MeasuringPointDetails.vue
@@ -46,9 +46,8 @@
             </div>
 
             <div class="schart-container">
-                <div class="schart-box" v-for="(item, index) in schart" :key="index">
-                    <!-- <div class="content-title">折线图</div> -->
-                    <schart class="schart" :canvasId="'schart' + index" :options="item"></schart>
+                <div class="schart-box" v-for="(item, index) in tableData.delimit" :key="index">
+                    <div class="schart" :id="'myChart' + index"></div>
                 </div>
             </div>
             <!-- <div class="handle-box">
@@ -192,10 +191,10 @@ export default {
     },
 
     computed: {},
-    created() {
-        this.getData();
-    },
+    created() {},
     mounted() {
+        this.getData();
+        window.console.log(document.getElementById('myChart1'));
     },
     methods: {
         getData(date) {
@@ -220,36 +219,118 @@ export default {
                         let b = 'option' + i;
                         let info = [];
                         let date = [];
+                        // let limit_up =
+
                         arr[a] = data.delimit.find(item => {
                             return item.cp_id == a;
                         });
+                        let limit_up = arr[a].limit_up;
+                        let limit_down = arr[a].limit_down;
+
+                        window.console.log(limit_up);
+                        window.console.log(limit_down);
+
                         data.info.forEach(item => {
                             info.push(item[a] * arr[a].k);
                             date.push(Moment(+item.ts).format('HH:mm:ss'));
                         });
                         // window.console.log(date);
-                        this.schart.push({
-                            type: 'line',
-                            title: {
-                                text: arr[a].cp_name
+                        let option = {
+                            color: ['#ed7a2c', '#5b9bd5', '#a5a5a5'],
+                            grid: {
+                                bottom: 60
                             },
-                            bgColor: '#fff',
-                            labels: date,
-                            datasets: [
+                            title: {
+                                text: arr[a].cp_name,
+                                x: 'center',
+                                y: '10',
+                                textStyle: {
+                                    fontWeight: 500,
+                                    fontSize: '20'
+                                }
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                confine: true,
+                                textStyle: {
+                                    fontSize: 12
+                                }
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: date
+                            },
+                            yAxis: {
+                                type: 'value',
+                                scale: true
+                            },
+                            series: [
                                 {
+                                    name: arr[a].cp_name,
+                                    type: 'line',
+                                    markLine: {
+                                        lineStyle: {
+                                            width: 2
+                                        },
+                                        label: {
+                                            position: 'insideEndTop',
+                                            formatter: '{b}',
+                                            color: '#333'
+                                        },
+                                        symbolSize: 0,
+                                        data: [
+                                            {
+                                                name: '上限值',
+                                                yAxis: limit_up,
+                                                lineStyle: {
+                                                    color: '#f60902'
+                                                }
+                                            },
+                                            {
+                                                name: '下限值',
+                                                yAxis: limit_down,
+                                                lineStyle: {
+                                                    color: '#f89933'
+                                                }
+                                            }
+                                        ]
+                                    },
                                     data: info
                                 }
-                            ],
-                            legend: {
-                                display: false
-                            },
+                            ]
+                            //-------------------------------------
+                            // type: 'line',
+                            // title: {
+                            //     text: arr[a].cp_name
+                            // },
+                            // bgColor: '#fff',
+                            // labels: date,
+                            // datasets: [
+                            //     {
+                            //         data: info
+                            //     }
+                            // ],
+                            // legend: {
+                            //     display: false
+                            // },
                             // leftPadding: 50,
                             // rightPadding: 50,
-                            width: '100%'
-                        });
+                            // width: '100%'
+                        };
+                        this.schart.push(option);
+                        window.console.log(this.schart);
+                        // myChart.setOption(option);
                     }
                     this.limit = arr;
                     window.console.log(arr);
+                })
+                .then(() => {
+                    for (let i in this.schart) {
+                        let divId = 'myChart' + i;
+                        window.console.log(document.getElementById(divId));
+                        let myChart = this.$echarts.init(document.getElementById(divId));
+                        myChart.setOption(this.schart[i]);
+                    }
                 })
                 .catch(err => {});
         },
