@@ -1,11 +1,8 @@
-const {
-    connect
-} = require('http2')
 
 /*
  * @Author: your name
  * @Date: 2020-06-14 14:08:41
- * @LastEditTime: 2020-06-17 17:18:08
+ * @LastEditTime: 2020-06-18 20:15:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\maintain\index.js
@@ -22,13 +19,24 @@ module.exports = app => {
 
     //获取所有设备
     router.get('/fetchEquipment', authMiddle, async (req, res) => {
-        console.log(123);
+        if (req.user.role === 1) {
+            console.log('超级');
+            sql = "select * from device where is_deleted = 0"
+        } else if (req.user.role === 2) {
+            console.log('企业');
+            sql = `select * from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
+        } else {
+            console.log('普通');
+            sql = `select ud.user_id uid, ud.device_id did, d.eq, d.device_name,d.created_time, d.device_type, d.device_supplier, d.address,d.device_description,d.is_on,d.status,d.device_model from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
+            console.log(sql);
 
-        let sql = `select * from device d inner join device_type dt on (d.device_type = dt.id) where d.is_deleted = 0`
-        let results = {}
-        results.success = true
-        results.data = await connection(sql)
-        res.send(results)
+        }
+        let row = await connection(sql)
+        let data = {
+            success: true,
+            data: row
+        }
+        res.send(data)
     })
 
     //根据设备eq获取实时数据

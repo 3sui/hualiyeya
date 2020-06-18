@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-01 11:31:14
- * @LastEditTime: 2020-06-15 17:28:11
+ * @LastEditTime: 2020-06-18 20:55:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\server\route\map\index.js
@@ -46,10 +46,10 @@ module.exports = app => {
             sql = "select d.*,u.username from device d inner join user_info u on d.principal = u.id where d.is_deleted = 0"
         } else if (req.user.role === 2) {
             console.log('企业');
-            sql = `select * from device d inner join user_info u on d.principal = u.id where d.enterprise_id = ${req.user.enterprise_id} and d.is_deleted = 0`
+            sql = `select *,d.id from device d inner join user_info u on d.principal = u.id where d.enterprise_id = ${req.user.enterprise_id} and d.is_deleted = 0`
         } else {
             console.log('普通');
-            sql = `select ud.*,d.* from user_device ud inner join device d on d.id = ud.device_id inner join user_info u on d.principal = u.id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
+            sql = `select ud.*,d.*,d.id from user_device ud inner join device d on d.id = ud.device_id inner join user_info u on d.principal = u.id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
         }
         let row = await connection(sql)
         let data = {

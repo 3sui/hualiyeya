@@ -50,15 +50,18 @@ module.exports = app => {
     })
 
 
+
     //单个删除维修表信息
     router.get('/DeleteRepair', async (req, res) => {
         let id = req.query.id;
         let sql = `update repair set is_deleted=1 where id in (${id}) `
-        connection.query(sql, (err, results) => {
-            if (err) throw err
-            // console.log(results)
-            res.send(results)
-        })
+        await connection(sql)
+        let results = {
+            success: true,
+            data: '删除成功'
+        }
+        res.send(results)
+
     })
     //查询维修表信息
     router.post('/SearchRepair', async (req, res) => {
@@ -73,72 +76,72 @@ module.exports = app => {
             res.send(results)
         })
     })
-        //单个删除行业表信息
-        router.get('/DeleteRepair', authMiddle, async (req, res) => {
-            let id = req.query.id;
-            let sql = "update industry set is_deleted=1 where id=" + id
-            let results = await connection(sql)
+    //单个删除行业表信息
+    router.get('/DeleteRepair', authMiddle, async (req, res) => {
+        let id = req.query.id;
+        let sql = "update industry set is_deleted=1 where id=" + id
+        let results = await connection(sql)
+
+        res.send(results)
+    })
+    //查询行业表信息
+    router.post('/SearchIndustry', authMiddle, async (req, res) => {
+        let keyword = req.body.keyword;
+        let sql = "select * from  industry where ( is_deleted=0 or is_deleted is NULL) and industry_name like '%" + keyword + "%' order by created_time Desc"
+        let results = await connection(sql)
+
+        console.log(results)
+        res.send(results)
+    })
+
+    //获得故障种类选择对象
+    router.get('/FaultTypeChoose', authMiddle, async (req, res) => {
+        let sql = "select fault_type,fault_phenomenon from fault_type where is_deleted = 0 or is_deleted is NULL"
+        let results = await connection(sql)
+
+        if (results) {
+            let faultTypelist = [];
+            let typeContainer = {};
+            results.forEach(element => {
+
+                typeContainer[element.fault_type] = typeContainer[element.fault_type] || [];
+                typeContainer[element.fault_type].push(element)
+            });
+            // console.log(typeContainer);
+            var TypeName = Object.keys(typeContainer);
+
+            TypeName.forEach(element => {
+                // console.log(element);                  
+                let typeItem = {}
+                typeItem['fault_type'] = element
+                let phenomenonlist = []
+                typeContainer[element].forEach(item => {
+                    phenomenonlist.push(item.fault_phenomenon)
+                })
+                typeItem['fault_phenomenon'] = phenomenonlist
+
+                faultTypelist.push(typeItem)
+            });
+            // console.log(faultTypelist);           
+            res.send(faultTypelist)
+        }
+
+    })
+
+    //根据企业id获取设备
+    router.post('/Devices', authMiddle, async (req, res) => {
+        let id = req.body.enterprise_id
+
+        let sql = `select id,eq as value from device where  enterprise_id=${id} and is_deleted = 0 or is_deleted is NULL `
+        let results = await connection(sql)
+
+        if (results) {
 
             res.send(results)
-        })
-        //查询行业表信息
-        router.post('/SearchIndustry', authMiddle, async (req, res) => {
-            let keyword = req.body.keyword;
-            let sql = "select * from  industry where ( is_deleted=0 or is_deleted is NULL) and industry_name like '%" + keyword + "%' order by created_time Desc"
-            let results = await connection(sql)
-
-            console.log(results)
-            res.send(results)
-        })
-
-        //获得故障种类选择对象
-        router.get('/FaultTypeChoose', authMiddle, async (req, res) => {
-            let sql = "select fault_type,fault_phenomenon from fault_type where is_deleted = 0 or is_deleted is NULL"
-            let results = await connection(sql)
-
-            if (results) {
-                let faultTypelist = [];
-                let typeContainer = {};
-                results.forEach(element => {
-
-                    typeContainer[element.fault_type] = typeContainer[element.fault_type] || [];
-                    typeContainer[element.fault_type].push(element)
-                });
-                // console.log(typeContainer);
-                var TypeName = Object.keys(typeContainer);
-
-                TypeName.forEach(element => {
-                    // console.log(element);                  
-                    let typeItem = {}
-                    typeItem['fault_type'] = element
-                    let phenomenonlist = []
-                    typeContainer[element].forEach(item => {
-                        phenomenonlist.push(item.fault_phenomenon)
-                    })
-                    typeItem['fault_phenomenon'] = phenomenonlist
-
-                    faultTypelist.push(typeItem)
-                });
-                // console.log(faultTypelist);           
-                res.send(faultTypelist)
-            }
-
-        })
-
-        //根据企业id获取设备
-        router.post('/Devices', authMiddle, async (req, res) => {
-            let id = req.body.enterprise_id
-
-            let sql = `select id,eq as value from device where  enterprise_id=${id} and is_deleted = 0 or is_deleted is NULL `
-            let results = await connection(sql)
-
-            if (results) {
-
-                res.send(results)
-            }
-        })
+        }
+    })
 
 
 
-        app.use('/api', router)
-    }
+    app.use('/api', router)
+}
