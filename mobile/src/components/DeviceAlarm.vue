@@ -16,8 +16,8 @@
      <van-search
       v-model="value"
       shape="round"
-      background="white"
-      placeholder="请输入搜索关键词"
+      background="#f0f0f0"
+      placeholder="搜索设备名称、设备编号、报警时间"
       show-action
       @search="onSearch(value)"
       @cancel="onCancel"
@@ -49,7 +49,7 @@
                   <p>报警时间：{{record.created_time}}</p>
                 </van-col>
                 <van-col span="8">
-                  <div class="mark" :class="record.is_handled?'success':'danger'">{{record.is_handled?'已处理':'未处理'}}</div>
+                  <div class="mark" :class="record.is_handled==='1'?'success':'danger'">{{record.is_handled==='1'?'已处理':'未处理'}}</div>
                 </van-col>
               </van-row>
             </div>
@@ -182,7 +182,7 @@ export default {
      //取消
     onCancel() {
       this.value="";
-      this.getData()
+      location.reload()
     },
   }
 };
@@ -236,8 +236,10 @@ export default {
   height: 3rem;
   margin: auto;
   padding: 0.5rem 0;
+  color:#23A9F2;
 }
 .item-title .record-title {
+  color:#23A9F2;
   height: 3rem;
   line-height: 3rem;
   font-size: 1.2rem;
@@ -279,9 +281,9 @@ export default {
 }
 
 .item-content .success{
-  color: #0dbc79;
+  color: #69D3AB;
 }
 .item-content .danger{
- color: #DD4F42;
+ color: #EB6379;
 }
 </style>

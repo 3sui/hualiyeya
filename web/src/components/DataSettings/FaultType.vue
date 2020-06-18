@@ -194,7 +194,9 @@ export default {
             this.editVisible = true;
             this.isAdd = true;
             this.form = {
-                is_deleted: 0
+                // is_deleted: 0
+                fault_type:'',
+                fault_phenomenon:''
             };
         },
         //添加确认

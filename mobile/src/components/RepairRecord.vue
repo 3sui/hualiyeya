@@ -42,48 +42,55 @@
       </van-col>
     </van-row>-->
     <van-search
-      v-model="value" 
+      v-model="value"
       shape="round"
       background="#F0F0F0"
-      placeholder="请输入搜索关键词"
+      placeholder="设备名称、维修人员、设备种类、状态、时间"
       show-action
       @search="onSearch"
       @cancel="onCancel"
     />
     <div class="record_container">
-    
-      <div class="record_item" v-for="record in recordlist" @click="goRecordDetail(record.id)">  <van-swipe-cell> 
-        <div class="item-title">
-          <van-row :gutter="20">
-            <van-col span="2">
-              <div class="record-icon">
-                <van-icon size="2rem" name="records" />
-              </div>
-            </van-col>
-            <van-col span="10">
-              <div class="record-title">{{record.eq}}</div>
-            </van-col>
-            <van-col span="12">
-              <div class="record-date">维修时间：{{record.date}}</div>
-            </van-col>
-          </van-row>
-        </div>
-        <div class="item-content">
-          <van-row :gutter="20">
-            <van-col span="16">
-              <p>维修人员：{{record.repair_person}}</p>
-              <p>故障类型：{{record.type}}</p>
-            </van-col>
-            <van-col span="8">
-              <div class="mark" :style="{'color':getColor(record.state)}">{{record.state}}</div>
-            </van-col>
-          </van-row>
-        </div> <template #right>
-    <van-button square text="编辑" type="danger" class="edit-button" v-if="rolecheck"  @click="goEditRepairRecord(record.id)"/>
-  </template>
-  </van-swipe-cell>
+      <div class="record_item" v-for="record in recordlist" @click="goRecordDetail(record.id)">
+        <van-swipe-cell>
+          <div class="item-title">
+            <van-row :gutter="20">
+              <van-col span="2">
+                <div class="record-icon">
+                  <van-icon size="2rem" name="records" />
+                </div>
+              </van-col>
+              <van-col span="10">
+                <div class="record-title">{{record.device_name}}</div>
+              </van-col>
+              <van-col span="12">
+                <div class="record-date">维修时间：{{record.date}}</div>
+              </van-col>
+            </van-row>
+          </div>
+          <div class="item-content">
+            <van-row :gutter="20">
+              <van-col span="16">
+                <p>维修人员：{{record.repair_person}}</p>
+                <p>故障类型：{{record.type}}</p>
+              </van-col>
+              <van-col span="8">
+                <div class="mark" :style="{'color':getColor(record.state)}">{{record.state}}</div>
+              </van-col>
+            </van-row>
+          </div>
+          <template #right>
+            <van-button
+              square
+              text="编辑"
+              type="danger"
+              class="edit-button"
+              v-if="rolecheck"
+              @click="goEditRepairRecord(record.id)"
+            />
+          </template>
+        </van-swipe-cell>
       </div>
-       
     </div>
     <!-- <div class="footer"></div> -->
   </div>
@@ -99,7 +106,7 @@ import {
   Search,
   Button,
   Image as VanImage,
-  SwipeCell 
+  SwipeCell
 } from "vant";
 export default {
   name: "RepairRecord",
@@ -112,22 +119,22 @@ export default {
     [Form.name]: Form,
     [Search.name]: Search,
     [VanImage.name]: VanImage,
-    [SwipeCell.name]:SwipeCell ,
-    [Button.name]:Button
+    [SwipeCell.name]: SwipeCell,
+    [Button.name]: Button
   },
   data() {
     return {
-      rolecheck:false,
+      rolecheck: false,
       value: "",
       recordlist: [],
-     
+
       colors: [
-        "#85144b",
-        "#129646",
-        "#FF851B",
-        "#FFDC00",
-        "#01FF70",
-        "#0074D9",
+        "#EB6379",
+        "#69D3AB",
+        "#53CFE9",
+        "#EEA03C",
+        "#75649B",
+        "#23A9F2",
         "#39CCCC"
       ],
       state: []
@@ -189,29 +196,36 @@ export default {
     },
     //搜索
     onSearch(val) {
-     this.recordlist=this.recordlist.filter(array=>{
-      return  array.repair_person.match(val) || array.state.match(val) || array.type.match(val) || array.eq.match(val)
-     })
+      this.recordlist = this.recordlist.filter(array => {
+        return (
+          array.repair_person.match(val) ||
+          array.state.match(val) ||
+          array.type.match(val) ||
+          array.device_name.match(val) ||
+          array.date.match(val)
+        );
+      });
     },
 
     //取消
     onCancel() {
-      this.value="",
-      this.getData()
+      this.value = "";
+      // this.getData();
+      location.reload()
     },
-    
+
     //获取用户权限
 
     getRole() {
       if (localStorage) {
         let user_role = localStorage.getItem("role");
-        if(user_role==='4' || user_role==='1'){
-          this.rolecheck=true;
-        }else{
-          return ;
+        if (user_role === "4" || user_role === "1") {
+          this.rolecheck = true;
+        } else {
+          return;
         }
-      }else{
-        return ;
+      } else {
+        return;
       }
     },
     //企业用户进入维修记录详情，只能查看
@@ -230,7 +244,6 @@ export default {
         path: "/EditRepairRecord",
         query: {
           id: id
-          
         }
       });
     }
@@ -286,12 +299,14 @@ export default {
   height: 3rem;
   margin: auto;
   padding: 0.5rem 0;
+  color: #23a9f2;
 }
 .item-title .record-title {
   height: 3rem;
   line-height: 3rem;
   font-size: 1.2rem;
   font-weight: bold;
+  color: #23a9f2;
 }
 
 .item-title .record-date {
@@ -326,9 +341,10 @@ export default {
   color: #747474;
   font-size: 1.3rem;
   font-weight: bold;
+  text-align: center;
 }
 
-.edit-button{
+.edit-button {
   height: 100%;
 }
 </style>

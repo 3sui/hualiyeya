@@ -13,7 +13,7 @@
       </van-row>
     </div>
     <van-row class="main">
-      <van-col span="8">
+      <van-col span="8" :style="{color:'#53CFE9'}">
         <div class="img">
           <div class="img_icon">
             <van-icon size="1.5rem" name="bar-chart-o" />
@@ -22,19 +22,19 @@
         <h3>{{deviceNum}}</h3>
         <p>设备数</p>
       </van-col>
-      <van-col span="8" class="second">
+      <van-col span="8" class="second" :style="{color:'#69D3AB'}">
         <div class="img">
           <div class="img_icon">
-            <van-icon size="1.5rem" name="bar-chart-o" />
+            <van-icon size="1.5rem" name="tv-o" />
           </div>
         </div>
         <h3>{{device_isonNum}}</h3>
         <p>运行数</p>
       </van-col>
-      <van-col span="8">
+      <van-col span="8" :style="{color:'#EB6379'}">
         <div class="img">
           <div class="img_icon">
-            <van-icon size="1.5rem" name="bar-chart-o" />
+            <van-icon size="1.5rem" name="warn-o" />
           </div>
         </div>
         <h3>{{device_alarmNum}}</h3>
@@ -46,7 +46,7 @@
       v-model="value"
       shape="round"
       background="white"
-      placeholder="请输入搜索关键词"
+      placeholder="搜索设备名称、出厂编号"
       show-action
       @search="onSearch(value)"
       @cancel="onCancel"
@@ -182,7 +182,8 @@ export default {
     //取消
     onCancel() {
       this.value="";
-      this.getData()
+      // this.getData()
+      location.reload()
     },
 
     //查看设备详情
@@ -236,15 +237,17 @@ export default {
 }
 
 .devicemanage .main h3 {
-  font-weight: normal;
+  font-weight: bolder;
   text-align: center;
   margin: 0.3rem auto;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
 }
 
 .devicemanage .main p {
   text-align: center;
   margin: 0.2rem auto;
+  color:  #cccccc;
+  font-size: 0.8rem;
 }
 
 .devicemanage .main .img {

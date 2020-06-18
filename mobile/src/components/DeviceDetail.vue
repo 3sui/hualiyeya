@@ -36,7 +36,7 @@
               设备状态:
               <van-tag
                 round
-                :type="device.status=='正常'?'success':'danger'"
+                :type="device.status==='正常'?'success':'danger'"
                 size="medium"
               >{{device.status}}</van-tag>
             </p>
@@ -60,13 +60,13 @@
               </p>
               <p>
                 <span class="limit">
-                  <van-icon color="blue" size="1rem" name="arrow-up" />上限值
+                  <van-icon color="blue" size="1rem" name="arrow-up" /> 上限值
                 </span>
                 {{point.up_limit}}
               </p>
               <p>
                 <span class="limit">
-                  <van-icon color="blue" size="1rem" name="arrow-down" />下限值
+                  <van-icon color="blue" size="1rem" name="arrow-down" /> 下限值
                 </span>
                 {{point.down_limit}}
               </p>
@@ -198,7 +198,7 @@ export default {
             let result = res.data[0];
             // console.log(result);
             let array = Object.values(result);
-            let time = array.pop();
+            let time = array[array.length-2];
             // console.log(time);
             
             this.data = array.slice(4, 4 + this.list.length);
@@ -354,6 +354,7 @@ export default {
   margin: 0.5rem 0;
   font-size: 0.9rem;
   padding: 0;
+  line-height: 2rem;
 }
 .limit {
   /* color: #A3A3A3; */
@@ -365,7 +366,7 @@ export default {
   text-align: center;
   font-size: 2rem;
   font-weight: bold;
-  margin: 1rem 0 0 0;
+  /* margin: 1rem 0 0 0; */
 }
 .point-detail .success{
   color: #0dbc79;
@@ -376,7 +377,7 @@ export default {
 
 .point-detail .current-label {
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #7f7f7f;
   font-weight: bold;
 }

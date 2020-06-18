@@ -272,7 +272,9 @@ export default {
             this.editVisible = true;
             this.isAdd = true;
             this.form = {
-                is_deleted: 0
+                // is_deleted: 0
+                enterprise_name:'',
+                industry_id:''
             };
         },
         //添加确认

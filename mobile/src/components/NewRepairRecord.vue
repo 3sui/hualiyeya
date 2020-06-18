@@ -170,13 +170,11 @@
       />
       <div class="sub">
         <van-button round block type="info" native-type="submit">提交</van-button>
-        <!-- <van-button round block type="default" native-type="cancel">返回</van-button> -->
-      </div>
-      <div class="sub">
-        <!-- <van-button round block type="info" native-type="submit">提交</van-button> -->
-        <van-button round block type="default" native-type="cancel" @click="back">返回</van-button>
       </div>
     </van-form>
+    <div class="sub">
+      <van-button round block type="default"  @click="back">返回</van-button>
+    </div>
   </div>
 </template>
 
@@ -284,9 +282,8 @@ export default {
           .post("/mobile/AddRepair", this.query)
           .then(res => {
             if (res.status === 200) {
-              
               Toast.success("添加成功");
-                this.$router.push("/RepairRecord");
+              this.$router.push("/RepairRecord");
             }
           })
           .catch(err => {
@@ -297,7 +294,7 @@ export default {
 
     //返回
     back() {
-      this.$router.push("/DeviceManage");
+      this.$router.push("/RepairRecord");
     },
 
     //获取企业选项
@@ -323,8 +320,11 @@ export default {
       let index = this.enterprises.indexOf(value);
       this.enterprise_id = this.enterprises_id[index];
       this.showPicker_enterprise = false;
-      this.getDevices();
+      this.devices_id=[];
+      this.eqlist=[];
       this.eq = "";
+      this.getDevices();
+    
     },
 
     //企业选择改变
@@ -371,7 +371,6 @@ export default {
     //选择设备编号确认
     eqonConfirm(value) {
       this.eq = value;
-
       let index = this.eqlist.indexOf(value);
       this.query.device_id = this.devices_id[index];
       this.showPicker_eq = false;
@@ -400,7 +399,7 @@ export default {
       let index = this.faultType.indexOf(value);
       this.phenomenons = this.choosefault[index];
       this.showPicker_fault_type = false;
-      this.phenomenon = "";
+      this.query.phenomenon = "";
     },
     //选择故障现象确认
     phenomenononConfirm(value) {
@@ -417,8 +416,11 @@ export default {
 
     //日期格式化
     formatDate(date) {
-
-      return `${date.getFullYear()}-${date.getMonth() + 1>=10?date.getMonth() + 1: '0'+ (date.getMonth() + 1)}-${date.getDate()>=10?date.getDate() : '0'+ date.getDate() }`;
+      return `${date.getFullYear()}-${
+        date.getMonth() + 1 >= 10
+          ? date.getMonth() + 1
+          : "0" + (date.getMonth() + 1)
+      }-${date.getDate() >= 10 ? date.getDate() : "0" + date.getDate()}`;
     },
 
     //选择日期确认
@@ -440,7 +442,7 @@ export default {
 .newrepairrecord {
   background-color: #f0f0f0;
   padding: 0 0 1rem 0;
-  min-height:95vh ;
+  min-height: 95vh;
 }
 .header {
   background-color: white;

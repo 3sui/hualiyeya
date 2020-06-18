@@ -9,59 +9,48 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-row :gutter="20" class="mgb20">
-                <!-- <el-col :span="6">
-                    <div class="block">
-                        <span class="demonstration"></span>
-                        <el-date-picker
-                            v-model="datepick"
-                            type="daterange"
-                            align="right"
-                            unlink-panels
-                            range-separator="-"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            :picker-options="pickerOptions"
-                        ></el-date-picker>
-                    </div>
-                </el-col>-->
+            <!-- <el-row :gutter="20" class="mgb20">
                 <el-col :span="6">
                     <el-button type="primary" icon="el-icon-search" @click="Refresh">刷新</el-button>
                     <el-button type="primary" icon="el-icon-download" @click="Download">导出报表</el-button>
                 </el-col>
-            </el-row>
+            </el-row> -->
             <!-- </div>
 
             <div class="container">-->
-            <el-row :gutter="20" class="mgb20">
+            <el-row :gutter="20" >
                 <el-col :span="6" v-for="(industry,index) in industryTop" :key="index">
                     <el-card shadow="hover" :body-style="{padding: '0px'}" v-if="index<4">
                         <div class="grid-content grid-con">
-                            <i
+                              <div
+                                        class="card-title"
+                                        :class="backgroundstyle[index]"
+                                    >{{industry.industryname}}</div>
+                            <!-- <i
                                 class="grid-con-icon"
                                 :class="backgroundstyle[index]"
-                            >{{industry.sort}}</i>
+                            >{{industry.sort}}</i> -->
                             <div class="grid-cont-right">
-                                <el-row>
+                                <!-- <el-row>
                                     <div
                                         class="card-title"
                                         :class="style[index]"
                                     >{{industry.industryname}}</div>
-                                </el-row>
+                                </el-row> -->
                                 <el-row :gutter="24">
                                     <el-col :span="12">
                                         <div
                                             :class="style[index]"
                                             class="grid-num"
                                         >{{industry.enterpriseNum}}</div>
-                                        <div>企业数</div>
+                                        <div class="grid_dev">企业数</div>
                                     </el-col>
                                     <el-col :span="12">
                                         <div
                                             :class="style[index]"
                                             class="grid-num"
                                         >{{industry.deviceNum}}</div>
-                                        <div>设备数</div>
+                                        <div class="grid_dev">设备数</div>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -252,21 +241,21 @@ export default {
             let lineColor = 'rgba(255,255,255,0.2)';
             let colors = [
                 {
-                    borderColor: 'rgba(227,161,96,1)',
-                    start: 'rgba(227,161,96,0.8)',
-                    end: 'rgba(227,161,96,0.3)'
+                    borderColor: 'rgba(238，160,60,1)',
+                    start: 'rgba(238,160,60,0.8)',
+                    end: 'rgba(238,160,60,0.5)'
                 },
                 {
-                    borderColor: 'rgba(0,222,255,1)',
-                    start: 'rgba(0,222,255,0.3)',
-                    end: 'rgba(0,222,255,0.8)'
+                    borderColor: 'rgba(35,169,242,1)',
+                    start: 'rgba(35,169,242,0.5)',
+                    end: 'rgba(35,169,242,0.8)'
                 }
             ];
             let borderData = [];
             let scale = 2;
-            borderData = xData.map(item => {
-                return scale;
-            });
+            // borderData = xData.map(item => {
+            //     return 1;
+            // });
             var option = {
                 baseOption: {
                     title: {
@@ -479,18 +468,18 @@ export default {
                         data: lastYearData,
                         animationEasing: 'elasticOut'
                     },
-                    {
-                        name: '设备数',
-                        type: 'bar',
-                        barWidth: 25,
-                        stack: '1',
-                        itemStyle: {
-                            normal: {
-                                color: colors[0].borderColor
-                            }
-                        },
-                        data: borderData
-                    },
+                    // {
+                    //     name: '设备数',
+                    //     type: 'bar',
+                    //     barWidth: 25,
+                    //     stack: '1',
+                    //     itemStyle: {
+                    //         normal: {
+                    //             color: colors[0].borderColor
+                    //         }
+                    //     },
+                    //     data: borderData
+                    // },
                     {
                         name: '企业数',
                         type: 'bar',
@@ -520,20 +509,20 @@ export default {
                         data: thisYearData,
                         animationEasing: 'elasticOut'
                     },
-                    {
-                        name: '企业数',
-                        type: 'bar',
-                        xAxisIndex: 2,
-                        yAxisIndex: 2,
-                        barWidth: 25,
-                        stack: '2',
-                        itemStyle: {
-                            normal: {
-                                color: colors[1].borderColor
-                            }
-                        },
-                        data: borderData
-                    }
+                    // {
+                    //     name: '企业数',
+                    //     type: 'bar',
+                    //     xAxisIndex: 2,
+                    //     yAxisIndex: 2,
+                    //     barWidth: 25,
+                    //     stack: '2',
+                    //     itemStyle: {
+                    //         normal: {
+                    //             color: colors[1].borderColor
+                    //         }
+                    //     },
+                    //     data: borderData
+                    // }
                 ]
             });
 
@@ -567,12 +556,18 @@ export default {
     text-align: center;
     font-size: 14px;
     color: #999;
+    height: 120px;
 }
 
 .grid-num {
-    font-size: 24px;
+    font-size: 50px;
     font-weight: bold;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
+    height: 90px;
+    line-height:90px;
+}
+.grid_dev{
+    font-size: 18px;
 }
 
 .grid-con-icon {
@@ -588,41 +583,43 @@ export default {
     text-align: center;
     font-size: 20px;
     font-weight: bold;
-    /* color: coral; */
+    color: white;
     letter-spacing: 0.5em;
-    line-height: 50px;
+    width: 50%;
+    line-height: 120px;
+    height: 120px;
+    background-color:#f0f0f0 ;
 }
-
 .s1 {
-    color: rgb(45, 140, 240);
-}
-
-.s2 {
-    color: coral;
+    color: #EB6379;
 }
 
 .s3 {
+    color:#EEA03C;
+}
+
+.s2 {
     color: darkturquoise;
 }
 
 .s4 {
-    color: red;
+    color: #69D3AB;
 }
 
 .b1 {
-    background-color: rgb(45, 140, 240);
-}
-
-.b2 {
-    background-color: coral;
+    background-color:#EB6379;
 }
 
 .b3 {
+    background-color:#EEA03C;
+}
+
+.b2 {
     background-color: darkturquoise;
 }
 
 .b4 {
-    background-color: red;
+    background-color: #69D3AB;
 }
 .container {
     padding-top: 15px;

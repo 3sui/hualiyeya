@@ -185,8 +185,18 @@ export default {
             this.editVisible = true;
             this.isAdd = true;
             this.form = {
-                is_deleted: 0
+                typename:''
+                // is_deleted: 0
             };
+        },
+
+         //获取设备种类列表
+        getdevicetypeelist() {
+            let list = [];
+            this.tableData.forEach(element => {
+                list.push(element.typename);
+            });
+            return list;
         },
         //添加确认
         Confirm(formName) {

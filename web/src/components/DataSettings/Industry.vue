@@ -194,8 +194,16 @@ export default {
             this.editVisible = true;
             this.isAdd = true;
             this.form = {
-                is_deleted: 0
+                industry_name: ''
             };
+        },
+        //获取行业列表
+        getenterpriselist() {
+            let list = [];
+            this.tableData.forEach(element => {
+                list.push(element.enterprise_name);
+            });
+            return list;
         },
         //添加确认
         Confirm(formName) {
