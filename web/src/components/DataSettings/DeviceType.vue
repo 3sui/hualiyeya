@@ -181,21 +181,33 @@ export default {
             this.editVisible = true;
             this.isAdd = true;
             this.form = {
-                is_deleted: 0
+                typename:''
+                // is_deleted: 0
             };
+        },
+
+         //获取设备种类列表
+        getdevicetypeelist() {
+            let list = [];
+            this.tableData.forEach(element => {
+                list.push(element.typename);
+            });
+            return list;
         },
         //添加确认
         Confirm() {
             if (this.form.typename === '' || this.form.typename === '') {
                 this.$message.error(`设备名称不能为空`);
-            } else if (this.form.typename.length > 128) {
-                this.$message.error(`设备名称过长`);
+            } else if (this.getdevicetypeelist().indexOf(this.form.typename) !== -1) {
+                // console.log(this.getenterpriselist().indexOf(this.form.industry_name));
+                
+                this.$message.error(`设备种类名称不能重复`);
             } else {
                 if (this.isAdd) {
                     // this.query.industry_name=this.form.industry_name
-                    let date = new Date();
-                    this.form.created_time = date.getTime();
-                    console.log(date);
+                    // let date = new Date();
+                    // this.form.created_time = date.getTime();
+                    // console.log(date);
                     this.$axios
                         .post('/dataSettings/AddDeviceType', this.form)
                         .then(res => {

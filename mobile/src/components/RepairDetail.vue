@@ -12,18 +12,95 @@
         </van-col>
       </van-row>
     </div>
-    <van-cell title="企业名称" :value="query.enterprise_name" size="large" title-class="titleclass" value-class="valueclass"/>
-    <van-cell title="设备编号" :value="query.eq" size="large" title-class="titleclass" value-class="valueclass" />
-    <van-cell title="故障类型" :value="query.type" size="large" title-class="titleclass" value-class="valueclass" />
-    <van-cell title="故障现象" :value="query.phenomenon" size="large"  title-class="titleclass" value-class="valueclass" />
-    <van-cell title="维修人员" :value="query.repair_person" size="large" title-class="titleclass" value-class="valueclass"  />
-    <van-cell title="手机号" :value="query.repair_person_phone" size="large" title-class="titleclass" value-class="valueclass" />
-    <van-cell title="维修日期" :value="query.date" size="large" title-class="titleclass" value-class="valueclass"  />
-    <van-cell title="维修状态" :value="query.state" size="large" title-class="titleclass" value-class="valueclass"  />
-    <van-field v-model="query.cause" rows="4" autosize label="故障原因" type="textarea" readonly label-class="valueclass" class="titleclass"/>
-    <van-field v-model="query.methods" rows="4" autosize label="排除办法" type="textarea" readonly label-class="valueclass" class="titleclass"/>
-<div class="sub"> <van-button round block type="info" native-type="cancel" style="margin-top:1rem"  @click="back">返回</van-button></div>
-   
+
+    <div class="area">
+      <van-cell
+        title="企业名称"
+        :value="query.enterprise_name"
+        size="large"
+        title-class="titleclass"
+        value-class="valueclass"
+      />
+      <van-cell
+        title="设备编号"
+        :value="query.eq"
+        size="large"
+        title-class="titleclass"
+        value-class="valueclass"
+      />
+      <van-cell
+        title="故障类型"
+        :value="query.type"
+        size="large"
+        title-class="titleclass"
+        value-class="valueclass"
+      />
+      <van-cell
+        title="故障现象"
+        :value="query.phenomenon"
+        size="large"
+        title-class="titleclass"
+        value-class="valueclass"
+      />
+      <van-cell
+        title="维修人员"
+        :value="query.repair_person"
+        size="large"
+        title-class="titleclass"
+        value-class="valueclass"
+      />
+      <van-cell
+        title="手机号"
+        :value="query.repair_person_phone"
+        size="large"
+        title-class="titleclass"
+        value-class="valueclass"
+      />
+      <van-cell
+        title="维修日期"
+        :value="query.date"
+        size="large"
+        title-class="titleclass"
+        value-class="valueclass"
+      />
+      <van-cell
+        title="维修状态"
+        :value="query.state"
+        size="large"
+        title-class="titleclass"
+        value-class="valueclass"
+      />
+      <van-field
+        v-model="query.cause"
+        rows="4"
+        autosize
+        label="故障原因"
+        type="textarea"
+        readonly
+        label-class="fieldclass"
+        class="fieldcontentclass"
+      />
+      <van-field
+        v-model="query.methods"
+        rows="4"
+        autosize
+        label="排除办法"
+        type="textarea"
+        readonly
+        label-class="fieldclass"
+        class="fieldcontentclass"
+      />
+      <div class="sub">
+        <van-button
+          round
+          block
+          type="info"
+          native-type="cancel"
+          style="margin-top:1rem"
+          @click="back"
+        >返回</van-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -58,38 +135,37 @@ export default {
   },
   data() {
     return {
-   
       query: {
-      //   enterprise_name: "1111",
-      //   eq: "",
-      //   type: "",
-      //   phenomenon: "",
-      //   repair_person: "",
-      //   date: "",
-      //   state: "",
-      //  repair_person_phone: "",
-      //   cause: "",
-      //   methods: ""
+        //   enterprise_name: "1111",
+        //   eq: "",
+        //   type: "",
+        //   phenomenon: "",
+        //   repair_person: "",
+        //   date: "",
+        //   state: "",
+        //  repair_person_phone: "",
+        //   cause: "",
+        //   methods: ""
       }
     };
   },
-  mounted(){
+  mounted() {
     this.getData();
   },
   methods: {
-    getData(){
-     
-      this.$axios.get('mobile/RepairInfo',{params:{ "id":this.$route.query.id}})
-      .then(res=>{
-        console.log(res.data)
-        if(res.status===200){
-          this.query=res.data[0]
-        }
-      })
+    getData() {
+      this.$axios
+        .get("mobile/RepairInfo", { params: { id: this.$route.query.id } })
+        .then(res => {
+          console.log(res.data);
+          if (res.status === 200) {
+            this.query = res.data[0];
+          }
+        });
     },
-   
-    back(){
-      this.$router.push('/RepairRecord')
+
+    back() {
+      this.$router.push("/RepairRecord");
     }
   }
 };
@@ -98,8 +174,8 @@ export default {
 <style scoped>
 .repairdetail {
   background-color: #f0f0f0;
-  padding: 0 0 1rem 0;
-   min-height:95vh ;
+  /* padding: 0 0 1rem 0; */
+  min-height: 95vh;
 }
 .header {
   background-color: white;
@@ -121,19 +197,41 @@ export default {
   color: #1989fa;
 }
 
-.area {
-  margin: 1rem 0;
+/* .area {
+  padding: 0 1.5rem ;
+} */
+.repairdetail .titleclass {
+  font-size: 1rem;
+  padding-left: 0.5rem;
+  text-align-last: justify
+  /* width: 30%; */
 }
-.repairdetail .titleclass{
-font-size: 1rem;
-}
-.repairdetail .valueclass{
+.repairdetail .valueclass {
   font-size: 1rem;
   color: #747474;
+  padding-right: 0.5rem;
+  /* width: 70%; */
 }
 
-.sub{
+/* .repairdetail .fieldclass{
+  
+  font-size: 1rem;
+  color: #747474;
+} */
+.fieldcontentclass{
+    font-size: 1rem;
+  padding-left: 1.5rem;
+}
+.repairdetail .van-field__value {
+   font-size: 1rem;
+  color: #747474;
+  padding-right: 0.5rem;
+}
+
+
+.sub {
   width: 80%;
   margin: 1rem auto;
+  height: 4rem;
 }
 </style>

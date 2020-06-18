@@ -186,7 +186,9 @@ export default {
             this.editVisible = true;
             this.isAdd = true;
             this.form = {
-                is_deleted: 0
+                // is_deleted: 0
+                fault_type:'',
+                fault_phenomenon:''
             };
         },
         //添加确认
@@ -198,14 +200,14 @@ export default {
                 this.form.fault_phenomenon === null
             ) {
                 this.$message.error(`故障类型、故障现象不能为空`);
-            } else if (this.form.fault_type.length > 128) {
-                this.$message.error(`故障类型过长`);
-            } else if (this.form.fault_phenomenon.length > 1024) {
-                this.$message.error(`故障现象过长`);
+            // } else if (this.form.fault_type.length > 128) {
+            //     this.$message.error(`故障类型过长`);
+            // } else if (this.form.fault_phenomenon.length > 1024) {
+            //     this.$message.error(`故障现象过长`);
             } else {
                 if (this.isAdd) {
-                    let date = new Date();
-                    this.form.created_time = date.getTime();
+                    // let date = new Date();
+                    // this.form.created_time = date.getTime();
                     // console.log(date);
                     this.$axios
                         .post('/dataSettings/AddFaultType', this.form)

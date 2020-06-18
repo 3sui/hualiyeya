@@ -191,21 +191,31 @@ export default {
             this.editVisible = true;
             this.isAdd = true;
             this.form = {
-                is_deleted: 0
+                industry_name: ''
             };
+        },
+        //获取行业列表
+        getenterpriselist() {
+            let list = [];
+            this.tableData.forEach(element => {
+                list.push(element.enterprise_name);
+            });
+            return list;
         },
         //添加确认
         Confirm() {
-            if (this.form.industry_name === '' || this.form.industry_name === null) {
+            if ('' === this.form.industry_name || null === this.form.industry_name) {
                 this.$message.error(`行业名称不能为空`);
-            } else if (this.form.industry_name.length > 128) {
-                this.$message.error(`行业名称过长`);
+            } else if (this.getenterpriselist().indexOf(this.form.industry_name) !== -1) {
+                // console.log(this.getenterpriselist().indexOf(this.form.industry_name));
+                
+                this.$message.error(`行业名称不能重复`);
             } else {
                 if (this.isAdd) {
                     // this.query.industry_name=this.form.industry_name
-                    let date = new Date();
-                    this.form.created_time = date.getTime();
-                    console.log(date);
+                    // let date = new Date();
+                    // this.form.created_time = date.getTime();
+                    // console.log(date);
                     this.$axios
                         .post('/dataSettings/AddIndustry', this.form)
                         .then(res => {

@@ -258,9 +258,11 @@ module.exports = app => {
 
     //修改某个id的报警状态
     router.post('/UpdateAlarmRecord', authMiddle, async (req, res) => {
+       
+        
         let id = req.body.id;
-        let state = res.body.state;
-        let sql = `update alarm set is_handled=${state} where id=${id}`
+        let state = req.body.state;
+        let sql = `update alarm set is_handled='${state}' where id=${id}`
         console.log(sql);
         let results = await connection(sql)
         console.log(results)

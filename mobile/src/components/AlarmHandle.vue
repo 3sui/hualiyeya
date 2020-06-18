@@ -30,13 +30,13 @@
               </p>
               <p>
                 <span class="limit">
-                  <van-icon color="blue" size="1rem" name="arrow-up" />上限值
+                  <van-icon color="blue" size="1rem" name="arrow-up" /> 上限值
                 </span>
                 {{point.limit_up}}
               </p>
               <p>
                 <span class="limit">
-                  <van-icon color="blue" size="1rem" name="arrow-down" />下限值
+                  <van-icon color="blue" size="1rem" name="arrow-down" /> 下限值
                 </span>
                 {{point.limit_down}}
               </p>
@@ -61,7 +61,7 @@
         round
         block
         type="info"
-     v-if="!point.is_handled"
+     v-if="point.is_handled==='0'"
         style="margin-top:1rem"
         @click="handle(point.id,'1')"
       >处理报警信息</van-button>
@@ -70,7 +70,7 @@
         round
         block
         type="info"
-       v-if="point.is_handled"
+       v-if="point.is_handled==='1'"
         style="margin-top:1rem"
         @click="handle(point.id,'0')"
       >标记为未处理</van-button>   
@@ -150,7 +150,7 @@ export default {
           }
           // on confirm
           this.Updatestate(query);
-          console.log(123);
+          //console.log(123);
           
         })
         .catch(() => {
@@ -229,6 +229,7 @@ export default {
   margin: 0.5rem 0;
   font-size: 0.9rem;
   padding: 0;
+  line-height: 2rem;
 }
 .limit {
   /* color: #A3A3A3; */
@@ -236,11 +237,12 @@ export default {
   /* font-size: 1rem; */
 }
 .point-detail .current {
-  color: #a30014;
+  color:#EB6379;
   text-align: center;
   font-size: 2rem;
   font-weight: bold;
-  margin: 1rem 0 0 0;
+  /* margin: 1rem 0 0 0; */
+  line-height: 4rem;
 }
 
 .point-detail .current-label {
@@ -248,6 +250,7 @@ export default {
   font-size: 1.2rem;
   color: #7f7f7f;
   font-weight: bold;
+  line-height: 2rem;
 }
 .point-detail .timestemp {
   font-size: 0.8rem;

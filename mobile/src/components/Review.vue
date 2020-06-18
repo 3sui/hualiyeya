@@ -3,24 +3,36 @@
     <div class="title">文档查看</div>
 
     <div class="content">
-      <pdf :src="pdfPath" ></pdf>
+      <pdf class="document" :src="pdfPath" ></pdf >
+
+     
+<!-- 
+      <canvas id="the-canvas"></canvas>
+      <div class="foot" v-if='pdfDoc'>
+        <button class='left' v-if="pageNum>1" @click="onPrevPage">上一页</button>
+        <button class='right' v-if="pageNum<pdfDoc.numPages" @click="onNextPage">下一页</button>
+        </div>
+ -->
+
     </div>
 
     <div class="sub">
-      <van-button round block type="info" class="quit" @click="quit">返回</van-button>
+      <van-button round block type="info" class="quit" @click="back">返回</van-button>
     </div>
+    <a href="../../static/xxx.xlsx" download="xxx.xlsx">下载</a>
   </div>
 </template>
 
 
 <script>
-import pdfPath from '../assets/pdf/1111.pdf';
+// import pdfPath from '../assets/pdf/1111.pdf';
 import { Button } from "vant";
-import pdf from 'vue-pdf';
+import pdf from '@/components/pdf'
+// import pdf from 'pdfjs-dist';
 export default {
   name: "Review",
   components: {
-    [pdf.name]:pdf,
+    pdf,
     [Button.name]: Button
   },
   data() {
@@ -29,12 +41,20 @@ export default {
     };
   },
 
+  mounted () {
+   this.$showPDF('/media/up/2018/3/9/494079c7ec333bd371798dd0a73c0a0b.pdf')
+  
+
+},
 
   methods: {
       userAvatar(){},
-    quit() {
+
+
+    back() {  
+      console.log(1111);
       
-      this.$router.push(-1);
+      window.history.back()
     }
   }
 };
@@ -51,9 +71,12 @@ export default {
 }
 
 .content {
-  
-
   height: 77vh;
+}
+.document{
+  height: 96%;
+  width: 96%;
+  margin: 2%;
 }
 
 .quit {
