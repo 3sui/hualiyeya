@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 10:56:10
- * @LastEditTime: 2020-06-16 17:09:41
+ * @LastEditTime: 2020-06-18 20:56:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\ProductDetails.vue
@@ -73,8 +73,8 @@
                                     <th>故障现象</th>
                                     <th>可能产生的原因</th>
                                     <th>排除办法</th>
-                                    <th>故障部件供应商</th>
-                                    <th>是否更换部件</th>
+                                    <!-- <th>故障部件供应商</th>
+                                    <th>是否更换部件</th> -->
                                     <th>维修人</th>
                                 </tr>
                                 <tr>
@@ -83,8 +83,8 @@
                                     <td>{{item.phenomenon}}</td>
                                     <td>{{item.cause}}</td>
                                     <td>{{item.methods}}</td>
-                                    <td>{{item.LastSupplier}}</td>
-                                    <td>{{item.more}}</td>
+                                    <!-- <td>{{item.LastSupplier}}</td>
+                                    <td>{{item.more}}</td> -->
                                     <td>{{item.repair_person}}</td>
                                 </tr>
                             </thead>

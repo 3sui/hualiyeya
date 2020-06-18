@@ -85,14 +85,14 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog :title="isAdd?'新增':'编辑'" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="100px">
-                <el-form-item label="行业名称">
+            <el-form ref="form" :rules="rules" :model="form" label-width="100px">
+                <el-form-item label="行业名称" prop="industry_name">
                     <el-input v-model="form.industry_name"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="Cancel">取 消</el-button>
-                <el-button type="primary" @click=" Confirm ">确 定</el-button>
+                <el-button type="primary" @click="Confirm(form)">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -110,6 +110,9 @@ export default {
             pageIndex: 1,
             pageSize: 10,
             form: {},
+            rules: {
+                industry_name: [{ required: true, message: '请输入行业名称', trigger: 'blur' }]
+            },
             isAdd: true,
             idx: 1
         };
@@ -195,45 +198,53 @@ export default {
             };
         },
         //添加确认
-        Confirm() {
-            if (this.form.industry_name === '' || this.form.industry_name === null) {
-                this.$message.error(`行业名称不能为空`);
-            } else if (this.form.industry_name.length > 128) {
-                this.$message.error(`行业名称过长`);
-            } else {
-                if (this.isAdd) {
-                    // this.query.industry_name=this.form.industry_name
-                    let date = new Date();
-                    this.form.created_time = date.getTime();
-                    console.log(date);
-                    this.$axios
-                        .post('/dataSettings/AddIndustry', this.form)
-                        .then(res => {
-                            console.log(res.data);
-                            this.getData();
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+        Confirm(formName) {
+            // if (this.form.industry_name === '' || this.form.industry_name === null) {
+            //     this.$message.error(`行业名称不能为空`);
+            // } else if (this.form.industry_name.length > 128) {
+            //     this.$message.error(`行业名称过长`);
+            // } else {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    if (this.isAdd) {
+                        // this.query.industry_name=this.form.industry_name
+                        let date = new Date();
+                        this.form.created_time = date.getTime();
+                        console.log(date);
+                        this.$axios
+                            .post('/dataSettings/AddIndustry', this.form)
+                            .then(res => {
+                                console.log(res.data);
+                                this.getData();
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    } else {
+                        this.form.id = this.idx;
+                        delete this.form['created_time'];
+                        //  let date =new Date(this.form.created_time)
+                        // this.form.created_time =  date.getTime();
+                        this.$axios
+                            .post('/dataSettings/updateIndustry', this.form)
+                            .then(res => {
+                                console.log(res.data);
+                                this.getData();
+                                this.$message.success('修改成功');
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    }
+                    this.editVisible = false;
+                    this.form = {};
                 } else {
-                    this.form.id = this.idx;
-                    delete this.form['created_time'];
-                    //  let date =new Date(this.form.created_time)
-                    // this.form.created_time =  date.getTime();
-                    this.$axios
-                        .post('/dataSettings/updateIndustry', this.form)
-                        .then(res => {
-                            console.log(res.data);
-                            this.getData();
-                            this.$message.success('修改成功');
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    console.log('error submit!!');
+                    return false;
                 }
-                this.editVisible = false;
-                this.form = {};
-            }
+            });
+
+            // }
         },
         //取消
         Cancel() {

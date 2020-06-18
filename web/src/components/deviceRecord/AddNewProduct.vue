@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 14:19:13
- * @LastEditTime: 2020-06-15 16:49:35
+ * @LastEditTime: 2020-06-18 21:39:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\AddNewProduct.vue
@@ -20,7 +20,7 @@
             <el-button type="primary" @click="$router.go(-1)">返回</el-button>
 
             <div class="form-box">
-                <el-form ref="form" :model="form" label-width="120px">
+                <el-form ref="form" :rules="rules" :model="form" label-width="120px">
                     <el-form-item label="设备ID" prop="eq">
                         <el-input v-model="form.eq" placeholder="例: 123456"></el-input>
                     </el-form-item>
@@ -133,7 +133,7 @@
                         </el-upload>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" @click="onSubmit">提交</el-button>
+                        <el-button type="primary" @click="onSubmit('form')">提交</el-button>
                         <el-button @click="resetForm('form')">取消</el-button>
                     </el-form-item>
                 </el-form>
@@ -158,6 +158,64 @@ export default {
                 address: '',
                 device_model: '',
                 principal: []
+            },
+            rules: {
+                eq: [
+                    {
+                        required: true,
+                        message: '请输入设备ID',
+                        trigger: 'blur'
+                    }
+                ],
+                device_name: [
+                    {
+                        required: true,
+                        message: '请输入设备名称',
+                        trigger: 'blur'
+                    }
+                ],
+                device_description: [
+                    {
+                        required: true,
+                        message: '请输入型号描述',
+                        trigger: 'blur'
+                    }
+                ],
+                device_type: [
+                    {
+                        required: true,
+                        message: '请选择设备种类',
+                        trigger: 'change'
+                    }
+                ],
+                enterprise_id: [
+                    {
+                        required: true,
+                        message: '请选择所属企业',
+                        trigger: 'change'
+                    }
+                ],
+                principal: [
+                    {
+                        required: true,
+                        message: '请选择负责人',
+                        trigger: 'change'
+                    }
+                ],
+                device_supplier: [
+                    {
+                        required: true,
+                        message: '请输入设备厂家',
+                        trigger: 'blur'
+                    }
+                ],
+                address: [
+                    {
+                        required: true,
+                        message: '请输入详细地址',
+                        trigger: 'blur'
+                    }
+                ]
             },
 
             selectedOptions: '',
@@ -197,39 +255,46 @@ export default {
         },
 
         //提交表单
-        onSubmit() {
-            axios({
-                method: 'post',
-                url: '/device/addNewProduct',
-                data: this.form
-            })
-                .then(res => {
-                    console.log(1);
+        onSubmit(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    axios({
+                        method: 'post',
+                        url: '/device/addNewProduct',
+                        data: this.form
+                    })
+                        .then(res => {
+                            console.log(1);
 
-                    window.console.log(res.data);
-                    if (res.data.success) {
-                        this.$message.success(res.data.message);
-                        this.newDeviceId = res.data.insertId;
-                        // this.$refs.form.resetFields();
-                    }
-                })
-                .then(() => {
-                    this.$refs.uploadImg.submit();
-                    this.$refs.uploadWord.submit();
-                    // window.console.log(res.data);
-                })
-                .then(() => {
-                    console.log(this.form);
-                    this.$router.push({
-                        path: '/deviceSettings',
-                        query: {
-                            id: this.form.eq
-                        }
-                    });
-                    // this.$refs.uploadImg.clearFiles();
-                    // this.$refs.uploadWord.clearFiles();
-                })
-                .catch(err => {});
+                            window.console.log(res.data);
+                            if (res.data.success) {
+                                this.$message.success(res.data.message);
+                                this.newDeviceId = res.data.insertId;
+                                // this.$refs.form.resetFields();
+                            }
+                        })
+                        .then(() => {
+                            this.$refs.uploadImg.submit();
+                            this.$refs.uploadWord.submit();
+                            // window.console.log(res.data);
+                        })
+                        .then(() => {
+                            console.log(this.form);
+                            this.$router.push({
+                                path: '/deviceSettings',
+                                query: {
+                                    id: this.form.eq
+                                }
+                            });
+                            // this.$refs.uploadImg.clearFiles();
+                            // this.$refs.uploadWord.clearFiles();
+                        })
+                        .catch(err => {});
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
 
         //取消

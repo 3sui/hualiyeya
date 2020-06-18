@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 16:21:18
- * @LastEditTime: 2020-06-15 14:44:51
+ * @LastEditTime: 2020-06-18 20:12:07
  * @LastEditors: Please set LastEditors
  * @Description: 设备监控
  * @FilePath: \vue-manage-system\src\components\view\EquipmentMonitoring.vue
@@ -66,14 +66,14 @@
                                 icon="el-icon-refresh"
                                 @click="refresh"
                             >重置</el-button>
-                            <el-button
+                            <!-- <el-button
                                 type="primary"
                                 icon="el-icon-delete"
                                 class="handle-del"
                                 @click="visible = true;"
-                            >阈值查看</el-button>
+                            >阈值查看</el-button>-->
 
-                            <el-dialog
+                            <!-- <el-dialog
                                 v-dialogDrag
                                 title="阈值详情"
                                 center
@@ -124,10 +124,9 @@
                                     </table>
                                 </div>
                                 <span slot="footer" class="dialog-footer">
-                                    <!-- <el-button @click="visible = false">取 消</el-button> -->
                                     <el-button type="primary" @click="visible = false">确 定</el-button>
                                 </span>
-                            </el-dialog>
+                            </el-dialog>-->
                         </div>
                     </el-col>
                 </el-row>
@@ -145,12 +144,24 @@
                 <el-table-column prop="eq" label="设备ID"></el-table-column>
 
                 <el-table-column prop="device_name" label="设备名称"></el-table-column>
-                <el-table-column prop="typename" label="设备种类"></el-table-column>
-                <el-table-column prop="device_model" label="型号描述"></el-table-column>
+                <el-table-column prop="device_model" label="设备型号"></el-table-column>
+                <el-table-column prop="device_description" label="型号描述"></el-table-column>
                 <el-table-column prop="device_supplier" label="客户名称"></el-table-column>
 
-                <el-table-column prop="status" label="工作状态"></el-table-column>
-                <el-table-column prop="is_on" label="开关机"></el-table-column>
+                <el-table-column label="状态" align="center">
+                    <template slot-scope="scope">
+                        <el-tag
+                            :type="scope.row.status==='正常'?'success':(scope.row.status==='报警'?'danger':'')"
+                        >{{scope.row.status}}</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="is_on" label="开关机" align="center">
+                    <template slot-scope="scope">
+                        <el-tag
+                            :type="scope.row.is_on == '0'?'danger':(scope.row.is_on=='1'?'success':'')"
+                        >{{scope.row.is_on == '0'? '关机' : '开机'}}</el-tag>
+                    </template>
+                </el-table-column>
                 <!-- <el-table-column prop="created_time" label="更新日期"></el-table-column> -->
                 <el-table-column label="操作" width="120" align="center">
                     <template slot-scope="scope">

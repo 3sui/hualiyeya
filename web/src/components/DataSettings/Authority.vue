@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-03 15:08:38
- * @LastEditTime: 2020-06-15 15:12:31
+ * @LastEditTime: 2020-06-18 22:52:30
  * @LastEditors: Please set LastEditors
  * @Description: 用户管理
  * @FilePath: \web\src\components\DataSettings\Authority.vue
@@ -128,7 +128,7 @@
                 <el-form-item label="账号" prop="username">
                     <el-input v-model="newUser.username"></el-input>
                 </el-form-item>
-                <el-form-item label="用户名">
+                <el-form-item label="用户名" prop="nickname">
                     <el-input v-model="newUser.nickname"></el-input>
                 </el-form-item>
                 <el-form-item label="权限" prop="role">
@@ -273,7 +273,7 @@ export default {
                         trigger: 'change'
                     }
                 ],
-                username: [{ required: true, message: '请输入账号', trigger: 'blur' }, {}],
+                username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
                 role: [
                     {
                         required: true,
@@ -283,22 +283,22 @@ export default {
                 ],
                 email: [
                     {
-                        type: 'email',
                         required: true,
                         message: '请输入正确的email地址',
                         trigger: 'blur'
                     }
                 ],
+                nickname: [
+                    {
+                        required: true,
+                        message: '请输入用户名',
+                        trigger: 'blur'
+                    }
+                ],
                 phone: [
                     {
-                        type: 'regexp',
                         required: true,
                         message: '请输入正确的手机号',
-                        trigger: 'blur'
-                    },
-                    {
-                        length: 11,
-                        message: '请输入正确的手机号1',
                         trigger: 'blur'
                     }
                 ]
@@ -634,5 +634,8 @@ export default {
 }
 .demo-ruleForm .el-dialog__body {
     text-align: center;
+}
+.el-select {
+    display: block !important;
 }
 </style>

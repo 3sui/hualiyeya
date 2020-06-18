@@ -100,11 +100,11 @@
             width="30%"
             class="demo-ruleForm"
         >
-            <el-form ref="form" :model="form" label-width="100px">
-                <el-form-item label="企业名称">
+            <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+                <el-form-item label="企业名称" prop="enterprise_name">
                     <el-input v-model="form.enterprise_name"></el-input>
                 </el-form-item>
-                <el-form-item label="行业">
+                <el-form-item label="行业" prop="industry_id">
                     <el-select v-model="form.industry_id" placeholder="请选择行业">
                         <el-option
                             v-for="industry in industrys"
@@ -114,22 +114,22 @@
                         ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="联系人">
+                <el-form-item label="联系人" prop="contact">
                     <el-input v-model="form.contact"></el-input>
                 </el-form-item>
-                <el-form-item label="联系电话">
+                <el-form-item label="联系电话" prop="contact_phone">
                     <el-input v-model="form.contact_phone"></el-input>
                 </el-form-item>
-                <el-form-item label="邮箱">
+                <el-form-item label="邮箱" prop="contact_email">
                     <el-input v-model="form.contact_email"></el-input>
                 </el-form-item>
-                <el-form-item label="地址">
+                <el-form-item label="地址" prop="address">
                     <el-input v-model="form.address"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="Cancel">取 消</el-button>
-                <el-button type="primary" @click=" Confirm() ">确 定</el-button>
+                <el-button type="primary" @click=" Confirm(form) ">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -148,6 +148,29 @@ export default {
             pageIndex: 1,
             pageSize: 10,
             form: {},
+            rules: {
+                enterprise_name: [
+                    { required: true, message: '请输入企业名称', trigger: 'blur' },
+                    { min: 1, max: 128, message: '长度在 1 到 128 个字符', trigger: 'blur' }
+                ],
+                industry_id: [{ required: true, message: '请选择行业', trigger: 'change' }],
+                contact: [
+                    { required: true, message: '请输入联系人', trigger: 'blur' },
+                    { min: 0, max: 128, message: '长度在 0 到 128 个字符', trigger: 'blur' }
+                ],
+                contact_phone: [
+                    { required: true, message: '请输入联系电话', trigger: 'blur' },
+                    { min: 0, max: 128, message: '长度在 0 到 128 个字符', trigger: 'blur' }
+                ],
+                contact_email: [
+                    { required: true, message: '请输入邮箱', trigger: 'blur' },
+                    { min: 0, max: 128, message: '长度在 0 到 128 个字符', trigger: 'blur' }
+                ],
+                address: [
+                    { required: true, message: '请输入地址', trigger: 'blur' },
+                    { min: 0, max: 128, message: '长度在 0 到 128 个字符', trigger: 'blur' }
+                ]
+            },
             isAdd: true,
             idx: 1
             // rules: {
@@ -253,45 +276,53 @@ export default {
             };
         },
         //添加确认
-        Confirm() {
-            if (this.form.enterprise_name === '' || this.form.enterprise_name === null) {
-                this.$message.error(`企业名称不能为空`);
-            } else if (this.form.industry_id === '' || this.form.industry_id === null) {
-                this.$message.error(`行业不能为空`);
-            } else {
-                if (this.isAdd) {
-                    let date = new Date();
-                    this.form.created_time = date.getTime();
-                    console.log(date);
-                    this.$axios
-                        .post('/dataSettings/AddEnterprise', this.form)
-                        .then(res => {
-                            console.log(res.data);
-                            this.getData();
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+        Confirm(formName) {
+            // if (this.form.enterprise_name === '' || this.form.enterprise_name === null) {
+            //     this.$message.error(`企业名称不能为空`);
+            // } else if (this.form.industry_id === '' || this.form.industry_id === null) {
+            //     this.$message.error(`行业不能为空`);
+            // } else {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    if (this.isAdd) {
+                        let date = new Date();
+                        this.form.created_time = date.getTime();
+                        console.log(date);
+                        this.$axios
+                            .post('/dataSettings/AddEnterprise', this.form)
+                            .then(res => {
+                                console.log(res.data);
+                                this.getData();
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    } else {
+                        this.form.id = this.idx;
+                        delete this.form['industry_name'];
+                        delete this.form['created_time'];
+                        // let date =new Date(this.form.created_time )
+                        // this.form.created_time =  date.getTime();
+                        this.$axios
+                            .post('/dataSettings/updateEnterprise', this.form)
+                            .then(res => {
+                                console.log(res.data);
+                                this.getData();
+                                this.$message.success('修改成功');
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    }
+                    this.editVisible = false;
+                    this.form = {};
                 } else {
-                    this.form.id = this.idx;
-                    delete this.form['industry_name'];
-                    delete this.form['created_time'];
-                    // let date =new Date(this.form.created_time )
-                    // this.form.created_time =  date.getTime();
-                    this.$axios
-                        .post('/dataSettings/updateEnterprise', this.form)
-                        .then(res => {
-                            console.log(res.data);
-                            this.getData();
-                            this.$message.success('修改成功');
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    console.log('error submit!!');
+                    return false;
                 }
-                this.editVisible = false;
-                this.form = {};
-            }
+            });
+
+            // }
         },
         //取消
         Cancel() {

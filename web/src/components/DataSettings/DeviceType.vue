@@ -86,13 +86,17 @@
         <!-- 编辑弹出框 -->
         <el-dialog :title="isAdd?'新增':'编辑'" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="100px">
-                <el-form-item label="设备类型名称">
+                <el-form-item
+                    prop="typename"
+                    label="设备类型名称"
+                    :rules="{required: true, message: '请输入设备类型名称', trigger: 'blur'}"
+                >
                     <el-input v-model="form.typename"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="Cancel">取 消</el-button>
-                <el-button type="primary" @click=" Confirm ">确 定</el-button>
+                <el-button type="primary" @click="Confirm('form')">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -185,45 +189,52 @@ export default {
             };
         },
         //添加确认
-        Confirm() {
-            if (this.form.typename === '' || this.form.typename === '') {
-                this.$message.error(`设备名称不能为空`);
-            } else if (this.form.typename.length > 128) {
-                this.$message.error(`设备名称过长`);
-            } else {
-                if (this.isAdd) {
-                    // this.query.industry_name=this.form.industry_name
-                    let date = new Date();
-                    this.form.created_time = date.getTime();
-                    console.log(date);
-                    this.$axios
-                        .post('/dataSettings/AddDeviceType', this.form)
-                        .then(res => {
-                            console.log(res.data);
-                            this.getData();
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+        Confirm(formName) {
+            // if (this.form.typename === '' || this.form.typename === '') {
+            //     this.$message.error(`设备名称不能为空`);
+            // } else if (this.form.typename.length > 128) {
+            //     this.$message.error(`设备名称过长`);
+            // } else {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    if (this.isAdd) {
+                        // this.query.industry_name=this.form.industry_name
+                        let date = new Date();
+                        this.form.created_time = date.getTime();
+                        console.log(date);
+                        this.$axios
+                            .post('/dataSettings/AddDeviceType', this.form)
+                            .then(res => {
+                                console.log(res.data);
+                                this.getData();
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    } else {
+                        this.form.id = this.idx;
+                        delete this.form['created_time'];
+                        // let date =new Date(this.form.created_time )
+                        // this.form.created_time =  date.getTime();
+                        this.$axios
+                            .post('/dataSettings/updateDeviceType', this.form)
+                            .then(res => {
+                                console.log(res.data);
+                                this.getData();
+                                this.$message.success('修改成功');
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    }
+                    this.editVisible = false;
+                    this.form = {};
+                    // }
                 } else {
-                    this.form.id = this.idx;
-                    delete this.form['created_time'];
-                    // let date =new Date(this.form.created_time )
-                    // this.form.created_time =  date.getTime();
-                    this.$axios
-                        .post('/dataSettings/updateDeviceType', this.form)
-                        .then(res => {
-                            console.log(res.data);
-                            this.getData();
-                            this.$message.success('修改成功');
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    console.log('error submit!!');
+                    return false;
                 }
-                this.editVisible = false;
-                this.form = {};
-            }
+            });
         },
         //取消
         Cancel() {

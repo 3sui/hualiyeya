@@ -88,16 +88,24 @@
         <!-- 编辑弹出框 -->
         <el-dialog :title="isAdd?'新增':'编辑'" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="100px">
-                <el-form-item label="故障种类">
+                <el-form-item
+                    label="故障种类"
+                    prop="fault_type"
+                    :rules="{required: true, message: '请输入故障种类', trigger: 'blur'}"
+                >
                     <el-input v-model="form.fault_type"></el-input>
                 </el-form-item>
-                <el-form-item label="故障现象">
+                <el-form-item
+                    label="故障现象"
+                    prop="fault_phenomenon"
+                    :rules="{required: true, message: '请输入故障现象', trigger: 'blur'}"
+                >
                     <el-input v-model="form.fault_phenomenon"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="Cancel">取 消</el-button>
-                <el-button type="primary" @click=" Confirm ">确 定</el-button>
+                <el-button type="primary" @click="Confirm('form')">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -190,51 +198,59 @@ export default {
             };
         },
         //添加确认
-        Confirm() {
-            if (
-                this.form.fault_type === '' ||
-                this.form.fault_type === null ||
-                this.form.fault_phenomenon === '' ||
-                this.form.fault_phenomenon === null
-            ) {
-                this.$message.error(`故障类型、故障现象不能为空`);
-            } else if (this.form.fault_type.length > 128) {
-                this.$message.error(`故障类型过长`);
-            } else if (this.form.fault_phenomenon.length > 1024) {
-                this.$message.error(`故障现象过长`);
-            } else {
-                if (this.isAdd) {
-                    let date = new Date();
-                    this.form.created_time = date.getTime();
-                    // console.log(date);
-                    this.$axios
-                        .post('/dataSettings/AddFaultType', this.form)
-                        .then(res => {
-                            console.log(res.data);
-                            this.getData();
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+        Confirm(formName) {
+            // if (
+            //     this.form.fault_type === '' ||
+            //     this.form.fault_type === null ||
+            //     this.form.fault_phenomenon === '' ||
+            //     this.form.fault_phenomenon === null
+            // ) {
+            //     this.$message.error(`故障类型、故障现象不能为空`);
+            // } else if (this.form.fault_type.length > 128) {
+            //     this.$message.error(`故障类型过长`);
+            // } else if (this.form.fault_phenomenon.length > 1024) {
+            //     this.$message.error(`故障现象过长`);
+            // } else {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    if (this.isAdd) {
+                        let date = new Date();
+                        this.form.created_time = date.getTime();
+                        // console.log(date);
+                        this.$axios
+                            .post('/dataSettings/AddFaultType', this.form)
+                            .then(res => {
+                                console.log(res.data);
+                                this.getData();
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    } else {
+                        this.form.id = this.idx;
+                        delete this.form['created_time'];
+                        //  let date =new Date(this.form.created_time )
+                        // this.form.created_time =  date.getTime();
+                        this.$axios
+                            .post('/dataSettings/updateFaultType', this.form)
+                            .then(res => {
+                                console.log(res.data);
+                                this.getData();
+                                this.$message.success('修改成功');
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    }
+                    this.editVisible = false;
+                    this.form = {};
                 } else {
-                    this.form.id = this.idx;
-                    delete this.form['created_time'];
-                    //  let date =new Date(this.form.created_time )
-                    // this.form.created_time =  date.getTime();
-                    this.$axios
-                        .post('/dataSettings/updateFaultType', this.form)
-                        .then(res => {
-                            console.log(res.data);
-                            this.getData();
-                            this.$message.success('修改成功');
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+                    console.log('error submit!!');
+                    return false;
                 }
-                this.editVisible = false;
-                this.form = {};
-            }
+            });
+
+            // }
         },
         //取消
         Cancel() {

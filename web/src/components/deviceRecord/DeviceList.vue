@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-16 13:45:39
+ * @LastEditTime: 2020-06-18 20:58:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -152,7 +152,7 @@
                 <el-table-column label="开关机" align="center">
                     <template slot-scope="scope">
                         <el-tag
-                            :type="scope.row.is_on==='0'?'danger':(scope.row.is_on=='1'?'success':'')"
+                            :type="scope.row.is_on == '0'?'danger':(scope.row.is_on=='1'?'success':'')"
                         >{{scope.row.is_on == '0'? '关机' : '开机'}}</el-tag>
                     </template>
                 </el-table-column>
@@ -416,7 +416,7 @@ export default {
         delAllSelection() {
             let idArr = [];
             for (let i = 0; i < this.multipleSelection.length; i++) {
-                idArr.push(this.multipleSelection[i].did);
+                idArr.push(this.multipleSelection[i].id);
             }
             window.console.log(idArr);
             if (this.multipleSelection.length === 0) {

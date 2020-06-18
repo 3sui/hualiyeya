@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-12 09:13:08
- * @LastEditTime: 2020-06-12 15:05:37
+ * @LastEditTime: 2020-06-18 22:14:55
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \web\src\components\deviceRecord\DeviceSettings.vue
@@ -24,19 +24,49 @@
                         <el-form-item label="测点标识号">
                             <el-input v-model="item.cp_id" disabled></el-input>
                         </el-form-item>
-                        <el-form-item label="测点名称">
+                        <el-form-item
+                            label="测点名称"
+                            :prop="'point.'+ index  + '.cp_name'"
+                            :rules="{
+      required: true, message: '测点名称不能为空', trigger: 'blur'
+    }"
+                        >
                             <el-input v-model="item.cp_name"></el-input>
                         </el-form-item>
-                        <el-form-item label="测点单位">
+                        <el-form-item
+                            label="测点单位"
+                            :prop="'point.'+ index  + '.unit'"
+                            :rules="{
+      required: true, message: '测点单位不能为空', trigger: 'blur'
+    }"
+                        >
                             <el-input v-model="item.unit"></el-input>
                         </el-form-item>
-                        <el-form-item label="计算系数值">
+                        <el-form-item
+                            label="计算系数值"
+                            :prop="'point.'+ index  + '.k'"
+                            :rules="{
+      required: true, message: '计算系数值不能为空', trigger: 'blur'
+    }"
+                        >
                             <el-input v-model="item.k"></el-input>
                         </el-form-item>
-                        <el-form-item label="上限值">
+                        <el-form-item
+                            label="上限值"
+                            :prop="'point.'+ index  + '.limit_up'"
+                            :rules="{
+      required: true, message: '上限值不能为空', trigger: 'blur'
+    }"
+                        >
                             <el-input v-model="item.limit_up"></el-input>
                         </el-form-item>
-                        <el-form-item label="下限值">
+                        <el-form-item
+                            label="下限值"
+                            :prop="'point.'+ index  + '.limit_down'"
+                            :rules="{
+      required: true, message: '下限值不能为空', trigger: 'blur'
+    }"
+                        >
                             <el-input v-model="item.limit_down"></el-input>
                         </el-form-item>
                     </div>
@@ -98,28 +128,28 @@ export default {
         },
         submitForm(formName) {
             this.form.eq = this.$route.query;
+
             window.console.log(this.form.eq);
-            // this.$refs[formName].validate(valid => {
-            //     if (valid) {
-            //         alert('submit!');
-            //     } else {
-            //         console.log('error submit!!');
-            //         return false;
-            //     }
-            // });
-            axios({
-                method: 'post',
-                url: '/device/settings',
-                data: this.form
-            })
-                .then(res => {
-                    console.log(res.data);
-                    if (res.data.success) {
-                        this.$message.success(res.data.message);
-                        this.$router.push('/deviceList');
-                    }
-                })
-                .catch(err => {});
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    axios({
+                        method: 'post',
+                        url: '/device/settings',
+                        data: this.form
+                    })
+                        .then(res => {
+                            console.log(res.data);
+                            if (res.data.success) {
+                                this.$message.success(res.data.message);
+                                this.$router.push('/deviceList');
+                            }
+                        })
+                        .catch(err => {});
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         }
     }
 };

@@ -9,7 +9,7 @@
                                 <i class="el-icon-monitor grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <p class="grid-num">{{deviceNum}}</p>
-                                    <p>设备数</p>
+                                    <p>设备总数</p>
                                 </div>
                             </div>
                         </el-card>
@@ -19,8 +19,8 @@
                             <div class="grid-content grid-con-2">
                                 <i class="el-icon-video-play grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <p class="grid-num">{{deviceNum}}</p>
-                                    <p>运行数</p>
+                                    <p class="grid-num">{{run}}</p>
+                                    <p>运行设备数</p>
                                 </div>
                             </div>
                         </el-card>
@@ -32,8 +32,8 @@
                             <div class="grid-content grid-con-3">
                                 <i class="el-icon-bell grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <p class="grid-num">0</p>
-                                    <p>故障数</p>
+                                    <p class="grid-num">{{bed}}</p>
+                                    <p>异常设备数</p>
                                 </div>
                             </div>
                         </el-card>
@@ -43,8 +43,8 @@
                             <div class="grid-content grid-con-4">
                                 <i class="el-icon-video-pause grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <p class="grid-num">0</p>
-                                    <p>待机数</p>
+                                    <p class="grid-num">{{repair}}</p>
+                                    <p>累计维修数</p>
                                 </div>
                             </div>
                         </el-card>
@@ -73,12 +73,18 @@
                         <el-card shadow="hover" style="height:342px;">
                             <div slot="header" class="clearfix">
                                 <span>报警</span>
-                                <!-- <el-button style="float: right; padding: 3px 0" type="text">添加</el-button> -->
+                                <el-button
+                                    style="float: right; padding: 3px 0"
+                                    type="text"
+                                    @click="$router.push('/AlarmRecord')"
+                                >查看更多>></el-button>
                             </div>
                             <el-tabs v-model="message">
                                 <el-tab-pane :label="`未读消息(${unread.length})`" name="first">
                                     <el-table
-                                        :data="unread"
+                                        :data="unread.filter((item, index) => {
+                                            return index <= 3
+                                        })"
                                         :show-header="false"
                                         style="width: 100%"
                                     >
@@ -92,19 +98,18 @@
                                             <template slot-scope="scope">
                                                 <el-button
                                                     size="small"
-                                                    @click="handleRead(scope.$index)"
+                                                    @click="handleRead(scope.$index,scope.row)"
                                                 >标为已读</el-button>
                                             </template>
                                         </el-table-column>
                                     </el-table>
-                                    <!-- <div class="handle-row">
-                                        <el-button type="primary">全部标为已读</el-button>
-                                    </div>-->
                                 </el-tab-pane>
                                 <el-tab-pane :label="`已读消息(${read.length})`" name="second">
                                     <template v-if="message === 'second'">
                                         <el-table
-                                            :data="read"
+                                            :data="read.filter((item, index) => {
+                                                return index <= 3
+                                            })"
                                             :show-header="false"
                                             style="width: 100%"
                                         >
@@ -114,21 +119,21 @@
                                                 </template>
                                             </el-table-column>
                                             <el-table-column prop="date" width="150"></el-table-column>
-                                            <el-table-column width="120">
+                                            <!-- <el-table-column width="120">
                                                 <template slot-scope="scope">
                                                     <el-button
                                                         type="danger"
                                                         @click="handleDel(scope.$index)"
                                                     >删除</el-button>
                                                 </template>
-                                            </el-table-column>
+                                            </el-table-column>-->
                                         </el-table>
                                         <!-- <div class="handle-row">
                                             <el-button type="danger">删除全部</el-button>
                                         </div>-->
                                     </template>
                                 </el-tab-pane>
-                                <el-tab-pane :label="`回收站(${recycle.length})`" name="third">
+                                <!-- <el-tab-pane :label="`回收站(${recycle.length})`" name="third">
                                     <template v-if="message === 'third'">
                                         <el-table
                                             :data="recycle"
@@ -149,22 +154,22 @@
                                                 </template>
                                             </el-table-column>
                                         </el-table>
-                                        <!-- <div class="handle-row">
+                                        <div class="handle-row">
                                             <el-button type="danger">清空回收站</el-button>
-                                        </div>-->
+                                        </div>
                                     </template>
-                                </el-tab-pane>
+                                </el-tab-pane>-->
                             </el-tabs>
                         </el-card>
                     </el-col>
                 </el-row>
             </el-col>
         </el-row>
-        <el-row>
+        <!-- <el-row>
             <el-card shadow="hover">
                 <schart ref="line" class="schart" canvasId="line" :options="options2"></schart>
             </el-card>
-        </el-row>
+        </el-row>-->
     </div>
 </template>
 
@@ -209,58 +214,6 @@ export default {
                 }
             ],
             name: localStorage.getItem('ms_username'),
-            // todoList: [
-            //     {
-            //         title: '设备1温度过高',
-            //         status: false,
-            //         alarmTime: '2020-05-15 14:00:00'
-            //     },
-            //     {
-            //         title: '设备2温度过高',
-            //         status: true,
-            //         alarmTime: '2020-05-15 14:00:00'
-            //     },
-            //     {
-            //         title: '设备1断电',
-            //         status: false,
-            //         alarmTime: '2020-05-15 14:00:00'
-            //     },
-            //     {
-            //         title: '设备1故障',
-            //         status: false,
-            //         alarmTime: '2020-05-15 14:00:00'
-            //     },
-            //     {
-            //         title: '设备2故障',
-            //         status: true,
-            //         alarmTime: '2020-05-15 14:00:00'
-            //     },
-            //     {
-            //         title: '设备1故障',
-            //         status: false,
-            //         alarmTime: '2020-05-15 14:00:00'
-            //     }
-            //     // {
-            //     //     title: '设备2故障',
-            //     //     status: true,
-            //     //     alarmTime: '2020-05-15 14:00:00'
-            //     // },
-            //     // {
-            //     //     title: '设备2故障',
-            //     //     status: true,
-            //     //     alarmTime: '2020-05-15 14:00:00'
-            //     // },
-            //     // {
-            //     //     title: '设备1故障',
-            //     //     status: false,
-            //     //     alarmTime: '2020-05-15 14:00:00'
-            //     // },
-            //     // {
-            //     //     title: '设备2故障',
-            //     //     status: true,
-            //     //     alarmTime: '2020-05-15 14:00:00'
-            //     // }
-            // ],
 
             options: {
                 type: 'line',
@@ -341,11 +294,15 @@ export default {
                 ]
             },
             status: {},
-            deviceNum: 0
+            deviceNum: 0,
+            repair: 0,
+            run: 0,
+            bed: 0
         };
     },
     created() {
-        this.fetchDeviceNum();
+        // this.fetchDeviceNum();
+        this.fetchDeviceInfo();
         // this.fetchDeviceStatus();
     },
     components: {
@@ -394,15 +351,36 @@ export default {
         //     this.$refs.line.renderChart();
         // }
         //获取企业设备数量
-        fetchDeviceNum() {
+        // fetchDeviceNum() {
+        //     axios({
+        //         method: 'get',
+        //         url: '/map/fetchDeviceNum'
+        //     })
+        //         .then(res => {
+        //             this.deviceNum = res.data.data;
+        //         })
+        //         .catch();
+        // },
+
+        fetchDeviceInfo() {
             axios({
                 method: 'get',
-                url: '/map/fetchDeviceNum'
+                url: '/home/fetchDeviceInfo'
             })
                 .then(res => {
-                    this.deviceNum = res.data.data;
+                    window.console.log(res);
+                    if (res.data.success) {
+                        this.repair = res.data.repair;
+                        this.unread = res.data.unread;
+                        this.read = res.data.read;
+                        this.run = res.data.run;
+                        this.bed = res.data.bed;
+                        this.deviceNum = res.data.deviceNum
+                    }
                 })
-                .catch();
+                .catch(err => {
+                    window.console.log(err);
+                });
         },
 
         // //获取企业设备各种状态的数据
@@ -416,10 +394,20 @@ export default {
         //         })
         //         .catch();
         // },
-        handleRead(index) {
-            const item = this.unread.splice(index, 1);
-            console.log(item);
-            this.read = item.concat(this.read);
+        handleRead(index, row) {
+            console.log(row);
+            axios({
+                method: 'post',
+                url: '/maintain/changeHandled',
+                data: {
+                    id: row.id
+                }
+            })
+                .then(res => {
+                    console.log(res);
+                    this.fetchDeviceInfo();
+                })
+                .catch(err => {});
         },
         handleDel(index) {
             const item = this.read.splice(index, 1);

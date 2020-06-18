@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 15:04:18
- * @LastEditTime: 2020-06-08 01:05:49
+ * @LastEditTime: 2020-06-18 22:20:53
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\MaintenanceRecords.vue
@@ -21,12 +21,12 @@
                 <el-row>
                     <el-col :span="6">
                         <div class="mt-10">
-                            <el-button
+                            <!-- <el-button
                                 type="primary"
                                 icon="el-icon-lx-add"
                                 class="handle-del mr10"
                                 @click="$router.push('./addNewMaintenance')"
-                            >新增</el-button>
+                            >新增</el-button> -->
                             <el-button
                                 type="primary"
                                 icon="el-icon-delete"
@@ -271,14 +271,14 @@ export default {
                 .then(() => {
                     axios({
                         method: 'get',
-                        url: '/deleteMaintenance',
+                        url: '/DeleteRepair',
                         params: {
                             id: idArr
                         }
                     })
                         .then(res => {
                             window.console.log(res.data);
-                            this.$message.success(res.data);
+                            this.$message.success(res.data.data);
                             this.getData();
                         })
                         .catch();
@@ -295,7 +295,7 @@ export default {
         delAllSelection() {
             let idArr = [];
             for (let i = 0; i < this.multipleSelection.length; i++) {
-                idArr.push(this.multipleSelection[i].DeviceID);
+                idArr.push(this.multipleSelection[i].id);
             }
             window.console.log(idArr);
             if (this.multipleSelection.length === 0) {
@@ -308,14 +308,14 @@ export default {
                 .then(() => {
                     axios({
                         method: 'get',
-                        url: '/deleteMaintenance',
+                        url: '/DeleteRepair',
                         params: {
                             id: idArr
                         }
                     })
                         .then(res => {
                             window.console.log(res.data);
-                            this.$message.success(res.data);
+                            this.$message.success(res.data.data);
                             this.getData();
                         })
                         .catch({});

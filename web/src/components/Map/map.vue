@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-04-28 16:25:21
- * @LastEditTime: 2020-06-15 17:23:13
+ * @LastEditTime: 2020-06-18 20:48:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\vue-manage-system\src\components\page\map.vue
@@ -62,27 +62,27 @@
                     <div class="map-info">
                         <div class="info-one">
                             <p>{{deviceNum}}</p>
-                            <p>设备数量</p>
+                            <p>设备总数</p>
                         </div>
-                        <div class="info-two">
-                            <el-progress type="circle" :percentage="100"></el-progress>
+                        <div class="info-one">
+                            <!-- <el-progress type="circle" :percentage="100"></el-progress> -->
                             <div>
-                                <p>{{deviceNum}}</p>
+                                <p>{{run}}</p>
                                 <p>运行设备数</p>
                             </div>
                         </div>
-                        <div class="info-three">
-                            <el-progress type="circle" :percentage="0"></el-progress>
+                        <div class="info-one">
+                            <!-- <el-progress type="circle" :percentage="0"></el-progress> -->
                             <div>
-                                <p>0</p>
-                                <p>关机设备数</p>
+                                <p>{{bed}}</p>
+                                <p>异常设备数</p>
                             </div>
                         </div>
-                        <div class="info-four">
-                            <el-progress type="circle" :percentage="0"></el-progress>
+                        <div class="info-one">
+                            <!-- <el-progress type="circle" :percentage="0"></el-progress> -->
                             <div>
-                                <p>0</p>
-                                <p>待机设备数</p>
+                                <p>{{repair}}</p>
+                                <p>累计维修数</p>
                             </div>
                         </div>
                     </div>
@@ -148,6 +148,9 @@ export default {
             map: '',
             show: false,
             deviceNum: 0,
+            repair: 0,
+            run: 0,
+            bed: 0,
             imgList: [],
             wordList: []
         };
@@ -212,15 +215,22 @@ export default {
         fetchDeviceNum() {
             axios({
                 method: 'get',
-                url: '/map/fetchDeviceNum'
+                url: '/home/fetchDeviceInfo'
             })
                 .then(res => {
+                    window.console.log(res);
                     if (res.data.success) {
-                        this.deviceNum = res.data.data;
-                        // window.console.log(res.data.data);
+                        this.repair = res.data.repair;
+                        this.unread = res.data.unread;
+                        this.read = res.data.read;
+                        this.run = res.data.run;
+                        this.bed = res.data.bed;
+                        this.deviceNum = res.data.deviceNum;
                     }
                 })
-                .catch();
+                .catch(err => {
+                    window.console.log(err);
+                });
         },
 
         //获取所有设备数据
