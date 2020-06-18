@@ -9,7 +9,7 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-row :gutter="20" class="mgb20">
+            <!-- <el-row :gutter="20" class="mgb20">
                 <el-col :span="6">
                     <div class="block">
                         <span class="demonstration"></span>
@@ -29,25 +29,21 @@
                     <el-button type="primary" icon="el-icon-search">查询报表</el-button>
                     <el-button type="primary" icon="el-icon-download">导出报表</el-button>
                 </el-col>
-            </el-row>
-            <el-row :gutter="20" class="mgb20">
+            </el-row>-->
+            <el-row :gutter="20" >
                 <el-col :span="6" v-for="(device,index) in deviceTop" :key="index">
                     <el-card shadow="hover" :body-style="{padding: '0px'}" v-if="index<4">
                         <div class="grid-content grid-con">
-                            <i class="grid-con-icon" :class="backgroundstyle[index]">{{device.sort}}</i>
+                            <!-- <i class="grid-con-icon" :class="backgroundstyle[index]">{{device.sort}}</i>
+                            -->
+                            <div class="card-title" :class="backgroundstyle[index]">{{device.device_type}}</div>
                             <div class="grid-cont-right">
-                                <el-row>
-                                    <div
-                                        class="card-title"
-                                        :class="style[index]"
-                                    >{{device.device_type}}</div>
-                                </el-row>
-                                <el-row :gutter="24">
-                                    <el-col :span="24">
+                                
+                               
+                                
                                         <div :class="style[index]" class="grid-num">{{device.count}}</div>
-                                        <div>设备数</div>
-                                    </el-col>
-                                </el-row>
+                                        <div class="grid_dev">设备数</div>
+                                 
                             </div>
                         </div>
                     </el-card>
@@ -117,15 +113,14 @@ export default {
             devicedatalist: []
         };
     },
-    created(){
-this.getDeviceTypes()
+    created() {
+        this.getDeviceTypes();
     },
     mounted() {
-      this.getChart3();
+        this.getChart3();
     },
     methods: {
-
-         //获取设备类型设备数量数据
+        //获取设备类型设备数量数据
         getDeviceTypes() {
             this.$axios
                 .get('DeviceByType')
@@ -146,8 +141,8 @@ this.getDeviceTypes()
         },
         //获取数据
         getdata() {
-             this.devicetypelist=[];
-              this.devicedatalist=[];
+            this.devicetypelist = [];
+            this.devicedatalist = [];
             for (let i = 0; i < this.deviceTop.length; i++) {
                 let item = this.deviceTop[i];
                 this.devicetypelist.push(item.device_type);
@@ -166,8 +161,9 @@ this.getDeviceTypes()
             let option = {
                 title: {
                     text: '设备类型数量分布图',
-                    left: '45%'
+                    left: '40%'
                 },
+                color:['#8378EA','#E7BCF3','#FB7293','#FF9F7F','#9FE6B8','#32C5E9','#4B7CF3','#EB6379','#068687','#82DACA'],
                 backgroundColor: '#fff',
                 legend: {
                     orient: 'vertical',
@@ -199,8 +195,8 @@ this.getDeviceTypes()
                     {
                         name: '设备类型',
                         type: 'pie',
-                        radius: ['30%', '80%'],
-                        center: ['40%', '50%'],
+                        radius: ['20%', '65%'],//半径
+                        center: ['40%', '60%'],//位置
                         roseType: 'radius',
                         label: {
                             show: true,
@@ -225,10 +221,10 @@ this.getDeviceTypes()
 };
 </script>
 
-<style>
-.el-row {
+<style scope>
+/* .el-row {
     margin-bottom: 10px;
-}
+} */
 
 .grid-content {
     display: flex;
@@ -241,12 +237,18 @@ this.getDeviceTypes()
     text-align: center;
     font-size: 14px;
     color: #999;
+    height: 120px;
 }
 
 .grid-num {
-    font-size: 24px;
+    font-size: 50px;
     font-weight: bold;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
+    height: 90px;
+    line-height:90px;
+}
+.grid_dev{
+    font-size: 18px;
 }
 
 .grid-con-icon {
@@ -262,41 +264,44 @@ this.getDeviceTypes()
     text-align: center;
     font-size: 20px;
     font-weight: bold;
-    /* color: coral; */
+    color: white;
     letter-spacing: 0.5em;
-    line-height: 50px;
+    width: 50%;
+    line-height: 120px;
+    height: 120px;
+    background-color:#f0f0f0 ;
 }
 
 .s1 {
-    color: rgb(45, 140, 240);
-}
-
-.s2 {
-    color: coral;
+    color: #EB6379;
 }
 
 .s3 {
+    color:#EEA03C;
+}
+
+.s2 {
     color: darkturquoise;
 }
 
 .s4 {
-    color: red;
+    color: #69D3AB;
 }
 
 .b1 {
-    background-color: rgb(45, 140, 240);
-}
-
-.b2 {
-    background-color: coral;
+    background-color:#EB6379;
 }
 
 .b3 {
+    background-color:#EEA03C;
+}
+
+.b2 {
     background-color: darkturquoise;
 }
 
 .b4 {
-    background-color: red;
+    background-color: #69D3AB;
 }
 .container {
     padding-top: 15px;

@@ -57,10 +57,10 @@ _axios.interceptors.response.use(
     // Do something with response error
     // window.console.log(error.response);
     if (error.response.data.message) {
-      Vue.prototype.$message({
-        type: 'error',
-        message: error.response.data.message
-      })
+    //   Vue.prototype.$message({
+    //     type: 'error',
+    //     message: error.response.data.message
+    //   })
       window.console.log(error.response.status);
       if (error.response.status === 401) {
         router.push('/login')

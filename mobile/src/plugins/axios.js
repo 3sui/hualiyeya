@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-10 19:04:15
- * @LastEditTime: 2020-06-15 09:37:51
+ * @LastEditTime: 2020-06-16 13:33:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\mobile\src\plugins\axios.js
@@ -18,9 +18,9 @@ import router from '../router/index'
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  baseURL: 'http://58.216.47.108:8890/api',
+  // baseURL: 'http://58.216.47.108:8890/api',
 
-  // baseURL: 'http://localhost:8085/api',
+  baseURL: 'http://localhost:8085/api',
 
   // baseURL: 'http://10.159.24.78:8085/api',
   // baseURL: process.env.baseURL || process.env.apiUrl || ""

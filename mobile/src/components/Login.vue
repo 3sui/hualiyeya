@@ -1,11 +1,11 @@
 <template>
-  <div class="login">
-    <div class="title">登录</div>
+  <div class="login" :style="note">
+    <div class="title" >设备远程管理系统</div>
     <div class="content">
-      <van-divider style="margin:0" />
+      <!-- <van-divider style="margin:0" /> -->
       <div class="vactor">
         <div class="icon_container">
-          <van-icon class="icon_vactor" size="5rem" color="#CCCCCC" name="manager" />
+          <van-image round width="6rem" height="6rem" :src="userAvatar" />
         </div>
       </div>
       <van-form @submit="onSubmit" class="loginform">
@@ -36,7 +36,9 @@
 </template>
 
 <script>
-import { Form, Field, Button, Icon, Divider, Toast } from "vant";
+
+import { Form, Field, Button, Icon, Divider, Toast, Image as VanImage } from "vant";
+import imgUrl from "../assets/img/vactar.jpg";
 export default {
   name: "Login",
   components: {
@@ -45,15 +47,33 @@ export default {
     [Icon.name]: Icon,
     [Divider.name]: Divider,
     [Field.name]: Field,
-    [Toast.name]: Toast
+    [Toast.name]: Toast,
+     [VanImage.name]: VanImage
   },
   data() {
     return {
       query: {
         username: "",
         password: ""
+      },
+      note:{
+         background:'url('+ require('../assets/img/bg.jpg') +')',
+         backgroundRepeat: "no-repeat",
+         
       }
     };
+  },
+  computed:{
+
+    userAvatar() {
+      let userAvatar =
+        axios.defaults.baseURL.slice(0, -4) + localStorage.getItem("avatar");
+      // console.log(localStorage.avatar == null);
+      // console.log(imgUrl);
+      console.log(userAvatar);
+      return localStorage.avatar == null ? imgUrl : userAvatar;
+    
+  },
   },
   methods: {
     onSubmit() {
@@ -64,6 +84,8 @@ export default {
           data: this.query
         })
           .then(res => {
+            // console.log(res);
+            
             if (res.data.success) {
               // this.$message.success('登录成功');
               localStorage.ms_username = res.data.ms_username;
@@ -80,6 +102,7 @@ export default {
               }
             } else {
               this.query = {};
+              Toast.fail("用户名密码错误")
               return;
             }
           })
@@ -94,20 +117,23 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped >
 .login {
   height: 100vh;
+  /* background:  url( ../assets/img/bg.jpg) 100% 100% cover no-repeat; */
 }
 
 .title {
   text-align: center;
   line-height: 8vh;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+  /* background-color: white; */
 }
-.divider {
-  margin: 0;
-}
+
 .content {
-  background-color: #f0f0f0;
+  /* background-color: #f0f0f0; */
   width: 100%;
   height: 92vh;
 }
@@ -135,6 +161,11 @@ export default {
 
 .loginform {
   padding: 0 1rem;
+  /* background-color: rgba(255, 255, 255, 0.6); */
+}
+
+.loginform .van-field{
+background-color: rgba(255, 255, 255, 0.5);
 }
 
 .sub {

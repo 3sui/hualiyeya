@@ -170,13 +170,14 @@
       />
       <div class="sub">
         <van-button round block type="info" native-type="submit">提交</van-button>
-        <!-- <van-button round block type="default" native-type="cancel">返回</van-button> -->
-      </div>
+       
+      </div> 
+      </van-form>
       <div class="sub">
-        <!-- <van-button round block type="info" native-type="submit">提交</van-button> -->
-        <van-button round block type="default" native-type="cancel" @click="back">返回</van-button>
+       
+        <van-button round block type="default"  @click="back">返回</van-button>
       </div>
-    </van-form>
+   
   </div>
 </template>
 
@@ -337,7 +338,7 @@ export default {
 
     //返回
     back() {
-      this.$router.push("/DeviceManage");
+      this.$router.push("/RepairRecord");
     },
 
     //获取企业选项
@@ -363,19 +364,23 @@ export default {
       let index = this.enterprises.indexOf(value);
       this.enterprise_id = this.enterprises_id[index];
       this.showPicker_enterprise = false;
+      this.devices_id=[];
+      this.eqlist=[]
       this.getDevices();
       this.eq = "";
     },
 
     //企业选择改变
-    EnterpriseonChange() {},
+    EnterpriseonChange() {
+      
+    },
 
     //获取设备ID
     getDevices() {
       this.$axios
         .post("/mobile/Devices", { enterprise_id: this.enterprise_id })
         .then(res => {
-          console.log(res.data);
+          // console.log(res.data);
           let results = res.data;
           results.forEach(item => {
             this.eqlist.push(item.value);
@@ -440,7 +445,7 @@ export default {
       let index = this.faultType.indexOf(value);
       this.phenomenons = this.choosefault[index];
       this.showPicker_fault_type = false;
-      this.phenomenon = "";
+      this.query.phenomenon = "";
     },
     //选择故障现象确认
     phenomenononConfirm(value) {

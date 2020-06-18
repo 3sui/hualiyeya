@@ -9,7 +9,7 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-row :gutter="20" class="mgb20">
+            <!-- <el-row :gutter="20" class="mgb20">
                 <el-col :span="6">
                     <div class="block">
                         <span class="demonstration"></span>
@@ -29,23 +29,27 @@
                     <el-button type="primary" icon="el-icon-search">查询报表</el-button>
                     <el-button type="primary" icon="el-icon-download">导出报表</el-button>
                 </el-col>
-            </el-row>
+            </el-row> -->
             <el-row :gutter="20" class="mgb20">
                 <el-col :span="6" v-for="(fault,index) in faultTop" :key="index">
                     <el-card shadow="hover" :body-style="{padding: '0px'}" v-if="index<4">
                         <div class="grid-content grid-con">
-                            <i class="grid-con-icon" :class="backgroundstyle[index]">{{fault.sort}}</i>
+                            <!-- <i class="grid-con-icon" :class="backgroundstyle[index]">{{fault.sort}}</i> -->
+                              <div
+                                        class="card-title"
+                                        :class="backgroundstyle[index]"
+                                    >{{fault.fault_type}}</div>
                             <div class="grid-cont-right">
-                                <el-row>
+                                <!-- <el-row>
                                     <div
                                         class="card-title"
                                         :class="style[index]"
                                     >{{fault.fault_type}}</div>
-                                </el-row>
+                                </el-row> -->
                                 <el-row :gutter="24">
                                     <el-col :span="24">
                                         <div :class="style[index]" class="grid-num">{{fault.count}}</div>
-                                        <div>故障数</div>
+                                        <div class="grid_dev">故障数</div>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -183,11 +187,11 @@ export default {
             let myChart = this.$echarts.init(document.getElementById('byFault'));
             // 指定图表的配置项和数据
             var index = 0;
-            var colorList = ['#f36c6c', '#e6cf4e', '#20d180', '#0093ff'];
+            var colorList = ['#EB6379',  '#23A9F2', '#EEA03C',  '#69D3AB'];
             var option = {
                 title: {
                     text: '故障种类数量分布图',
-                    left: '45%'
+                    left: '40%'
                 },
 
                 tooltip: {
@@ -329,14 +333,19 @@ export default {
     text-align: center;
     font-size: 14px;
     color: #999;
+    height: 120px;
 }
 
 .grid-num {
-    font-size: 24px;
+    font-size: 50px;
     font-weight: bold;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
+    height: 90px;
+    line-height:90px;
 }
-
+.grid_dev{
+    font-size: 18px;
+}
 .grid-con-icon {
     font-size: 50px;
     width: 120px;
@@ -345,46 +354,48 @@ export default {
     line-height: 120px;
     color: #fff;
 }
-
 .card-title {
     text-align: center;
     font-size: 20px;
     font-weight: bold;
-    /* color: coral; */
+    color: white;
     letter-spacing: 0.5em;
-    line-height: 50px;
+    width: 50%;
+    line-height: 120px;
+    height: 120px;
+    background-color:#f0f0f0 ;
 }
 
 .s1 {
-    color: rgb(45, 140, 240);
-}
-
-.s2 {
-    color: coral;
+    color: #EB6379;
 }
 
 .s3 {
+    color:#EEA03C;
+}
+
+.s2 {
     color: darkturquoise;
 }
 
 .s4 {
-    color: red;
+    color: #69D3AB;
 }
 
 .b1 {
-    background-color: rgb(45, 140, 240);
-}
-
-.b2 {
-    background-color: coral;
+    background-color:#EB6379;
 }
 
 .b3 {
+    background-color:#EEA03C;
+}
+
+.b2 {
     background-color: darkturquoise;
 }
 
 .b4 {
-    background-color: red;
+    background-color: #69D3AB;
 }
 .container {
     padding-top: 15px;

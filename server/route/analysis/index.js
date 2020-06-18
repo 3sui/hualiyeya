@@ -16,6 +16,7 @@ module.exports = app => {
         assert(req.user.role < 2, 403, '您无权访问')
 
         let sql = `select device.eq,enterprise.enterprise_name,industry.industry_name from device,enterprise,industry where (device.is_deleted = 0 or device.is_deleted is NULL)and (device.enterprise_id=enterprise.id) and (enterprise.industry_id=industry.id)`
+        
         let results = await connection(sql)
         var resultlist = results
         // console.log(resultlist)

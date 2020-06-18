@@ -249,7 +249,9 @@ export default {
             this.editVisible = true;
             this.isAdd = true;
             this.form = {
-                is_deleted: 0
+                // is_deleted: 0
+                enterprise_name:'',
+                industry_id:''
             };
         },
         //添加确认
@@ -260,9 +262,9 @@ export default {
                 this.$message.error(`行业不能为空`);
             } else {
                 if (this.isAdd) {
-                    let date = new Date();
-                    this.form.created_time = date.getTime();
-                    console.log(date);
+                    // let date = new Date();
+                    // this.form.created_time = date.getTime();
+                    // console.log(date);
                     this.$axios
                         .post('/dataSettings/AddEnterprise', this.form)
                         .then(res => {
