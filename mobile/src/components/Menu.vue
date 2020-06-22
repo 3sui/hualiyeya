@@ -3,10 +3,10 @@
     <van-tabbar v-model="active" fixed>
       <van-tabbar-item
         v-for="item,index in items"
-        :key="index"
+        :key="item.index"
         :icon="item.icon"
         :to="item.index"
-        v-if="item.show"
+        v-show="item.show"
       >{{item.title}}</van-tabbar-item>
       <!-- <van-tabbar-item icon="bell" v-if="true">设备报警</van-tabbar-item>
       <van-tabbar-item icon="notes-o" v-if="true">维修记录</van-tabbar-item>
@@ -24,11 +24,21 @@ export default {
     [Notify.name]: Notify
   },
 
-  watch: {
+ watch: {
+   
     //监听路由变化
-    $route(to) {
-      this.tabbarActive(to.index);
-    }
+    // $route(to) {
+    //   this.tabbarActive(to.index);
+      
+    // },
+    $route(){
+    
+      
+      this.tabbarActive();
+      }
+
+
+
   },
   mounted() {
     this.getRole();
@@ -71,27 +81,32 @@ export default {
       ]
     };
   },
+  
   methods: {
-    tabbarActive(path) {
+    tabbarActive() {
+      let path=this.$route.name;
+    
       var index = this.items.map(item => item.index).indexOf(path);
       if (index != -1) {
         this.active = index;
       }
+      // console.log(index);
+      
     },
 
     //获取用户权限
     getRole() {
       if (localStorage) {
         let user_role = localStorage.getItem("role");
-        // if(user_role === "1") {
-        //   this.items.forEach(element => {
-        //     element.show = true;
-        //   });
-        // }
-        // else
+        if(user_role === "1") {
+          this.items[3].show=false;
+        }
+        else
          if (user_role === "2" || user_role === "3") {
-          // this.items[2].show = false;
+          // this.items[2].show = false; 
+          this.items[1].show = false;
           this.items[3].show = false;
+            
         }else {
         this.items[0].show = false;
         this.items[1].show = false;

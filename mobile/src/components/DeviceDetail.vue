@@ -29,7 +29,7 @@
       <div class="device_item">
         <van-row>
           <van-col span="12">
-            <p>出厂编号: {{device.eq}}</p>
+            <p>设备编号: {{device.eq}}</p>
             <p>设备类型: {{device.typename}}</p>
             <p>设备型号: {{device.device_model}}</p>
             <p>
@@ -43,7 +43,7 @@
           </van-col>
           <van-col span="12">
             <div class="img">
-              <van-image width="100%" height="100%" fit="fill" :src="Iamge(device.file_path)" />
+              <van-image width="100%" height="100%" fit="fill" :src="Iamge(imgpath)" />
             </div>
           </van-col>
         </van-row>
@@ -55,7 +55,7 @@
           <van-col span="10">
             <div class="point-detail">
               <p>
-                <van-icon color="#E54323" name="points" size="1rem" />
+                <van-icon color="blue"  name="points" size="1rem" />
                 <span class="point-name"> {{point.point_name}}</span>
               </p>
               <p>
@@ -85,13 +85,16 @@
         </van-row>
       </div>
       <div class="sub">
-        <van-button type="info" class="look" round block @click="review">查看设备手册</van-button>
+        <van-button type="info" class="look" round block @click="review(device.id)">查看设备手册</van-button>
+      </div>
+      <div class="sub">
+        <van-button type="default" class="look" round block @click="back">返回</van-button>
       </div>
     </div>
   </div>
 </template>
 <script>
-import imgUrl from "../assets/img/img.jpg";
+import imgUrl from "../assets/img/device.jpg";
 import { Tag, Col, Row, Icon, Button, Image as VanImage } from "vant";
 export default {
   name: "DeviceDetail",
@@ -141,7 +144,8 @@ export default {
       //   }
       // ],
       data: [],
-      list: []
+      list: [],
+      imgpath:''
     };
   },
   created() {
@@ -154,6 +158,7 @@ export default {
   methods: {
     //获取设备详情
     getData() {
+      this.imgpath=this.$route.query.file_path
       let data = {
         params: {
           id: this.$route.query.id
@@ -192,13 +197,13 @@ export default {
         .then(res => {
           // console.log(typeof(res.data));
 
-          if (res.data != null && res.data.length > 0) {
+          if (res.data !== null && res.data.length > 0) {
             // console.log(res.data);
 
             let result = res.data[0];
             // console.log(result);
             let array = Object.values(result);
-            let time = array[array.length-2];
+            let time = result.created_time;
             // console.log(time);
             
             this.data = array.slice(4, 4 + this.list.length);
@@ -239,12 +244,16 @@ export default {
       return path !== null ? userAvatar : imgUrl;
     },
     
-    //查看手册
-  review(){
-    this.$router.push({
-      path:'/Review',
-      id:this.device.device_id
-    })
+    //下载手册
+  review(id){
+   
+  },
+
+  //返回
+  back(){
+this.$router.push({
+  path:'/DeviceManage'
+})
   }
   }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="login" :style="note">
-    <div class="title" >设备远程管理系统</div>
+    <div class="title">设备远程管理系统</div>
     <div class="content">
       <!-- <van-divider style="margin:0" /> -->
       <div class="vactor">
@@ -36,8 +36,15 @@
 </template>
 
 <script>
-
-import { Form, Field, Button, Icon, Divider, Toast, Image as VanImage } from "vant";
+import {
+  Form,
+  Field,
+  Button,
+  Icon,
+  Divider,
+  Toast,
+  Image as VanImage
+} from "vant";
 import imgUrl from "../assets/img/vactar.jpg";
 export default {
   name: "Login",
@@ -48,7 +55,7 @@ export default {
     [Divider.name]: Divider,
     [Field.name]: Field,
     [Toast.name]: Toast,
-     [VanImage.name]: VanImage
+    [VanImage.name]: VanImage
   },
   data() {
     return {
@@ -56,15 +63,14 @@ export default {
         username: "",
         password: ""
       },
-      note:{
-         background:'url('+ require('../assets/img/bg.jpg') +')',
-         backgroundRepeat: "no-repeat",
-         
+      note: {
+        background: "url(" + require("../assets/img/bg.jpg") + ")",
+        backgroundRepeat: "no-repeat",
+        
       }
     };
   },
-  computed:{
-
+  computed: {
     userAvatar() {
       let userAvatar =
         axios.defaults.baseURL.slice(0, -4) + localStorage.getItem("avatar");
@@ -72,8 +78,7 @@ export default {
       // console.log(imgUrl);
       console.log(userAvatar);
       return localStorage.avatar == null ? imgUrl : userAvatar;
-    
-  },
+    }
   },
   methods: {
     onSubmit() {
@@ -85,24 +90,27 @@ export default {
         })
           .then(res => {
             // console.log(res);
-            
+
             if (res.data.success) {
               // this.$message.success('登录成功');
               localStorage.ms_username = res.data.ms_username;
+              localStorage.phone = res.data.phone;
               localStorage.token = res.data.token;
               localStorage.role = res.data.role;
               localStorage.avatar = res.data.avatar;
               // localStorage.enterprise_id = res.data.enterprise_id;
 
               console.log(res.data);
-              if (localStorage.role === "2" || localStorage.role === "3") {
+              if (localStorage.role !== '4') {
                 this.$router.push("/DeviceManage");
               } else {
                 this.$router.push("/RepairRecord");
               }
             } else {
+              console.log('密码错误请重输');
+              
               this.query = {};
-              Toast.fail("用户名密码错误")
+              Toast.fail("用户名密码错误");
               return;
             }
           })
@@ -164,8 +172,8 @@ export default {
   /* background-color: rgba(255, 255, 255, 0.6); */
 }
 
-.loginform .van-field{
-background-color: rgba(255, 255, 255, 0.5);
+.loginform .van-field {
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .sub {

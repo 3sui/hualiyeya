@@ -14,13 +14,13 @@ module.exports = app => {
 
         let sql = '';
         if (req.user.role === 4) {
-            sql = `select repair.*,device.eq,device.device_name from repair,device where repair.repair_person='${req.user.nickname}'and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id  order by repair.date Desc`
-        } else if (req.user.role === 2) {
-            sql = `select repair.*,device.eq,device.device_name from repair,device where device.enterprise_id= ${req.user.enterprise_id} and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id order by repair.date Desc`
-        } else if (req.user.role === 3) {
-            sql = `select repair.*,device.eq,device.device_name from repair,device,user_device where user_device.user_id= ${req.user.id}  and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id  and user_device.device_id=device.id order by repair.date Desc`
+            sql = `select * from repair where repair_person='${req.user.nickname}'and is_deleted = 0   order by repair.date Desc`
+        // } else if (req.user.role === 2) {
+        //     sql = `select repair.*,device.eq,device.device_name from repair,device where device.enterprise_id= ${req.user.enterprise_id} and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id order by repair.date Desc`
+        // } else if (req.user.role === 3) {
+        //     sql = `select repair.*,device.eq,device.device_name from repair,device,user_device where user_device.user_id= ${req.user.id}  and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id  and user_device.device_id=device.id order by repair.date Desc`
         } else (
-            sql = `select repair.*,device.eq,device.device_name from repair,device where  (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id  order by repair.date Desc`
+            sql = `select * from repair where is_deleted = 0  order by date Desc`
         )
         console.log(sql);
 
@@ -42,7 +42,7 @@ module.exports = app => {
     router.get('/RepairInfo', authMiddle, async (req, res) => {
 
         let id = req.query.id
-        let sql = `select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device.enterprise_id from repair,enterprise,device where repair.id=${id} and repair.device_id= device.id and device.enterprise_id = enterprise.id`
+        let sql = `select * from repair where repair.id=${id}`
         let results = await connection(sql)
 
 
@@ -57,6 +57,7 @@ module.exports = app => {
         let sql = "insert into repair set ? "
         console.log(sql)
         let results = await connection(sql, query)
+        console.log(results);
 
         res.send(results)
     })
@@ -176,24 +177,45 @@ module.exports = app => {
         }
     })
 
-    //企业用户获取自己企业的设备记录
+    //企业用户获取自己企业的设备记录,超级管理员获取所有设备
     router.get('/devicelist', authMiddle, async (req, res) => {
         let sql = '';
         if (req.user.role === 2) {
-            sql = `select * from (select d.*,count(l.cp_id) count from device d left join  devicedata_limit l on  d.eq=l.eq where l.is_deleted=0 group by l.eq )  b left join file_store f on b.id=f.device_id  where  b.is_deleted=0  and f.type='img' and b.enterprise_id=${req.user.enterprise_id}`
-        } else if (req.user.role === 3) {
-            sql = `select * from (select b.*,f.file_path from (select d.*,count(l.cp_id) count from device d left join  devicedata_limit l on  d.eq=l.eq where l.is_deleted=0 group by l.eq )  b left join file_store f on b.id=f.device_id  where  b.is_deleted=0  and f.type='img' )t,user_device u where t.id=u.device_id and u.user_id=${req.user.id}`
+            sql = `select * from (select d.*,dll.count  from  device d left outer join (select dl.eq,count(cp_id) as count   from  devicedata_limit dl where  dl.is_deleted=0 GROUP BY  dl.eq ) as dll on d.eq=dll.eq where  d.is_deleted = 0 and d.enterprise_id= ${req.user.enterprise_id}) dd LEFT outer  JOIN (select f.device_id ,f.file_path from file_store f where f.type='img' ) as ff on dd.id = ff.device_id `
+        } else if (req.user.role === 1) {
+            sql = `select * from (select d.*,dll.count  from  device d left outer join (select dl.eq,count(cp_id) as count   from  devicedata_limit dl where  dl.is_deleted=0 GROUP BY  dl.eq ) as dll on d.eq=dll.eq where  d.is_deleted = 0 ) dd LEFT outer  JOIN (select f.device_id ,f.file_path from file_store f where f.type='img' ) as ff on dd.id = ff.device_id `
         }
         let results = await connection(sql)
         if (results) {
             res.send(results)
         }
     })
+    //获取根据设备id获取测点数
+    // router.post('/devicepointcount', authMiddle, async (req, res) => {
+    //     let eq = req.body.eq;
+    //     let sql = `select count(cp_id) as count from  devicedata_limit where is_deleted=0 and eq='${eq}'`;
+    //     let results = await connection(sql)
+    //     if (results) {
+    //         res.send(results)
+    //     }
+    // })
+    // router.post('/deviceimg', authMiddle, async (req, res) => {
+    //     let id = req.body.id;
+    //     let sql = `select file_path from  file_store where  device_id=${id} and type='img'`;
+    //     // console.log(sql);
+
+    //     let results = await connection(sql)
+    //     if (results) {
+    //         res.send(results)
+    //     }
+    // })
+
+    //根据设备id获取图片地址
 
     //获取设备详情页设备信息
     router.get('/devicedetail', authMiddle, async (req, res) => {
         let id = req.query.id;
-        let sql = `select * from device d,file_store f,device_type t where d.id=${id} and d.device_type=t.id and d.id=f.device_id and f.type='img'`
+        let sql = `select d.*,t.typename from device d,device_type t where d.id=${id} and d.device_type=t.id `
         // console.log(sql);
 
         let results = await connection(sql)
@@ -231,8 +253,7 @@ module.exports = app => {
     router.get('/AlarmRecord', authMiddle, async (req, res) => {
         let enterprise_id = req.user.enterprise_id;
         console.log(enterprise_id);
-
-        let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  where  d.enterprise_id=${enterprise_id} order by a.created_time desc`
+        let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  order by a.created_time desc`
         console.log(sql);
         let results = await connection(sql)
         console.log(results)
@@ -256,8 +277,8 @@ module.exports = app => {
 
     //修改某个id的报警状态
     router.post('/UpdateAlarmRecord', authMiddle, async (req, res) => {
-       
-        
+
+
         let id = req.body.id;
         let state = req.body.state;
         let sql = `update alarm set is_handled='${state}' where id=${id}`
