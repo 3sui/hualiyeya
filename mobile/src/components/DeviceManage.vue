@@ -53,7 +53,11 @@
     />
 
     <div class="device_container">
-      <div class="device_item" v-for="device in devicelist" @click="goDeviceDetail(device.device_id)">
+      <div
+        class="device_item"
+        v-for="device in devicelist"
+        @click="goDeviceDetail(device.id,device.file_path)"
+      >
         <van-row :gutter="20">
           <van-col span="10">
             <div class="img">
@@ -66,19 +70,18 @@
               {{device.device_name}}
             </h3>
             <p>出厂编号:{{device.eq}}</p>
-            <p>测点数:{{device.count}}</p>
+            <p>测点数:{{device.count?device.count:0}}</p>
           </van-col>
           <van-col span="4">
-            <div class="state">{{device.state}}</div>
+            <div class="state">{{device.status}}</div>
           </van-col>
         </van-row>
       </div>
     </div>
-    <!-- <div class="footer"></div> -->
   </div>
 </template>
 <script>
-import imgUrl from "../assets/img/img.jpg";
+import imgUrl from "../assets/img/device.jpg";
 import {
   Col,
   Row,
@@ -103,100 +106,163 @@ export default {
   },
   data() {
     return {
-      enterprise_id: 1,
       value: "",
       devicelist: [],
-      deviceNum:0,
-      device_isonNum:0,
-      device_alarmNum:0,
-      
+      deviceNum: 0,
+      device_isonNum: 0,
+      device_alarmNum: 0
     };
   },
-  created() {
-    this.getEnterprise();
-  },
+  created() {},
   mounted() {
     this.getData();
   },
 
   methods: {
+    //图片路径地址转换
     Iamge(path) {
-      let userAvatar =''
-      if(path){
-        userAvatar =axios.defaults.baseURL.slice(0, -4)+ path.slice(0, -4) ;
+      let userAvatar = "";
+      if (path) {
+        userAvatar = axios.defaults.baseURL.slice(0, -4) + path.slice(0, -4);
       }
-      
-      // console.log(localStorage.avatar == null);
-      // console.log(imgUrl);
-      // console.log(userAvatar);
-      return path !== null ?  userAvatar: imgUrl;
+
+      return path !== null ? userAvatar : imgUrl;
     },
     //获取企业id
-    getEnterprise() {
-      let username = localStorage.getItem("ms_username");
-      console.log(username);
-    },
+    // getEnterprise() {
+    //   let username = localStorage.getItem("ms_username");
+    //   console.log(username);
+    // },
 
     // 获取设备列表数据
     getData() {
       axios({
         method: "get",
-        url: "/mobile/devicelist",
-        // params: {
-        //   enterprise_id: this.enterprise_id
-        // }
+        url: "/mobile/devicelist"
       })
         .then(res => {
-          console.log(res);
-          if (res.data.length) {
+          // console.log(res);
+          if (res.data !== null || res.data.length > 0) {
             this.devicelist = res.data;
-
-            // console.log(res.data);
           } else {
             console.log("服务器错误");
           }
         })
-        .then(()=>{
-          this.devicelist.forEach(element => {
-            this.deviceNum ++;
-            if(element.is_on==='1'){
-              this.device_isonNum++
-            }
-            if(element.status!=='正常'){
-              this.device_alarmNum++
-            }
-          });
-        })
-        .catch(err => {
-          console.log(err);
+        .then(() => {
+          this.deviceNum = 0;
+            this.device_isonNum = 0;
+            this.device_alarmNum = 0;
+            this.devicelist.forEach(element => {
+              this.deviceNum++;
+              if (element.is_on === "1") {
+                this.device_isonNum++;
+              }
+              if (element.status !== "正常") {
+                this.device_alarmNum++;
+              }
+            });
         });
+      // .then(() => {
+
+      //   this.list.forEach(element => {
+      //     let item = {};
+      //     item.id = element.id;
+      //     item.eq = element.eq;
+      //     item.device_name = element.device_name;
+      //     item.file_path = "";
+      //     item.count = 0;
+      //     this.$axios.all([this.getPointNum(element.eq), this.getImage(element.id)])
+      //       .then(
+      //         this.$axios.spread(function(val1, val2) {
+      //           console.log(val1);
+      //           console.log(val2);
+
+      //           //当这两个请求都完成的时候会触发这个函数，两个参数分别代表返回的结果
+      //           if (val1 !== null || val1.length > 0) {
+      //             console.log(this.count);
+
+      //             this.count = val1.data[0].count;
+      //           } else {
+      //             this.count = 0;
+      //           }
+      //           if (val2 !== null || val2.length > 0) {
+      //             this.file_path = val2.data[0].file_path;
+      //           } else {
+      //             this.file_path = "";
+      //           }
+      //           item.count = this.count;
+      //           item.file_path = this.file_path;
+      //            console.log(item);
+      //         })
+      //       )
+      //       .then(() => {
+      //         this.devicelist.push(item);
+      //       });
+      //   });
+      // });
     },
+
+    //获取测点数
+    // getPointNum:function(eq) {
+    //   return this.$axios.post("/mobile/devicepointcount", { eq: eq });
+    // .then(res => {
+    //   if (res.data !== null || res.data.length > 0) {
+    //     console.log(res.data[0].count);
+    //     this.count = res.data[0].count;
+    //   } else {
+    //     this.count = 0;
+    //   }
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // });
+    // },
+
+    //获取设备图片地址
+    // getImage:function(id) {
+    // console.log(id);
+
+    // return this.$axios.post("/mobile/deviceimg", { id: id });
+    // .then(res => {
+    //   if (res.data !== null || res.data.length > 0) {
+    //     console.log(res.data[0].file_path);
+
+    //     this.file_path = res.data[0].file_path;
+    //   } else {
+    //     this.file_path = "";
+    //   }
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // });
+    // },
 
     //搜索
     onSearch(val) {
-      this.devicelist=this.devicelist.filter(array=>{
-      return  array.device_name.match(val) || array.eq.match(val) 
-     })
+      this.devicelist = this.devicelist.filter(array => {
+        return array.device_name.match(val) || array.eq.match(val);
+      });
     },
 
     //取消
     onCancel() {
-      this.value="";
-      // this.getData()
-      location.reload()
+      this.value = "";
+
+      this.devicelist = [];
+      this.getData();
+      // location.reload();
     },
 
     //查看设备详情
-    goDeviceDetail(id) {
+    goDeviceDetail(id,url) {
       this.$router.push({
         path: "/DeviceDetail",
         query: {
-          id:id 
+          id: id,
+          file_path:url
         }
       });
-    },
-
-
+    }
   }
 };
 </script>
@@ -204,9 +270,9 @@ export default {
 <style scoped>
 .devicemanage {
   background-color: #f0f0f0;
-  min-height:95vh ;
+  min-height: 95vh;
 }
- .devicemanage .header {
+.devicemanage .header {
   background-color: white;
   height: 8vh;
   margin-bottom: 0.5vh;
@@ -246,7 +312,7 @@ export default {
 .devicemanage .main p {
   text-align: center;
   margin: 0.2rem auto;
-  color:  #cccccc;
+  color: #cccccc;
   font-size: 0.8rem;
 }
 
@@ -266,7 +332,6 @@ export default {
 }
 .devicemanage .device_container {
   padding: 0 0 2rem 0;
-  
 }
 
 .devicemanage .device_item {

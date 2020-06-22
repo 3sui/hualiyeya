@@ -22,10 +22,6 @@ let config = {
 
   baseURL: 'http://localhost:8085/api',
 
-<<<<<<< HEAD
-=======
-  baseURL: 'http://localhost:8085/api',
->>>>>>> 0b718fcbf3a86dd72c756a448909d75e929727df
   // baseURL: 'http://10.159.24.78:8085/api',
   // baseURL: process.env.baseURL || process.env.apiUrl || ""
   // timeout: 60 * 1000, // Timeout
@@ -130,7 +126,7 @@ _axios.interceptors.response.use(
 //   }
 // );
 
-
+_axios.__proto__ = axios
 
 
 Plugin.install = function (Vue, options) {
@@ -147,6 +143,7 @@ Plugin.install = function (Vue, options) {
         return _axios;
       }
     },
+ 
   });
 };
 

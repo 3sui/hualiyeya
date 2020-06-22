@@ -14,8 +14,11 @@
     </div>
 
     <van-form @submit="onSubmit">
+
+       <van-field v-model="query.enterprise_name" type="tel" required label="企业名称" placeholder="点击输入企业名称"/>
+      <van-field v-model="query.device_eq" type="tel" required label="设备编号" placeholder="点击输入设备编号"/>
       <!-- 选择企业 -->
-      <van-field
+      <!-- <van-field
         readonly
         clickable
         required
@@ -24,8 +27,8 @@
         label="企业名称"
         placeholder="点击选择企业名称"
         @click="showPicker_enterprise = true"
-      />
-      <van-popup v-model="showPicker_enterprise" position="bottom">
+      /> -->
+      <!-- <van-popup v-model="showPicker_enterprise" position="bottom">
         <van-picker
           show-toolbar
           :columns="enterprises"
@@ -33,10 +36,10 @@
           @cancel="showPicker_enterprise = false"
           @change="EnterpriseonChange"
         />
-      </van-popup>
+      </van-popup> -->
 
       <!-- 选择设备编号 -->
-      <van-field
+      <!-- <van-field
         readonly
         clickable
         required
@@ -45,8 +48,8 @@
         label="设备编号"
         placeholder="点击选择设备编号"
         @click="showPicker_eq = true"
-      />
-      <van-popup v-model="showPicker_eq" position="bottom">
+      /> -->
+      <!-- <van-popup v-model="showPicker_eq" position="bottom">
         <van-picker
           show-toolbar
           :columns="eqlist"
@@ -54,6 +57,7 @@
           @cancel="showPicker_eq = false"
         />
       </van-popup>
+       -->
       <van-field
         readonly
         clickable
@@ -90,7 +94,7 @@
           @cancel="showPicker_phenomenon = false"
         />
       </van-popup>
-      <van-field
+      <!-- <van-field
         readonly
         clickable
         required
@@ -107,8 +111,9 @@
           @confirm="persononConfirm"
           @cancel="showPicker_person = false"
         />
-      </van-popup>
-      <van-field v-model="query.repair_person_phone" type="tel" required label="手机号" />
+      </van-popup> -->
+       <van-field v-model="query.repair_person" type="tel" required label="维修人员" disabled/>
+      <van-field v-model="query.repair_person_phone" type="tel" required label="手机号" disabled />
       <van-field
         readonly
         clickable
@@ -152,7 +157,7 @@
         label="故障原因"
         type="textarea"
         maxlength="100"
-        placeholder="请输入"
+        placeholder="请输入故障原因"
         show-word-limit
       />
 
@@ -165,7 +170,7 @@
         label="排除办法"
         type="textarea"
         maxlength="100"
-        placeholder="请输入"
+        placeholder="请输入排除办法"
         show-word-limit
       />
       <div class="sub">
@@ -209,17 +214,17 @@ export default {
   data() {
     return {
       //企业
-      enterprises: [],
-      enterprises_id: [],
-      showPicker_enterprise: false,
-      enterprise_id: "",
-      enterprise_name: "",
+      // enterprises: [],
+      // enterprises_id: [],
+      // showPicker_enterprise: false,
+      // enterprise_id: "",
+      // enterprise_name: "",
       //设备
-      eqlist: [],
-      eq: "",
-      devices_id: [],
+      // eqlist: [],
+      // eq: "",
+      // devices_id: [],
       // device_id: "",
-      showPicker_eq: false,
+      // showPicker_eq: false,
       //故障及原因
       faultType: [],
       // type: "",
@@ -230,8 +235,8 @@ export default {
       showPicker_phenomenon: false,
 
       //维修人员
-      personlist: [],
-      phonelist: [],
+      // personlist: [],
+      // phonelist: [],
       // repair_person: "",
       showPicker_person: false,
 
@@ -244,7 +249,8 @@ export default {
       showPicker_state: false,
 
       query: {
-        device_id: "",
+        enterprise_name:"",
+        device_eq: "",
         type: "",
         phenomenon: "",
         repair_person: "",
@@ -257,16 +263,16 @@ export default {
     };
   },
   created() {
-    this.getEnterprises();
+    // this.getEnterprises();
     this.getFaultType();
-    this.getPersons();
+    this.getPerson();
     this.getStates();
   },
   methods: {
     onSubmit() {
       if (
-        !this.enterprise_name ||
-        !this.query.device_id ||
+        !this.query.enterprise_name ||
+        !this.query.device_eq ||
         !this.query.type ||
         !this.query.phenomenon ||
         !this.query.repair_person ||
@@ -298,64 +304,66 @@ export default {
     },
 
     //获取企业选项
-    getEnterprises() {
-      this.$axios
-        .get("/dataSettings/Enterprise")
-        .then(res => {
-          console.log(res.data);
-          let list = res.data;
-          list.forEach(element => {
-            this.enterprises_id.push(element.id);
-            this.enterprises.push(element.enterprise_name);
-          });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
+    // getEnterprises() {
+    //   this.$axios
+    //     .get("/dataSettings/Enterprise")
+    //     .then(res => {
+    //       console.log(res.data);
+    //       let list = res.data;
+    //       list.forEach(element => {
+    //         this.enterprises_id.push(element.id);
+    //         this.enterprises.push(element.enterprise_name);
+    //       });
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // },
 
     //选择企业确认
-    EnterpriseonConfirm(value) {
-      this.enterprise_name = value;
-      let index = this.enterprises.indexOf(value);
-      this.enterprise_id = this.enterprises_id[index];
-      this.showPicker_enterprise = false;
-      this.devices_id=[];
-      this.eqlist=[];
-      this.eq = "";
-      this.getDevices();
+    // EnterpriseonConfirm(value) {
+    //   this.enterprise_name = value;
+    //   let index = this.enterprises.indexOf(value);
+    //   this.enterprise_id = this.enterprises_id[index];
+    //   this.showPicker_enterprise = false;
+    //   this.devices_id=[];
+    //   this.eqlist=[];
+    //   this.eq = "";
+    //   this.getDevices();
     
-    },
+    // },
 
     //企业选择改变
-    EnterpriseonChange() {},
+    // EnterpriseonChange() {},
 
     //获取设备ID
-    getDevices() {
-      this.$axios
-        .post("/mobile/Devices", { enterprise_id: this.enterprise_id })
-        .then(res => {
-          console.log(res.data);
-          let results = res.data;
-          results.forEach(item => {
-            this.eqlist.push(item.value);
-            this.devices_id.push(item.id);
-          });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
+    // getDevices() {
+    //   this.$axios
+    //     .post("/mobile/Devices", { enterprise_id: this.enterprise_id })
+    //     .then(res => {
+    //       console.log(res.data);
+    //       let results = res.data;
+    //       results.forEach(item => {
+    //         this.eqlist.push(item.value);
+    //         this.devices_id.push(item.id);
+    //       });
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // },
 
     //获取维修人员
-    getPersons() {
-      this.$axios.get("/mobile/persons").then(res => {
-        let results = res.data;
-        results.forEach(item => {
-          this.personlist.push(item.nickname);
-          this.phonelist.push(item.phone);
-        });
-      });
+    getPerson() {
+      // this.$axios.get("/mobile/persons").then(res => {
+      //   let results = res.data;
+      //   results.forEach(item => {
+      //     this.personlist.push(item.nickname);
+      //     this.phonelist.push(item.phone);
+      //   });
+      // });
+      this.query.repair_person=localStorage.ms_username;
+       this.query.repair_person_phone=localStorage.phone;
     },
 
     //获取维修状态
@@ -369,12 +377,12 @@ export default {
     },
 
     //选择设备编号确认
-    eqonConfirm(value) {
-      this.eq = value;
-      let index = this.eqlist.indexOf(value);
-      this.query.device_id = this.devices_id[index];
-      this.showPicker_eq = false;
-    },
+    // eqonConfirm(value) {
+    //   this.eq = value;
+    //   let index = this.eqlist.indexOf(value);
+    //   this.query.device_id = this.devices_id[index];
+    //   this.showPicker_eq = false;
+    // },
 
     //获取故障类型、故障现象选项
     getFaultType() {
@@ -407,12 +415,12 @@ export default {
       this.showPicker_phenomenon = false;
     },
     //选择维修人员确认
-    persononConfirm(value) {
-      this.query.repair_person = value;
-      this.showPicker_person = false;
-      let index = this.personlist.indexOf(value);
-      this.query.repair_person_phone = this.phonelist[index];
-    },
+    // persononConfirm(value) {
+    //   this.query.repair_person = value;
+    //   this.showPicker_person = false;
+    //   let index = this.personlist.indexOf(value);
+    //   this.query.repair_person_phone = this.phonelist[index];
+    // },
 
     //日期格式化
     formatDate(date) {

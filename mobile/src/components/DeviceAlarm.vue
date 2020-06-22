@@ -182,7 +182,9 @@ export default {
      //取消
     onCancel() {
       this.value="";
-      location.reload()
+      this.recordlist=[];
+      this.getData()
+      // location.reload()
     },
   }
 };
@@ -242,7 +244,7 @@ export default {
   color:#23A9F2;
   height: 3rem;
   line-height: 3rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
 }
 

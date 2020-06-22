@@ -23,7 +23,7 @@
       />
       <van-cell
         title="设备编号"
-        :value="query.eq"
+        :value="query.device_eq"
         size="large"
         title-class="titleclass"
         value-class="valueclass"
@@ -203,7 +203,7 @@ export default {
 .repairdetail .titleclass {
   font-size: 1rem;
   padding-left: 0.5rem;
-  text-align-last: justify
+  /* text-align-last: justify */
   /* width: 30%; */
 }
 .repairdetail .valueclass {
