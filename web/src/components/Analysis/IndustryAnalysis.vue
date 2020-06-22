@@ -14,29 +14,29 @@
                     <el-button type="primary" icon="el-icon-search" @click="Refresh">刷新</el-button>
                     <el-button type="primary" icon="el-icon-download" @click="Download">导出报表</el-button>
                 </el-col>
-            </el-row> -->
+            </el-row>-->
             <!-- </div>
 
             <div class="container">-->
-            <el-row :gutter="20" >
+            <el-row :gutter="20">
                 <el-col :span="6" v-for="(industry,index) in industryTop" :key="index">
                     <el-card shadow="hover" :body-style="{padding: '0px'}" v-if="index<4">
                         <div class="grid-content grid-con">
-                              <div
-                                        class="card-title"
-                                        :class="backgroundstyle[index]"
-                                    >{{industry.industryname}}</div>
+                            <div
+                                class="card-title"
+                                :class="backgroundstyle[index]"
+                            >{{industry.industryname}}</div>
                             <!-- <i
                                 class="grid-con-icon"
                                 :class="backgroundstyle[index]"
-                            >{{industry.sort}}</i> -->
+                            >{{industry.sort}}</i>-->
                             <div class="grid-cont-right">
                                 <!-- <el-row>
                                     <div
                                         class="card-title"
                                         :class="style[index]"
                                     >{{industry.industryname}}</div>
-                                </el-row> -->
+                                </el-row>-->
                                 <el-row :gutter="24">
                                     <el-col :span="12">
                                         <div
@@ -508,7 +508,7 @@ export default {
                         },
                         data: thisYearData,
                         animationEasing: 'elasticOut'
-                    },
+                    }
                     // {
                     //     name: '企业数',
                     //     type: 'bar',
@@ -540,7 +540,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-row {
     margin-bottom: 20px;
 }
@@ -564,9 +564,9 @@ export default {
     font-weight: bold;
     /* margin-bottom: 10px; */
     height: 90px;
-    line-height:90px;
+    line-height: 90px;
 }
-.grid_dev{
+.grid_dev {
     font-size: 18px;
 }
 
@@ -588,14 +588,14 @@ export default {
     width: 50%;
     line-height: 120px;
     height: 120px;
-    background-color:#f0f0f0 ;
+    background-color: #f0f0f0;
 }
 .s1 {
-    color: #EB6379;
+    color: #eb6379;
 }
 
 .s3 {
-    color:#EEA03C;
+    color: #eea03c;
 }
 
 .s2 {
@@ -603,15 +603,15 @@ export default {
 }
 
 .s4 {
-    color: #69D3AB;
+    color: #69d3ab;
 }
 
 .b1 {
-    background-color:#EB6379;
+    background-color: #eb6379;
 }
 
 .b3 {
-    background-color:#EEA03C;
+    background-color: #eea03c;
 }
 
 .b2 {
@@ -619,7 +619,7 @@ export default {
 }
 
 .b4 {
-    background-color: #69D3AB;
+    background-color: #69d3ab;
 }
 .container {
     padding-top: 15px;

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-04-28 16:25:21
- * @LastEditTime: 2020-06-18 20:48:14
+ * @LastEditTime: 2020-06-22 09:41:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\vue-manage-system\src\components\page\map.vue
@@ -117,8 +117,9 @@
                         id: drawerData.id
                     }})"
                 >跳转到详情页</el-button>
-                <el-link
+                <a
                     target="_blank"
+                    download="重命名123.doc"
                     :href="axios.defaults.baseURL.slice(0, -4) + item.file_path.split('.').shift()"
                     :underline="false"
                     style="margin-left:15px"
@@ -126,7 +127,7 @@
                     :key="index"
                 >
                     <el-button size="mini" type="warning">{{item.file_name}} 下载</el-button>
-                </el-link>
+                </a>
             </div>
         </el-drawer>
     </div>

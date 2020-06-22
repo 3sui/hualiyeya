@@ -29,23 +29,23 @@
                     <el-button type="primary" icon="el-icon-search">查询报表</el-button>
                     <el-button type="primary" icon="el-icon-download">导出报表</el-button>
                 </el-col>
-            </el-row> -->
+            </el-row>-->
             <el-row :gutter="20" class="mgb20">
                 <el-col :span="6" v-for="(fault,index) in faultTop" :key="index">
                     <el-card shadow="hover" :body-style="{padding: '0px'}" v-if="index<4">
                         <div class="grid-content grid-con">
                             <!-- <i class="grid-con-icon" :class="backgroundstyle[index]">{{fault.sort}}</i> -->
-                              <div
-                                        class="card-title"
-                                        :class="backgroundstyle[index]"
-                                    >{{fault.fault_type}}</div>
+                            <div
+                                class="card-title"
+                                :class="backgroundstyle[index]"
+                            >{{fault.fault_type}}</div>
                             <div class="grid-cont-right">
                                 <!-- <el-row>
                                     <div
                                         class="card-title"
                                         :class="style[index]"
                                     >{{fault.fault_type}}</div>
-                                </el-row> -->
+                                </el-row>-->
                                 <el-row :gutter="24">
                                     <el-col :span="24">
                                         <div :class="style[index]" class="grid-num">{{fault.count}}</div>
@@ -161,7 +161,6 @@ export default {
                 .then(res => {
                     if (res) {
                         this.faultTop = res.data;
-                       
                     }
                 })
                 .then(() => {
@@ -187,7 +186,7 @@ export default {
             let myChart = this.$echarts.init(document.getElementById('byFault'));
             // 指定图表的配置项和数据
             var index = 0;
-            var colorList = ['#EB6379',  '#23A9F2', '#EEA03C',  '#69D3AB'];
+            var colorList = ['#EB6379', '#23A9F2', '#EEA03C', '#69D3AB'];
             var option = {
                 title: {
                     text: '故障种类数量分布图',
@@ -317,7 +316,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .el-row {
     margin-bottom: 10px;
 }
@@ -341,9 +340,9 @@ export default {
     font-weight: bold;
     /* margin-bottom: 10px; */
     height: 90px;
-    line-height:90px;
+    line-height: 90px;
 }
-.grid_dev{
+.grid_dev {
     font-size: 18px;
 }
 .grid-con-icon {
@@ -363,15 +362,15 @@ export default {
     width: 50%;
     line-height: 120px;
     height: 120px;
-    background-color:#f0f0f0 ;
+    background-color: #f0f0f0;
 }
 
 .s1 {
-    color: #EB6379;
+    color: #eb6379;
 }
 
 .s3 {
-    color:#EEA03C;
+    color: #eea03c;
 }
 
 .s2 {
@@ -379,15 +378,15 @@ export default {
 }
 
 .s4 {
-    color: #69D3AB;
+    color: #69d3ab;
 }
 
 .b1 {
-    background-color:#EB6379;
+    background-color: #eb6379;
 }
 
 .b3 {
-    background-color:#EEA03C;
+    background-color: #eea03c;
 }
 
 .b2 {
@@ -395,7 +394,7 @@ export default {
 }
 
 .b4 {
-    background-color: #69D3AB;
+    background-color: #69d3ab;
 }
 .container {
     padding-top: 15px;

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 14:19:13
- * @LastEditTime: 2020-06-18 21:39:07
+ * @LastEditTime: 2020-06-22 10:49:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\AddNewProduct.vue
@@ -107,7 +107,7 @@
                             <img width="100%" :src="dialogImageUrl" alt />
                         </el-dialog>
                     </el-form-item>
-                    <el-form-item label="上传文档">
+                    <!-- <el-form-item label="上传文档">
                         <el-upload
                             multiple
                             :data="{id: newDeviceId,
@@ -131,7 +131,7 @@
                                 class="el-upload__tip ml-2"
                             >只能上传pdf/word文件，且不超过2MB，最多上传3份文档</span>
                         </el-upload>
-                    </el-form-item>
+                    </el-form-item>-->
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit('form')">提交</el-button>
                         <el-button @click="resetForm('form')">取消</el-button>
@@ -275,7 +275,7 @@ export default {
                         })
                         .then(() => {
                             this.$refs.uploadImg.submit();
-                            this.$refs.uploadWord.submit();
+                            // this.$refs.uploadWord.submit();
                             // window.console.log(res.data);
                         })
                         .then(() => {
@@ -301,7 +301,7 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
             this.$refs.uploadImg.clearFiles();
-            this.$refs.uploadWord.clearFiles();
+            // this.$refs.uploadWord.clearFiles();
         },
 
         //文件超出个数限制时的钩子

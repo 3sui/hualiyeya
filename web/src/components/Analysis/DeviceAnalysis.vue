@@ -30,20 +30,19 @@
                     <el-button type="primary" icon="el-icon-download">导出报表</el-button>
                 </el-col>
             </el-row>-->
-            <el-row :gutter="20" >
+            <el-row :gutter="20">
                 <el-col :span="6" v-for="(device,index) in deviceTop" :key="index">
                     <el-card shadow="hover" :body-style="{padding: '0px'}" v-if="index<4">
                         <div class="grid-content grid-con">
                             <!-- <i class="grid-con-icon" :class="backgroundstyle[index]">{{device.sort}}</i>
                             -->
-                            <div class="card-title" :class="backgroundstyle[index]">{{device.device_type}}</div>
+                            <div
+                                class="card-title"
+                                :class="backgroundstyle[index]"
+                            >{{device.device_type}}</div>
                             <div class="grid-cont-right">
-                                
-                               
-                                
-                                        <div :class="style[index]" class="grid-num">{{device.count}}</div>
-                                        <div class="grid_dev">设备数</div>
-                                 
+                                <div :class="style[index]" class="grid-num">{{device.count}}</div>
+                                <div class="grid_dev">设备数</div>
                             </div>
                         </div>
                     </el-card>
@@ -163,7 +162,7 @@ export default {
                     text: '设备类型数量分布图',
                     left: '40%'
                 },
-                color:['#8378EA','#E7BCF3','#FB7293','#FF9F7F','#9FE6B8','#32C5E9','#4B7CF3','#EB6379','#068687','#82DACA'],
+                color: ['#8378EA', '#E7BCF3', '#FB7293', '#FF9F7F', '#9FE6B8', '#32C5E9', '#4B7CF3', '#EB6379', '#068687', '#82DACA'],
                 backgroundColor: '#fff',
                 legend: {
                     orient: 'vertical',
@@ -195,8 +194,8 @@ export default {
                     {
                         name: '设备类型',
                         type: 'pie',
-                        radius: ['20%', '65%'],//半径
-                        center: ['40%', '60%'],//位置
+                        radius: ['20%', '65%'], //半径
+                        center: ['40%', '60%'], //位置
                         roseType: 'radius',
                         label: {
                             show: true,
@@ -221,7 +220,7 @@ export default {
 };
 </script>
 
-<style scope>
+<style scoped>
 /* .el-row {
     margin-bottom: 10px;
 } */
@@ -245,9 +244,9 @@ export default {
     font-weight: bold;
     /* margin-bottom: 10px; */
     height: 90px;
-    line-height:90px;
+    line-height: 90px;
 }
-.grid_dev{
+.grid_dev {
     font-size: 18px;
 }
 
@@ -269,15 +268,15 @@ export default {
     width: 50%;
     line-height: 120px;
     height: 120px;
-    background-color:#f0f0f0 ;
+    background-color: #f0f0f0;
 }
 
 .s1 {
-    color: #EB6379;
+    color: #eb6379;
 }
 
 .s3 {
-    color:#EEA03C;
+    color: #eea03c;
 }
 
 .s2 {
@@ -285,15 +284,15 @@ export default {
 }
 
 .s4 {
-    color: #69D3AB;
+    color: #69d3ab;
 }
 
 .b1 {
-    background-color:#EB6379;
+    background-color: #eb6379;
 }
 
 .b3 {
-    background-color:#EEA03C;
+    background-color: #eea03c;
 }
 
 .b2 {
@@ -301,7 +300,7 @@ export default {
 }
 
 .b4 {
-    background-color: #69D3AB;
+    background-color: #69d3ab;
 }
 .container {
     padding-top: 15px;
