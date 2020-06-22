@@ -45,7 +45,7 @@
       v-model="value"
       shape="round"
       background="#F0F0F0"
-      placeholder="设备名称、维修人员、设备种类、状态、时间"
+      placeholder="企业、设备编号、设备种类、状态、时间"
       show-action
       @search="onSearch"
       @cancel="onCancel"
@@ -61,7 +61,7 @@
                 </div>
               </van-col>
               <van-col span="10">
-                <div class="record-title">{{record.device_name}}</div>
+                <div class="record-title">{{record.device_eq}}</div>
               </van-col>
               <van-col span="12">
                 <div class="record-date">维修时间：{{record.date}}</div>
@@ -71,6 +71,7 @@
           <div class="item-content">
             <van-row :gutter="20">
               <van-col span="16">
+                <p>企业名称：{{record.enterprise_name}}</p>
                 <p>维修人员：{{record.repair_person}}</p>
                 <p>故障类型：{{record.type}}</p>
               </van-col>
@@ -198,11 +199,12 @@ export default {
     onSearch(val) {
       this.recordlist = this.recordlist.filter(array => {
         return (
-          array.repair_person.match(val) ||
+         
           array.state.match(val) ||
           array.type.match(val) ||
-          array.device_name.match(val) ||
-          array.date.match(val)
+          array.device_eq.match(val) ||
+          array.date.match(val) ||
+          array.enterprise_name.match(val)
         );
       });
     },
@@ -210,8 +212,9 @@ export default {
     //取消
     onCancel() {
       this.value = "";
-      // this.getData();
-      location.reload()
+      this.recordlist=[]
+      this.getData();
+      // location.reload()
     },
 
     //获取用户权限
@@ -219,13 +222,13 @@ export default {
     getRole() {
       if (localStorage) {
         let user_role = localStorage.getItem("role");
-        if (user_role === "4" || user_role === "1") {
+        if (user_role === "4" ) {
           this.rolecheck = true;
         } else {
-          return;
+          return ;
         }
       } else {
-        return;
+        return ;
       }
     },
     //企业用户进入维修记录详情，只能查看
@@ -304,7 +307,7 @@ export default {
 .item-title .record-title {
   height: 3rem;
   line-height: 3rem;
-  font-size: 1.2rem;
+  font-size: 0.8rem;
   font-weight: bold;
   color: #23a9f2;
 }
@@ -317,7 +320,7 @@ export default {
 }
 
 .item-content {
-  height: 4rem;
+  height: 6rem;
   background-color: white;
   padding: 1rem;
 }
@@ -336,8 +339,8 @@ export default {
     
 } */
 .item-content .mark {
-  height: 4rem;
-  line-height: 4rem;
+  height: 6rem;
+  line-height: 6rem;
   color: #747474;
   font-size: 1.3rem;
   font-weight: bold;

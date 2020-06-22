@@ -35,7 +35,7 @@ const routes = [
       component: () => import('../components/DeviceManage'),
       meta: {
         title: '设备管理',
-        permission:2
+        permission:[1,2]
       },
     },
     {
@@ -44,26 +44,26 @@ const routes = [
       component: () => import('../components/DeviceDetail'),
       meta: {
         title: '设备详情',
-        permission: 2
+        permission: [1,2]
       }
 
     },
-    {
-      path: '/Review',
-      name: 'Review',
-      component: () => import('../components/Review'),
-      meta: {
-        title: '查看手册',
-        permission: 2
-      }
-    },
+    // {
+    //   path: '/Review',
+    //   name: 'Review',
+    //   component: () => import('../components/Review'),
+    //   meta: {
+    //     title: '查看手册',
+    //     permission: [1,2]
+    //   }
+    // },
     {
       path: '/DeviceAlarm',
       name: 'DeviceAlarm',
       component: () => import('../components/DeviceAlarm'),
       meta: {
         title: '设备报警',
-        permission: 2
+        permission: 1
       }
     },
     {
@@ -72,7 +72,7 @@ const routes = [
       component: () => import('../components/AlarmHandle'),
       meta: {
         title: '报警处理',
-        permission: 2
+        permission: 1
       }
     },
     {
@@ -80,7 +80,8 @@ const routes = [
       name: 'RepairRecord',
       component: () => import('../components/RepairRecord'),
       meta: {
-        title: '维修记录'
+        title: '维修记录',
+        permission: [1,4]
       }
     },
     {
@@ -88,7 +89,8 @@ const routes = [
       name: 'RepairDetail',
       component: () => import('../components/RepairDetail'),
       meta: {
-        title: '维修记录详情'
+        title: '维修记录详情',
+        permission: [1, 4]
       }
     },
     {
@@ -97,7 +99,7 @@ const routes = [
       component: () => import('../components/NewRepairRecord'),
       meta: {
         title: '新建工单',
-        permission: 1
+        permission: 4
       }
     },
     {
@@ -106,7 +108,7 @@ const routes = [
       component: () => import('../components/EditRepairRecord'),
       meta: {
         title: '工单编辑',
-        permission: 1
+        permission: 4
       }
     },
     {

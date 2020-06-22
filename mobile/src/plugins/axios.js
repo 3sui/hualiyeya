@@ -126,7 +126,7 @@ _axios.interceptors.response.use(
 //   }
 // );
 
-
+_axios.__proto__ = axios
 
 
 Plugin.install = function (Vue, options) {
@@ -143,6 +143,7 @@ Plugin.install = function (Vue, options) {
         return _axios;
       }
     },
+ 
   });
 };
 

@@ -2,11 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 
-import './plugins/axios'
+import    './plugins/axios'
 import './plugins/vant.js'
 import { Toast} from "vant";
 // import pdf from '@/components/pdf'
 // Vue.use(pdf)
+ 
+// Vue.prototype.$axios = axios;
 
 Vue.config.productionTip = false
 
@@ -15,12 +17,16 @@ router.beforeEach((to, from, next) => {
   const role = localStorage.getItem('role');
   if (!role && to.path !== '/login') {
     next('/login');
-  } else if (to.meta.permission===1) {
-    // 如果是管理员权限则可进入，这里只是简单的模拟管理员权限而已
+  } else if (to.meta.permission===4) {
+    // 如果是维修工
+    role === '4'? next() : next('/403');
+  } else if (to.meta.permission === 1){
+    role === '1'? next() : next('/403');
+  } else if (to.meta.permission ===[1,4]) {
     role === '1' || role === '4'? next() : next('/403');
-  } else if (to.meta.permission === 2){
-    role === '2' || role === '3'? next() : next('/403');
-  }else
+  } else if (to.meta.permission === [1, 2]) {
+    role === '1' || role === '2' ? next() : next('/403');
+  } else
   {
       next();
     }
