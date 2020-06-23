@@ -4,7 +4,10 @@ import router from './router'
 
 import    './plugins/axios'
 import './plugins/vant.js'
-import { Toast} from "vant";
+import { Toast } from "vant";
+
+Vue.use(Toast);
+Vue.prototype.$Toast = Toast
 // import pdf from '@/components/pdf'
 // Vue.use(pdf)
  
@@ -36,7 +39,6 @@ router.beforeEach((to, from, next) => {
 
 
 
-Vue.use(Toast);
 new Vue({
   router,
   render: h => h(App),

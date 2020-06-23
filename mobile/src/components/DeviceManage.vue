@@ -7,7 +7,7 @@
         </van-col>
         <van-col span="3" offset="9">
           <span class="alarm">
-            <van-icon name="bell" dot />
+            <!-- <van-icon name="bell" dot /> -->
           </span>
         </van-col>
       </van-row>
@@ -43,9 +43,10 @@
     </van-row>
 
     <van-search
+    class="search-item"
       v-model="value"
       shape="round"
-      background="white"
+      background="#ffffff"
       placeholder="搜索设备名称、出厂编号"
       show-action
       @search="onSearch(value)"
@@ -352,6 +353,7 @@ export default {
   height: 3rem;
   line-height: 3rem;
   margin: 0;
+  font-size:1rem ;
 }
 
 .devicemanage .device_item p {
@@ -362,14 +364,30 @@ export default {
   margin: 0;
 }
 .devicemanage .device_item .state {
-  text-align: center;
-  font-size: 1.3rem;
+  text-align: left;
+  font-size: 1rem;
   height: 7rem;
   line-height: 7rem;
   word-wrap: break-word;
   color: #0dbc79;
   font-weight: bold;
 }
+
+.search-item{
+  padding-left:  1rem;
+  padding-right:1rem;
+}
+
+.search-item .van-search__action{
+/* background-color:  #F7F8FA; */
+border-radius: 1rem;
+/* border: 1px solid #f0f0f0; */
+width: 12%;
+text-align: center;
+margin-left: 0.1rem;
+color: #1989FA;
+}
+
 
 /* .footer{
   height: 2rem;

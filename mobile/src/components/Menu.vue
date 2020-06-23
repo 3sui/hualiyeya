@@ -40,8 +40,12 @@ export default {
 
 
   },
+  created(){
+       this.tabbarActive();
+  },
   mounted() {
-    this.getRole();
+      this.getRole();
+  
   },
 
   data() {
@@ -51,13 +55,13 @@ export default {
         {
           index: "DeviceManage",
           title: "设备管理",
-          icon: "wap-home",
+          icon: "wap-home-o",
           show: true
         },
         {
           index: "DeviceAlarm",
           title: "设备报警",
-          icon: "bell",
+          icon: "warning-o",
           show: true
         },
         {
@@ -89,6 +93,7 @@ export default {
       var index = this.items.map(item => item.index).indexOf(path);
       if (index != -1) {
         this.active = index;
+        localStorage.active=index
       }
       // console.log(index);
       
