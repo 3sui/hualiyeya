@@ -253,7 +253,7 @@ module.exports = app => {
     router.get('/AlarmRecord', authMiddle, async (req, res) => {
         let enterprise_id = req.user.enterprise_id;
         console.log(enterprise_id);
-        let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  order by a.created_time desc`
+        let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0  order by a.created_time desc`
         console.log(sql);
         let results = await connection(sql)
         console.log(results)

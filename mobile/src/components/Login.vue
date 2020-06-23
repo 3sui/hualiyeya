@@ -66,6 +66,8 @@ export default {
       note: {
         background: "url(" + require("../assets/img/bg.jpg") + ")",
         backgroundRepeat: "no-repeat",
+        backgroundSize:'100% 100%' 
+        
         
       }
     };

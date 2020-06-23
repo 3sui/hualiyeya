@@ -7,7 +7,7 @@
         </van-col>
         <van-col span="3" offset="9">
           <span class="alarm">
-            <van-icon name="bell" dot />
+            <!-- <van-icon name="bell" dot /> -->
           </span>
         </van-col>
       </van-row>
@@ -360,10 +360,10 @@ this.$router.push({
 
 .point-detail p {
   color: #a3a3a3;
-  margin: 0.5rem 0;
+  /* margin: 0.5rem 0; */
   font-size: 0.9rem;
-  padding: 0;
-  line-height: 2rem;
+  /* padding: 0; */
+  line-height: 1.5rem;
 }
 .limit {
   /* color: #A3A3A3; */
@@ -373,9 +373,10 @@ this.$router.push({
 .point-detail .current {
   /* color: #0dbc79; */
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
   font-weight: bold;
-  /* margin: 1rem 0 0 0; */
+  margin-top:0.4rem;
 }
 .point-detail .success{
   color: #0dbc79;

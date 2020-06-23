@@ -7,16 +7,17 @@
         </van-col>
         <van-col span="3" offset="9">
           <span class="alarm">
-            <van-icon name="bell" dot />
+            <!-- <van-icon name="bell" dot /> -->
           </span>
         </van-col>
       </van-row>
     </div>
 
      <van-search
+     class="search-item"
       v-model="value"
       shape="round"
-      background="#f0f0f0"
+      background="#ffffff"
       placeholder="搜索设备名称、设备编号、报警时间"
       show-action
       @search="onSearch(value)"
@@ -198,7 +199,7 @@ export default {
 .header {
   background-color: white;
   height: 8vh;
-  margin-bottom: 0.5vh;
+  /* margin-bottom: 0.5vh; */
 }
 .title {
   font-size: 1.2rem;
@@ -278,8 +279,9 @@ export default {
   height: 8rem;
   line-height: 8rem;
   color: red;
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: bold;
+  text-align: center;
 }
 
 .item-content .success{
@@ -288,4 +290,21 @@ export default {
 .item-content .danger{
  color: #EB6379;
 }
+
+.search-item{
+  padding-left:  1rem;
+  padding-right:1rem;
+  /* background-color:  #f0f0f0; */
+}
+
+.search-item .van-search__action{
+/* background-color:  #F7F8FA; */
+border-radius: 1rem;
+/* border: 1px solid #f0f0f0; */
+width: 12%;
+text-align: center;
+margin-left: 0.1rem;
+color: #1989FA;
+}
+
 </style>
