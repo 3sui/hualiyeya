@@ -7,7 +7,7 @@
         </van-col>
         <van-col span="3" offset="9">
           <span class="alarm">
-            <van-icon name="bell" dot />
+            <!-- <van-icon name="bell" dot /> -->
           </span>
         </van-col>
       </van-row>
@@ -242,12 +242,12 @@ export default {
   font-size: 2rem;
   font-weight: bold;
   /* margin: 1rem 0 0 0; */
-  line-height: 4rem;
+  line-height: 4.6rem;
 }
 
 .point-detail .current-label {
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #7f7f7f;
   font-weight: bold;
   line-height: 2rem;

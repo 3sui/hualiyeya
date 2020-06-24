@@ -7,7 +7,7 @@
         </van-col>
         <van-col span="3" offset="9">
           <span class="alarm">
-            <van-icon name="bell" dot />
+            <!-- <van-icon name="bell" dot /> -->
           </span>
         </van-col>
       </van-row>
@@ -42,10 +42,11 @@
       </van-col>
     </van-row>-->
     <van-search
+    class="search-item"
       v-model="value"
       shape="round"
-      background="#F0F0F0"
-      placeholder="企业、设备编号、设备种类、状态、时间"
+      background="#ffffff"
+      placeholder="企业、设备编号、状态、时间"
       show-action
       @search="onSearch"
       @cancel="onCancel"
@@ -132,11 +133,13 @@ export default {
       colors: [
         "#EB6379",
         "#69D3AB",
-        "#53CFE9",
-        "#EEA03C",
+       
+        "#EEA03C", 
+         "#39CCCC",   
         "#75649B",
-        "#23A9F2",
-        "#39CCCC"
+        "#23A9F2", 
+        "#53CFE9",
+        
       ],
       state: []
     };
@@ -201,7 +204,7 @@ export default {
         return (
          
           array.state.match(val) ||
-          array.type.match(val) ||
+          // array.type.match(val) ||
           array.device_eq.match(val) ||
           array.date.match(val) ||
           array.enterprise_name.match(val)
@@ -262,7 +265,7 @@ export default {
 .header {
   background-color: white;
   height: 8vh;
-  margin-bottom: 0.5vh;
+  /* margin-bottom: 0.5vh; */
 }
 .title {
   font-size: 1.2rem;
@@ -342,7 +345,7 @@ export default {
   height: 6rem;
   line-height: 6rem;
   color: #747474;
-  font-size: 1.3rem;
+  font-size: 1rem;
   font-weight: bold;
   text-align: center;
 }
@@ -350,4 +353,21 @@ export default {
 .edit-button {
   height: 100%;
 }
+
+.search-item{
+  padding-left: 1rem;
+  padding-right: 1rem;
+ 
+}
+
+.search-item .van-search__action{
+/* background-color:  #F7F8FA; */
+border-radius: 1rem;
+/* border: 1px solid #f0f0f0; */
+width: 12%;
+text-align: center;
+margin-left: 0.1rem;
+color: #1989FA;
+}
+
 </style>

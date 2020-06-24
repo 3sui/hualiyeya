@@ -11,6 +11,7 @@
 import Vue from 'vue';
 import axios from "axios";
 import router from '../router/index'
+import { Toast } from "vant"
 
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
@@ -73,7 +74,7 @@ _axios.interceptors.response.use(
     // Do something with response error
     // window.console.log(error.response);
     if (error.response.data.message) {
-      Vue.prototype.$message({
+      Vue.prototype.$Toast({
         type: 'error',
         message: error.response.data.message
       })

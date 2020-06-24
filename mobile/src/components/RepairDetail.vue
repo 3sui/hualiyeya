@@ -7,7 +7,7 @@
         </van-col>
         <van-col span="3" offset="9">
           <span class="alarm">
-            <van-icon name="bell" dot />
+            <!-- <van-icon name="bell" dot /> -->
           </span>
         </van-col>
       </van-row>
