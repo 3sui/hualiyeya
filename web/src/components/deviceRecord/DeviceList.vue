@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-18 20:58:17
+ * @LastEditTime: 2020-06-23 09:25:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -207,8 +207,8 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑设备" :visible.sync="editVisibleDevice" width="30%">
-            <el-form ref="form" :model="form" label-width="70px">
-                <el-form-item label="设备名称">
+            <el-form ref="form" :model="form" label-width="90px" :rules="rules">
+                <el-form-item label="设备名称" prop="device_name">
                     <el-input v-model="form.device_name"></el-input>
                 </el-form-item>
                 <el-form-item label="地址" prop="address">
@@ -317,6 +317,36 @@ export default {
             editVisibleSetting: false,
             pageTotal: 0,
             form: {},
+            rules: {
+                device_name: [
+                    {
+                        required: true,
+                        message: '请输入设备名称',
+                        trigger: 'change'
+                    }
+                ],
+                address: [
+                    {
+                        required: true,
+                        message: '请输入设备名称',
+                        trigger: 'change'
+                    }
+                ],
+                device_supplier: [
+                    {
+                        required: true,
+                        message: '请输入设备名称',
+                        trigger: 'change'
+                    }
+                ],
+                device_description: [
+                    {
+                        required: true,
+                        message: '请输入设备名称',
+                        trigger: 'change'
+                    }
+                ]
+            },
             formSetting: {
                 point: [],
                 eq: ''

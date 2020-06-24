@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:03:27
- * @LastEditTime: 2020-06-19 14:36:36
+ * @LastEditTime: 2020-06-23 17:58:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\server.js
@@ -15,6 +15,8 @@ app.use(cors())
 
 //开放uploads文件夹
 app.use('/uploads', express.static(__dirname + '/uploads'))
+app.use('/nodeServer', express.static(__dirname + '/nodeServer/uploads'))
+
 //连接服务器
 require('./mysql/mysql.js')(app)
 // require('./route/admin/productProfile/index')(app)
@@ -28,6 +30,8 @@ require('./route/product/repair')(app)
 require('./route/maintain/index')(app)
 require('./route/monitor/index')(app)
 require('./route/home/index')(app)
+
+require('./route/upload/index')(app)
 
 
 require('./route/mobile/index')(app)

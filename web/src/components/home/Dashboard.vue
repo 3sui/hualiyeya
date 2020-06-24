@@ -289,7 +289,7 @@ export default {
                 labels: ['江苏'],
                 datasets: [
                     {
-                        data: [50]
+                        data: [3]
                     }
                 ]
             },
@@ -375,7 +375,7 @@ export default {
                         this.read = res.data.read;
                         this.run = res.data.run;
                         this.bed = res.data.bed;
-                        this.deviceNum = res.data.deviceNum
+                        this.deviceNum = res.data.deviceNum;
                     }
                 })
                 .catch(err => {
