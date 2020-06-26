@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 10:56:10
- * @LastEditTime: 2020-06-16 17:43:24
+ * @LastEditTime: 2020-06-24 10:29:01
  * @LastEditors: Please set LastEditors
  * @Description: 维修记录
  * @FilePath: \vue-manage-system\src\components\view\ProductDetails.vue
@@ -179,12 +179,12 @@ export default {
             }
         },
         getDeviceIDAndInfo() {
-            // window.console.log(this.$route.query.id);
+            window.console.log(this.$route.query.eq);
             axios({
                 method: 'get',
                 url: '/RepairInfo',
                 params: {
-                    id: this.$route.query.id
+                    eq: this.$route.query.eq
                 }
             })
                 .then(res => {

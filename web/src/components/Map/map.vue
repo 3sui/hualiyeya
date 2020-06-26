@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-04-28 16:25:21
- * @LastEditTime: 2020-06-22 09:41:50
+ * @LastEditTime: 2020-06-24 09:48:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\vue-manage-system\src\components\page\map.vue
@@ -105,29 +105,32 @@
                         fit="scale-down"
                     ></el-image>
                 </div>
-                <p>设备id: {{drawerData.eq}}</p>
-                <p>设备名称: {{drawerData.device_name}}</p>
-                <p>设备型号: {{drawerData.device_model}}</p>
-                <p>工作状态: {{drawerData.status}}</p>
-                <p>设备地址: {{drawerData.address}}</p>
-                <p>设备负责人: {{drawerData.username}}</p>
+                <div class="fs-lg">
+                    <p>设备id: {{drawerData.eq}}</p>
+                    <p>设备名称: {{drawerData.device_name}}</p>
+                    <p>设备型号: {{drawerData.device_model}}</p>
+                    <p>工作状态: {{drawerData.status}}</p>
+                    <p>设备地址: {{drawerData.address}}</p>
+                    <p>设备负责人: {{drawerData.username}}</p>
+                </div>
 
                 <el-button
                     @click="$router.push({path: '/ProductDetails', query: {
                         id: drawerData.id
                     }})"
                 >跳转到详情页</el-button>
-                <a
-                    target="_blank"
-                    download="重命名123.doc"
-                    :href="axios.defaults.baseURL.slice(0, -4) + item.file_path.split('.').shift()"
-                    :underline="false"
-                    style="margin-left:15px"
-                    v-for="(item, index) in wordList"
-                    :key="index"
-                >
-                    <el-button size="mini" type="warning">{{item.file_name}} 下载</el-button>
-                </a>
+                <div class="d-flex flex-column ai-start jc-between">
+                    <a
+                        target="_blank"
+                        :href="axios.defaults.baseURL.slice(0, -4) + item.file_path"
+                        :underline="false"
+                        style="margin-top:15px"
+                        v-for="(item, index) in wordList"
+                        :key="index"
+                    >
+                        <el-button size="mini" type="warning">{{item.file_name}} 下载</el-button>
+                    </a>
+                </div>
             </div>
         </el-drawer>
     </div>

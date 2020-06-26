@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 10:34:44
- * @LastEditTime: 2020-06-23 17:28:19
+ * @LastEditTime: 2020-06-24 11:01:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\deviceRecord\index.js
@@ -242,13 +242,21 @@ module.exports = app => {
     //获取设备基本信息
     router.get('/getDeviceInfo', async (req, res) => {
         let id = req.query.id
+
         console.log(id)
         let sql = `select * from device where id = '${id}' and is_deleted = 0`
         let results = {}
         results.info = await connection(sql) //设备基本信息
         sql = `select * from file_store where device_id = '${id}' and type = 'img'`
         results.imgList = await connection(sql) //设备图片
-        sql = `select * from repair where device_id = '${id}' and is_deleted = 0`
+
+        sql = `select eq from device where id = '${id}' and is_deleted = 0`
+        let eq = await connection(sql)
+        console.log(eq);
+
+        sql = `select * from repair where device_eq = '${eq[0].eq}' and is_deleted = 0`
+        console.log(sql);
+
         results.repair = await connection(sql) //维修记录
         results.success = true
         res.send(results)

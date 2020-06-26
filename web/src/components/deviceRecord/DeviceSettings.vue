@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-12 09:13:08
- * @LastEditTime: 2020-06-18 22:14:55
+ * @LastEditTime: 2020-06-24 09:10:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \web\src\components\deviceRecord\DeviceSettings.vue
@@ -72,8 +72,10 @@
                     </div>
                     <div style="text-align: right">
                         <el-button @click="submitForm('form')">提交</el-button>
-                        <el-button @click="addNewPoint">新增</el-button>
-                        <el-button @click="deletePoint">删除</el-button>
+                        <div style="text-align: center">
+                            <el-button @click="addNewPoint">新增</el-button>
+                            <el-button @click="deletePoint">删除</el-button>
+                        </div>
                     </div>
                 </el-form>
             </div>

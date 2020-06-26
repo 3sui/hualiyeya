@@ -9,15 +9,20 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <div class="handle-box">
+            <div class="handle-box d-flex jc-between">
                 <el-button
                     type="primary"
                     class="handle-del mr10"
                     @click="AddData"
                     icon="el-icon-plus"
                 >新增</el-button>
-                <el-input v-model="keyword" placeholder="企业名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch(keyword)">搜索</el-button>
+                <el-input
+                    prefix-icon="el-icon-search"
+                    v-model.trim="query.msg"
+                    placeholder="请输入您需要搜素的内容"
+                    class="handle-input mr10"
+                    @input="handleSearch"
+                ></el-input>
 
                 <!-- <div class="block datechoose">
                     <span class="demonstration">创建日期</span>
@@ -34,7 +39,7 @@
 
             <!-- 表格列 -->
             <el-table
-                :data="tableData.slice((pageIndex-1)*pageSize,pageIndex*pageSize)"
+                :data="showData"
                 border
                 class="table"
                 ref="multipleTable"
@@ -85,8 +90,8 @@
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :current-page="pageIndex"
-                    :page-size="pageSize"
+                    :current-page="query.pageIndex"
+                    :page-size="query.pageSize"
                     :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
@@ -143,10 +148,14 @@ export default {
             industrys: [],
             keyword: '',
             tableData: [],
+            showData: [],
+            query: {
+                msg: '', //关键字
+                pageIndex: 1, //当前页数
+                pageSize: 10 //每页显示个数选择器的选项设置
+            },
             editVisible: false,
             pageTotal: 0,
-            pageIndex: 1,
-            pageSize: 10,
             form: {},
             rules: {
                 enterprise_name: [
@@ -210,31 +219,36 @@ export default {
             this.$axios
                 .get('/dataSettings/Enterprise')
                 .then(res => {
-                    console.log(res.data);
                     this.tableData = res.data;
-                    this.pageTotal = this.tableData.length;
+                    this.showData = this.tableData.slice(
+                        (this.query.pageIndex - 1) * this.query.pageSize,
+                        this.query.pageIndex * this.query.pageSize
+                    );
+                    this.pageTotal = res.data.length;
+                    window.console.log(res.data);
                 })
                 .catch(err => {
                     console.log(err);
                 });
         },
         // 触发搜索按钮
-        handleSearch(value) {
-            if (value !== '') {
-                let query = {
-                    keyword: value
-                };
-                this.$axios.post('/dataSettings/SearchEnterprise', query).then(res => {
-                    if (res) {
-                        this.tableData = res.data;
-                        this.pageTotal = this.tableData.length;
+        handleSearch() {
+            this.query.pageIndex = 1;
+            this.showData = this.tableData.filter((item, index) => {
+                // return item.Address == '竹林北路256号';
+                for (let key in item) {
+                    // window.console.log(i, item[i]);
+                    if ((item[key] + '').includes(this.query.msg + '')) {
+                        return true;
                     }
-                });
-            } else {
-                this.getData();
-            }
-            //this.tableData = this.filterBy(this.tableAll, value);
-            //this.pageTotal = this.tableData.length;
+                }
+            });
+            this.pageTotal = this.showData.length;
+
+            this.showData = this.showData.slice(
+                (this.query.pageIndex - 1) * this.query.pageSize,
+                this.query.pageIndex * this.query.pageSize
+            );
         },
         // 删除操作
         handleDelete(index, row) {
@@ -273,8 +287,8 @@ export default {
             this.isAdd = true;
             this.form = {
                 // is_deleted: 0
-                enterprise_name:'',
-                industry_id:''
+                enterprise_name: '',
+                industry_id: ''
             };
         },
         //添加确认
@@ -344,7 +358,9 @@ export default {
 
         // 分页导航
         handlePageChange(val) {
-            this.pageIndex = val;
+            window.console.log(val);
+            this.$set(this.query, 'pageIndex', val);
+            this.getData();
         }
     }
 };

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 16:21:18
- * @LastEditTime: 2020-06-18 20:12:07
+ * @LastEditTime: 2020-06-24 16:45:01
  * @LastEditors: Please set LastEditors
  * @Description: 设备监控
  * @FilePath: \vue-manage-system\src\components\view\EquipmentMonitoring.vue
@@ -23,9 +23,11 @@
                     <el-col>
                         <div class="product-status">
                             <el-input
-                                v-model="query.name"
-                                placeholder="请输入关键字"
+                                prefix-icon="el-icon-search"
+                                v-model.trim="query.msg"
+                                placeholder="请输入您需要搜素的内容"
                                 class="handle-input mr10"
+                                @input="handleSearch"
                             ></el-input>
                             <!-- <el-select
                                 v-model="query.address"
@@ -59,13 +61,13 @@
                                 end-placeholder="结束日期"
                                 :picker-options="pickerOptions"
                             ></el-date-picker>-->
-                            <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                            <!-- <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                             <el-button
                                 type="primary"
                                 plain
                                 icon="el-icon-refresh"
                                 @click="refresh"
-                            >重置</el-button>
+                            >重置</el-button>-->
                             <!-- <el-button
                                 type="primary"
                                 icon="el-icon-delete"
@@ -132,7 +134,7 @@
                 </el-row>
             </div>
             <el-table
-                :data="tableData"
+                :data="showData"
                 border
                 class="table"
                 ref="multipleTable"
@@ -249,11 +251,12 @@ export default {
             value2: '',
             query: {
                 address: '',
-                name: '',
+                msg: '',
                 pageIndex: 1,
                 pageSize: 10
             },
             tableData: [],
+            showData: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -276,6 +279,10 @@ export default {
                 window.console.log(res);
                 if (res.data.success) {
                     this.tableData = res.data.data;
+                    this.showData = this.tableData.slice(
+                        (this.query.pageIndex - 1) * this.query.pageSize,
+                        this.query.pageIndex * this.query.pageSize
+                    );
                     this.pageTotal = res.data.data.length;
                     window.console.log(res.data);
                 } else {
@@ -285,15 +292,22 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
-            this.tableData = this.tableData.filter((item, index) => {
+            this.query.pageIndex = 1;
+            this.showData = this.tableData.filter((item, index) => {
                 // return item.Address == '竹林北路256号';
                 for (let key in item) {
                     // window.console.log(i, item[i]);
-                    if ((item[key] + '').includes(this.query.msg)) {
+                    if ((item[key] + '').includes(this.query.msg + '')) {
                         return true;
                     }
                 }
             });
+            this.pageTotal = this.showData.length;
+
+            this.showData = this.showData.slice(
+                (this.query.pageIndex - 1) * this.query.pageSize,
+                this.query.pageIndex * this.query.pageSize
+            );
         },
 
         // 触发重置按钮

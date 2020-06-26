@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 10:56:10
- * @LastEditTime: 2020-06-23 17:40:52
+ * @LastEditTime: 2020-06-24 11:21:23
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\ProductDetails.vue
@@ -100,13 +100,45 @@
             <div class="plugins-tips">维修记录</div>
             <el-timeline>
                 <el-timeline-item
-                    :timestamp="item.created_time"
+                    :timestamp="item.date"
                     placement="top"
                     v-for="(item, index) in tableData.repair"
                     :key="index"
                 >
                     <el-card>
-                        <table>
+                        <el-table :data="[item]" style="width: 100%">
+                            <el-table-column label="服务提出时间" width="180">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.created_time}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="故障类型" width="180">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.type}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="故障现象" width="180">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.phenomenon}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="可能产生的原因">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.cause}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="排除办法">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.methods}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="维修人" width="180">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.repair_person}}</div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <!-- <table>
                             <thead>
                                 <tr>
                                     <th>服务提出时间</th>
@@ -114,8 +146,6 @@
                                     <th>故障现象</th>
                                     <th>可能产生的原因</th>
                                     <th>排除办法</th>
-                                    <!-- <th>故障部件供应商</th>
-                                    <th>是否更换部件</th>-->
                                     <th>维修人</th>
                                 </tr>
                                 <tr>
@@ -124,37 +154,11 @@
                                     <td>{{item.phenomenon}}</td>
                                     <td>{{item.cause}}</td>
                                     <td>{{item.methods}}</td>
-                                    <!-- <td>{{item.LastSupplier}}</td>
-                                    <td>{{item.more}}</td>-->
                                     <td>{{item.repair_person}}</td>
                                 </tr>
                             </thead>
-                        </table>
+                        </table>-->
                         <p class="mt-10">备注: {{item.More}}</p>
-                        <!-- <div class="annex">
-                            附件:
-                            <img
-                                width="100"
-                                src="http://127.0.0.1:5500/images/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85/u711.png"
-                                alt
-                            />
-                            <img
-                                width="100"
-                                src="http://127.0.0.1:5500/images/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85/u711.png"
-                                alt
-                            />
-                            <img
-                                width="100"
-                                src="http://127.0.0.1:5500/images/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85/u711.png"
-                                alt
-                            />
-                            <img
-                                width="100"
-                                src="http://127.0.0.1:5500/images/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85/u711.png"
-                                alt
-                            />
-                        </div>
-                        <p>王小虎 提交于 2018/4/12 20:46</p>-->
                     </el-card>
                 </el-timeline-item>
             </el-timeline>

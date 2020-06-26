@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-23 09:25:21
+ * @LastEditTime: 2020-06-24 16:41:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -82,10 +82,13 @@
                             </el-select>
                         </div>-->
                         <div class="product-status">
+                            <!-- <span class="fs-md mr-2">查找</span> -->
                             <el-input
-                                v-model="query.msg"
-                                placeholder="请输入关键字"
+                                prefix-icon="el-icon-search"
+                                v-model.trim="query.msg"
+                                placeholder="请输入您需要搜素的内容"
                                 class="handle-input mr10"
+                                @input="handleSearch"
                             ></el-input>
                             <!-- <div class="block">
                                 <el-date-picker
@@ -99,19 +102,21 @@
                                     :picker-options="pickerOptions"
                                 ></el-date-picker>
                             </div>-->
-                            <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                            <!-- <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                             <el-button
                                 type="primary"
                                 plain
                                 icon="el-icon-refresh"
                                 @click="refresh"
-                            >重置</el-button>
+                            >重置</el-button>-->
                         </div>
                     </el-col>
                 </el-row>
             </div>
+            <!-- :data="showData.filter((query.pageIndex-1)*query.pageSize,query.pageIndex*query.pageSize)" -->
+
             <el-table
-                :data="tableData.slice((query.pageIndex-1)*query.pageSize,query.pageIndex*query.pageSize)"
+                :data="showData"
                 border
                 class="table"
                 ref="multipleTable"
@@ -251,8 +256,10 @@
                         <el-input v-model="item.limit_down"></el-input>
                     </el-form-item>
                 </div>
-                <el-button style="width: 100%" type="button" @click="addNewPoint">添加</el-button>
-                <el-button style="width: 100%;margin:0" type="button" @click="deletePoint">删除</el-button>
+                <div style="text-align: center">
+                    <el-button @click="addNewPoint">添加</el-button>
+                    <el-button type="button" @click="deletePoint">删除</el-button>
+                </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisibleSetting = false">取 消</el-button>
@@ -311,6 +318,7 @@ export default {
                 pageSize: 10 //每页显示个数选择器的选项设置
             },
             tableData: [], //设备列表的数据
+            showData: [], //展示的数据
             multipleSelection: [],
             delList: [],
             editVisibleDevice: false,
@@ -371,6 +379,10 @@ export default {
                     window.console.log(res);
                     if (res.data.success) {
                         this.tableData = res.data.data;
+                        this.showData = this.tableData.slice(
+                            (this.query.pageIndex - 1) * this.query.pageSize,
+                            this.query.pageIndex * this.query.pageSize
+                        );
                         this.pageTotal = res.data.data.length;
                         window.console.log(res.data);
                     } else {
@@ -382,21 +394,22 @@ export default {
 
         // 触发搜索按钮
         handleSearch() {
-            this.tableData = this.tableData.filter((item, index) => {
+            this.query.pageIndex = 1;
+            this.showData = this.tableData.filter((item, index) => {
                 // return item.Address == '竹林北路256号';
                 for (let key in item) {
                     // window.console.log(i, item[i]);
-                    if ((item[key] + '').includes(this.query.msg)) {
-                        return true;
+                    if ((item[key] + '').includes(this.query.msg + '')) {
+                        return true;    
                     }
                 }
             });
-        },
+            this.pageTotal = this.showData.length;
 
-        // 触发重置按钮
-        refresh() {
-            this.getData();
-            this.query.msg = '';
+            this.showData = this.showData.slice(
+                (this.query.pageIndex - 1) * this.query.pageSize,
+                this.query.pageIndex * this.query.pageSize
+            );
         },
 
         // 删除操作
@@ -575,6 +588,7 @@ export default {
 
         // 分页导航
         handlePageChange(val) {
+            window.console.log(val);
             this.$set(this.query, 'pageIndex', val);
             this.getData();
         }
@@ -615,6 +629,7 @@ export default {
     margin-bottom: 10px;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
 }
 .mt-10 {
     margin-bottom: 10px;

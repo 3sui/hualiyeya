@@ -13,7 +13,9 @@ module.exports = app => {
 
     //获取维修表信息
     router.get('/Repair', authMiddle, async (req, res) => {
-        let sql = "select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device_type.typename from repair,enterprise,device,device_type where (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id order by repair.created_time Desc"
+        // let sql = "select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device_type.typename from repair,enterprise,device,device_type where (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id order by repair.created_time Desc"
+        let sql = "select * from repair r where r.is_deleted = 0"
+
         let results = await connection(sql)
         // console.log(results)
         res.send(results)
@@ -21,8 +23,11 @@ module.exports = app => {
     //获取维修设备详情
     router.get('/RepairInfo', authMiddle, async (req, res) => {
 
-        let id = req.query.id
-        let sql = `select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device.device_supplier,device.device_model,device.device_description,device.address,device.principal,device_type.typename from repair,enterprise,device,device_type where repair.id=${id} and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id `
+        let eq = req.query.eq
+        // let sql = `select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device.device_supplier,device.device_model,device.device_description,device.address,device.principal,device_type.typename from repair,enterprise,device,device_type where repair.id=${id} and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id `
+        let sql = `select * from repair r where device_eq = '${eq}'`
+        console.log(sql);
+        
         let results = await connection(sql)
 
         res.send(results)

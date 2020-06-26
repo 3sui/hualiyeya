@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-07 13:46:11
- * @LastEditTime: 2020-06-17 17:17:28
+ * @LastEditTime: 2020-06-24 16:54:26
  * @LastEditors: Please set LastEditors
  * @Description: 报警记录
  * @FilePath: \vue-manage-system\src\components\view\AlarmRecord.vue
@@ -23,9 +23,11 @@
                     <el-col>
                         <div class="product-status">
                             <el-input
-                                v-model="query.name"
-                                placeholder="请输入关键字"
+                                prefix-icon="el-icon-search"
+                                v-model.trim="query.msg"
+                                placeholder="请输入您需要搜素的内容"
                                 class="handle-input mr10"
+                                @input="handleSearch"
                             ></el-input>
 
                             <!-- <el-select
@@ -60,18 +62,18 @@
                                 end-placeholder="结束日期"
                                 :picker-options="pickerOptions"
                             ></el-date-picker>-->
-                            <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                            <!-- <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                             <el-button
                                 type="primary"
                                 plain
                                 icon="el-icon-refresh"
                                 @click="refresh"
-                            >重置</el-button>
+                            >重置</el-button>-->
                         </div>
                     </el-col>
                 </el-row>
                 <el-table
-                    :data="tableData"
+                    :data="showData"
                     border
                     class="table"
                     ref="multipleTable"
@@ -119,6 +121,16 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div class="pagination">
+                    <el-pagination
+                        background
+                        layout="total, prev, pager, next"
+                        :current-page="query.pageIndex"
+                        :page-size="query.pageSize"
+                        :total="pageTotal"
+                        @current-change="handlePageChange"
+                    ></el-pagination>
+                </div>
             </div>
         </div>
     </div>
@@ -129,13 +141,15 @@ export default {
     name: 'AlarmRecord',
     data() {
         return {
+            showData: [],
             tableData: [],
             query: {
                 address: '',
-                name: '',
+                msg: '',
                 pageIndex: 1,
                 pageSize: 10
             },
+            pageTotal: 0,
             multipleSelection: [],
             value1: '',
             value2: '',
@@ -183,17 +197,30 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
+        // 分页导航
+        handlePageChange(val) {
+            window.console.log(val);
+            this.$set(this.query, 'pageIndex', val);
+            this.getData();
+        },
         // 触发搜索按钮
         handleSearch() {
-            this.tableData = this.tableData.filter((item, index) => {
+            this.query.pageIndex = 1;
+            this.showData = this.tableData.filter((item, index) => {
                 // return item.Address == '竹林北路256号';
                 for (let key in item) {
                     // window.console.log(i, item[i]);
-                    if ((item[key] + '').includes(this.query.msg)) {
+                    if ((item[key] + '').includes(this.query.msg + '')) {
                         return true;
                     }
                 }
             });
+            this.pageTotal = this.showData.length;
+
+            this.showData = this.showData.slice(
+                (this.query.pageIndex - 1) * this.query.pageSize,
+                this.query.pageIndex * this.query.pageSize
+            );
         },
 
         // 触发重置按钮
@@ -209,6 +236,10 @@ export default {
                 window.console.log(res);
                 if (res.data.success) {
                     this.tableData = res.data.data;
+                    this.showData = this.tableData.slice(
+                        (this.query.pageIndex - 1) * this.query.pageSize,
+                        this.query.pageIndex * this.query.pageSize
+                    );
                     this.pageTotal = res.data.data.length;
                     window.console.log(res.data);
                 } else {
