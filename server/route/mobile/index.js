@@ -250,10 +250,22 @@ module.exports = app => {
 
 
     //获取企业报警信息
-    router.get('/AlarmRecord', authMiddle, async (req, res) => {
-        let enterprise_id = req.user.enterprise_id;
-        console.log(enterprise_id);
-        let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0  order by a.created_time desc`
+    router.post('/AlarmRecord', authMiddle, async (req, res) => {
+        let startid=req.body.startid;
+        // console.log(enterprise_id);
+        let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0  order by a.created_time desc limit ${startid},10`
+        console.log(sql);
+        let results = await connection(sql)
+        console.log(results)
+        if (results) {
+            res.send(results)
+        }
+    })
+//获取设备报警总数
+    router.get('/AlarmRecordCount', authMiddle, async (req, res) => {
+        // let enterprise_id = req.user.enterprise_id;
+        // console.log(enterprise_id);
+        let sql = `select count(a.id) count  from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0  order by a.created_time desc`
         console.log(sql);
         let results = await connection(sql)
         console.log(results)

@@ -13,8 +13,8 @@
       </van-row>
     </div>
 
-     <van-search
-     class="search-item"
+    <van-search
+      class="search-item"
       v-model="value"
       shape="round"
       background="#ffffff"
@@ -24,40 +24,52 @@
       @cancel="onCancel"
     />
    
-        <div class="record_container">
-          <div class="record_item" v-for="record in recordlist" @click="handel(record.id)">
-            <div class="item-title">
-              <van-row :gutter="20">
-                <van-col span="2">
-                  <div class="record-icon">
-                    <van-icon size="2rem" name="records" />
-                  </div>
-                </van-col>
-                <van-col span="6">
-                  <div class="record-title">{{record.device_name}}</div>
-                </van-col>
-                <van-col span="16">
-                  <div class="record-date">{{record.timebefore}}前</div>
-                </van-col>
-              </van-row>
-            </div>
-            <div class="item-content">
-              <van-row :gutter="20">
-                <van-col span="16">
-                  <p>设备编号：{{record.device_eq}}</p>
-                  <p>测点名称：{{record.cp_name}}</p>
-                  <p>测点值：{{record.cp_value}}</p>
-                  <p>报警时间：{{record.created_time}}</p>
-                </van-col>
-                <van-col span="8">
-                  <div class="mark" :class="record.is_handled==='1'?'success':'danger'">{{record.is_handled==='1'?'已处理':'未处理'}}</div>
-                </van-col>
-              </van-row>
-            </div>
-          </div>
+
+    <div class="record_container">
+      <div class="record_item" v-for="record in recordlist" @click="handel(record.id)">
+        <div class="item-title">
+          <van-row :gutter="20">
+            <van-col span="2">
+              <div class="record-icon">
+                <van-icon size="2rem" name="records" />
+              </div>
+            </van-col>
+            <van-col span="16">
+              <div class="record-title">{{record.device_name}}</div>
+            </van-col>
+            <van-col span="6">
+              <div class="record-date">{{record.timebefore}}前</div>
+            </van-col>
+          </van-row>
         </div>
-    
-<!--      
+        <div class="item-content">
+          <van-row :gutter="20">
+            <van-col span="16">
+              <p>设备编号：{{record.device_eq}}</p>
+              <p>测点名称：{{record.cp_name}}</p>
+              <p>测点值：{{record.cp_value}}</p>
+              <p>报警时间：{{record.created_time}}</p>
+            </van-col>
+            <van-col span="8">
+              <div
+                class="mark"
+                :class="record.is_handled==='1'?'success':'danger'"
+              >{{record.is_handled==='1'?'已处理':'未处理'}}</div>
+            </van-col>
+          </van-row>
+        </div>
+      </div>
+    </div>
+  <van-empty v-if="recordlist.length===0?true:false" description="未获取报警记录信息" />
+    <van-pagination
+      v-model="currentPage"
+      :total-items="totalitems"
+      :show-page-size="3"
+      force-ellipses
+      @change="HandleChange"
+    />
+
+    <!--      
         <div class="record_container">
           <div class="record_item" v-for="(record) in recordlist_0" @click="handel(record.id)">
             <div class="item-title">
@@ -90,9 +102,7 @@
             </div>
           </div>
         </div>
-  -->
-
-
+    -->
   </div>
 </template>
 <script>
@@ -106,7 +116,9 @@ import {
   Search,
   Image as VanImage,
   Tab,
-  Tabs
+  Tabs,
+  Pagination,
+  Empty
 } from "vant";
 export default {
   name: "DeviceAlarm",
@@ -120,73 +132,130 @@ export default {
     [Search.name]: Search,
     [VanImage.name]: VanImage,
     [Tab.name]: Tab,
-    [Tabs.name]: Tabs
+    [Tabs.name]: Tabs,
+    [Pagination.name]: Pagination,
+    [Empty.name]:Empty
+
   },
   data() {
     return {
       value: "",
-      list:[],
+      list: [],
       recordlist: [],
-   
+      currentPage: 0,
+      totalitems: 0
     };
   },
-  created(){
-    this.getData()
+  watch:{
+    $$route(){
+      getCurrentPage()
+    }
+  },
+
+  created() {
+    this.getCurrentPage();
+    this.getCount();
+    
+  },
+  mounted() {
+    this.getData();
   },
   methods: {
-   
     handel(id) {
-    
       this.$router.push({
-        path:"/AlarmHandle",  
+        path: "/AlarmHandle",
         query: {
-          id:id 
+          id: id,
+          page: this.currentPage
+        }
+      });
+    },
+
+    //获取当前页面
+    getCurrentPage(){
+     console.log("page" in this.$route.query)
+    this.currentPage = "page" in this.$route.query == true ? Number(this.$route.query.page) : 1;
+    console.log(this.currentPage);
+    
+    },
+
+    //获取报警总数
+
+    getCount() {
+      this.$axios.get("/mobile/AlarmRecordCount").then(res => {
+        // console.log(res.data);
+        if (res.data !== null || res.data.length > 0) {
+          this.totalitems = res.data[0].count;
         }
       });
     },
     //获取报警信息
-    getData(){
-      this.$axios.get('/mobile/AlarmRecord')
-      .then(res=>{
-        console.log(res.data);
-        if(res.data!==null || res.data.length>0){
-          this.list=res.data
-        }
-        
-      })
-      .then(()=>{
-        this.list.forEach(element => {
-          let timebefore='';
-          let datenow=new Date().getTime();
-          let datealarm=new Date(element.created_time).getTime()
-          // console.log(datenow)
-          // console.log(datealarm)
-          let minites=parseInt((datenow-datealarm)/60000);
-          let hours=parseInt((datenow-datealarm)/3600000);
-          let days=parseInt((datenow-datealarm)/(3600000*24))
-          timebefore=days>=1?days+'天':(hours>=1?hours+'小时':(minites>=1?minites+'分钟':'1分钟'))
-          // console.log(timebefore);
-         element.timebefore=timebefore
-         this.recordlist.push(element)
+    getData() {
+      let startid = (this.currentPage - 1) * 10;
+
+      this.$axios
+        .post("/mobile/AlarmRecord", { startid: startid })
+        .then(res => {
+          // console.log(res.data);
+          if (res.data !== null || res.data.length > 0) {
+            this.list = res.data;
+          }
+        })
+        .then(() => {
+          this.list.forEach(element => {
+            let timebefore = "";
+            let datenow = new Date().getTime();
+            let datealarm = new Date(element.created_time).getTime();
+            // console.log(datenow)
+            // console.log(datealarm)
+            let minites = parseInt((datenow - datealarm) / 60000);
+            let hours = parseInt((datenow - datealarm) / 3600000);
+            let days = parseInt((datenow - datealarm) / (3600000 * 24));
+            timebefore =
+              days >= 1
+                ? days + "天"
+                : hours >= 1
+                ? hours + "小时"
+                : minites >= 1
+                ? minites + "分钟"
+                : "1分钟";
+            // console.log(timebefore);
+            element.timebefore = timebefore;
+            this.recordlist.push(element);
+          });
         });
-      })
-
     },
 
-     //搜索
+    //搜索
     onSearch(val) {
-      this.recordlist=this.recordlist.filter(array=>{
-      return  array.device_name.match(val) || array.device_eq.match(val) ||array.created_time.match(val)
-     })
+      this.recordlist = this.recordlist.filter(array => {
+        return (
+          array.device_name.match(val) ||
+          array.device_eq.match(val) ||
+          array.created_time.match(val)
+        );
+      });
     },
 
-     //取消
+    //取消
     onCancel() {
-      this.value="";
-      this.recordlist=[];
-      this.getData()
+      this.value = "";
+      this.recordlist = [];
+      this.getData();
       // location.reload()
     },
+
+    //换页
+    HandleChange() {
+      this.$router.push({
+        path:'/DeviceAlarm',
+        query:{
+        page:this.currentPage
+        }
+      })
+      this.recordlist=[]
+      this.getData()
+    }
   }
 };
 </script>
@@ -195,7 +264,7 @@ export default {
 .devicealarm {
   background-color: #f0f0f0;
   height: 95vh;
-  overflow-y:auto
+  overflow-y: auto;
 }
 .header {
   background-color: white;
@@ -240,10 +309,10 @@ export default {
   height: 3rem;
   margin: auto;
   padding: 0.5rem 0;
-  color:#23A9F2;
+  color: #23a9f2;
 }
 .item-title .record-title {
-  color:#23A9F2;
+  color: #23a9f2;
   height: 3rem;
   line-height: 3rem;
   font-size: 1rem;
@@ -285,27 +354,35 @@ export default {
   text-align: center;
 }
 
-.item-content .success{
-  color: #69D3AB;
+.item-content .success {
+  color: #69d3ab;
 }
-.item-content .danger{
- color: #EB6379;
+.item-content .danger {
+  color: #eb6379;
 }
 
-.search-item{
-  padding-left:  1rem;
-  padding-right:1rem;
+.search-item {
+  padding-left: 1rem;
+  padding-right: 1rem;
   /* background-color:  #f0f0f0; */
 }
 
-.search-item .van-search__action{
-/* background-color:  #F7F8FA; */
-border-radius: 1rem;
-/* border: 1px solid #f0f0f0; */
-width: 12%;
-text-align: center;
-margin-left: 0.1rem;
-color: #1989FA;
+.search-item .van-search__action {
+  /* background-color:  #F7F8FA; */
+  border-radius: 1rem;
+  /* border: 1px solid #f0f0f0; */
+  width: 12%;
+  text-align: center;
+  margin-left: 0.1rem;
+  color: #1989fa;
 }
 
+.devicealarm .van-pagination {
+  margin: 0 0 2rem 0;
+  /* height: 5rem; */
+}
+
+.devicealarm .van-empty{
+height: 69%;
+}
 </style>

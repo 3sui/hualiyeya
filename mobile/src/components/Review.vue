@@ -69,7 +69,7 @@ export default {
     },
     //下载文档
     download(path,file_name) {
-      console.log(11111111111111111);
+      // console.log(11111111111111111);
       
       // let url = axios.defaults.baseURL+'/mobile/download/?path='+path
       // console.log(url);
@@ -169,7 +169,7 @@ console.log(file_name);
 }
 
 .quit {
-  width: 95%;
+  /* width: 95%; */
   /* margin: 20% auto 0 auto; */
 }
 

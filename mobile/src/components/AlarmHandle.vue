@@ -162,7 +162,11 @@ export default {
 
     back(){
         //跳转回报警记录页面
-      this.$router.push("/DeviceAlarm");
+      this.$router.push({
+        path:"/DeviceAlarm",
+        query:{
+        page:this.$route.query.page
+      }});
     }
   }
 };

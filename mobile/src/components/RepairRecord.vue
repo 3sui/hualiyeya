@@ -94,7 +94,9 @@
         </van-swipe-cell>
       </div>
     </div>
-    <!-- <div class="footer"></div> -->
+    
+    
+    <van-empty v-if="recordlist.length===0?true:false" description="未获取维修记录信息" />
   </div>
 </template>
 <script>
@@ -108,7 +110,8 @@ import {
   Search,
   Button,
   Image as VanImage,
-  SwipeCell
+  SwipeCell,
+  Empty
 } from "vant";
 export default {
   name: "RepairRecord",
@@ -122,7 +125,8 @@ export default {
     [Search.name]: Search,
     [VanImage.name]: VanImage,
     [SwipeCell.name]: SwipeCell,
-    [Button.name]: Button
+    [Button.name]: Button,
+    [Empty.name]:Empty
   },
   data() {
     return {

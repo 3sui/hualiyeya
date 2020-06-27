@@ -79,6 +79,8 @@
         </van-row>
       </div>
     </div>
+
+    <van-empty v-if="devicelist.length===0?true:false" description="未获取设备信息" />
   </div>
 </template>
 <script>
@@ -91,7 +93,8 @@ import {
   Divider,
   Form,
   Search,
-  Image as VanImage
+  Image as VanImage,
+  Empty
 } from "vant";
 export default {
   name: "DeviceManage",
@@ -103,7 +106,8 @@ export default {
     [Divider.name]: Divider,
     [Form.name]: Form,
     [Search.name]: Search,
-    [VanImage.name]: VanImage
+    [VanImage.name]: VanImage,
+    [Empty.name]: Empty
   },
   data() {
     return {
@@ -111,12 +115,14 @@ export default {
       devicelist: [],
       deviceNum: 0,
       device_isonNum: 0,
-      device_alarmNum: 0
+      device_alarmNum: 0,
+     
     };
   },
   created() {},
   mounted() {
     this.getData();
+
   },
 
   methods: {
@@ -144,8 +150,10 @@ export default {
         .then(res => {
           // console.log(res);
           if (res.data !== null || res.data.length > 0) {
-            this.devicelist = res.data;
+            this.devicelist = res.data; 
+         
           } else {
+           
             console.log("服务器错误");
           }
         })
