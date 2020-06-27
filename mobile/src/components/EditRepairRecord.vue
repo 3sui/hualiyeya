@@ -110,8 +110,8 @@
           @cancel="showPicker_person = false"
         />
       </van-popup> -->
-        <van-field v-model="query.repair_person" type="tel" required label="维修人员" disabled/>
-      <van-field v-model="query.repair_person_phone" type="tel" required label="手机号" disabled />
+        <van-field v-model="query.repair_person" type="text" required label="维修人员" disabled/>
+      <van-field v-model="query.repair_person_phone" type="text" required label="手机号" disabled />
       <van-field
         readonly
         clickable
