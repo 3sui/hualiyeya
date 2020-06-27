@@ -78,7 +78,7 @@ export default {
         },
         {
           index: "Settings",
-          title: "设置",
+          title: "注销",
           icon: "setting-o",
           show: true
         }
