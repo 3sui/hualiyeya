@@ -15,8 +15,8 @@
 
     <van-form @submit="onSubmit">
 
-       <van-field v-model="query.enterprise_name" type="tel" required label="企业名称" placeholder="点击输入企业名称"/>
-      <van-field v-model="query.device_eq" type="tel" required label="设备编号" placeholder="点击输入设备编号"/>
+       <van-field v-model="query.enterprise_name" type="text" required label="企业名称" placeholder="点击输入企业名称"/>
+      <van-field v-model="query.device_eq" type="text" required label="设备编号" placeholder="点击输入设备编号"/>
       <!-- 选择企业 -->
       <!-- <van-field
         readonly
