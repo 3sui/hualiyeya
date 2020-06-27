@@ -194,7 +194,8 @@ export default {
 <style scoped>
 .devicealarm {
   background-color: #f0f0f0;
-  min-height: 95vh;
+  height: 95vh;
+  overflow-y:auto
 }
 .header {
   background-color: white;

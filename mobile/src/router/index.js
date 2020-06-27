@@ -48,15 +48,15 @@ const routes = [
       }
 
     },
-    // {
-    //   path: '/Review',
-    //   name: 'Review',
-    //   component: () => import('../components/Review'),
-    //   meta: {
-    //     title: '查看手册',
-    //     permission: [1,2]
-    //   }
-    // },
+    {
+      path: '/Review',
+      name: 'Review',
+      component: () => import('../components/Review'),
+      meta: {
+        title: '查看手册',
+        permission: [1,2]
+      }
+    },
     {
       path: '/DeviceAlarm',
       name: 'DeviceAlarm',

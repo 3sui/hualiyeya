@@ -15,10 +15,10 @@ module.exports = app => {
         let sql = '';
         if (req.user.role === 4) {
             sql = `select * from repair where repair_person='${req.user.nickname}'and is_deleted = 0   order by repair.date Desc`
-        // } else if (req.user.role === 2) {
-        //     sql = `select repair.*,device.eq,device.device_name from repair,device where device.enterprise_id= ${req.user.enterprise_id} and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id order by repair.date Desc`
-        // } else if (req.user.role === 3) {
-        //     sql = `select repair.*,device.eq,device.device_name from repair,device,user_device where user_device.user_id= ${req.user.id}  and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id  and user_device.device_id=device.id order by repair.date Desc`
+            // } else if (req.user.role === 2) {
+            //     sql = `select repair.*,device.eq,device.device_name from repair,device where device.enterprise_id= ${req.user.enterprise_id} and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id order by repair.date Desc`
+            // } else if (req.user.role === 3) {
+            //     sql = `select repair.*,device.eq,device.device_name from repair,device,user_device where user_device.user_id= ${req.user.id}  and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id  and user_device.device_id=device.id order by repair.date Desc`
         } else (
             sql = `select * from repair where is_deleted = 0  order by date Desc`
         )
@@ -277,8 +277,6 @@ module.exports = app => {
 
     //修改某个id的报警状态
     router.post('/UpdateAlarmRecord', authMiddle, async (req, res) => {
-
-
         let id = req.body.id;
         let state = req.body.state;
         let sql = `update alarm set is_handled='${state}' where id=${id}`
@@ -291,8 +289,48 @@ module.exports = app => {
     })
 
 
+    //获取设备文档
+    router.post('/files', authMiddle, async (req, res) => {
+        let id = req.body.id;
+        console.log(id);
+        let sql = `select * from file_store f where f.device_id=${id} and f.type != 'img'`
+        console.log(sql);
+        let results = await connection(sql)
+        console.log(results)
+        if (results) {
+            res.send(results)
+        }
+    })
+    //下载文档
+    router.post('/download', authMiddle, async (req, res) => {
+        // console.log(req);
 
+        var currFile = path.resolve(__dirname, '../../'+ req.body.path),
+            fileName = req.body.file_name,
+            fReadStream;
+       
+        
+        fs.exists(currFile, function (exist) {
+            console.log(exist);
+            
+            if (exist) {
+                res.set({
+                    "Content-type": "application/octet-stream",
+                    "Content-Disposition": "attachment;filename=" + encodeURI(fileName)
+                });
+                fReadStream = fs.createReadStream(currFile);
+                fReadStream.on("data", (chunk) => res.write(chunk, "binary"));
+                fReadStream.on("end", function () {
+                    res.end();
+                });
+            } else {
+                res.set("Content-type", "text/html");
+                res.send("file not exist!");
+                res.end();
+            }
+        });
 
+    });
 
 
 

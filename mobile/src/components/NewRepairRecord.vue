@@ -450,7 +450,8 @@ export default {
 .newrepairrecord {
   background-color: #f0f0f0;
   padding: 0 0 1rem 0;
-  min-height: 95vh;
+  height:95vh;
+  overflow-y:auto
 }
 .header {
   background-color: white;

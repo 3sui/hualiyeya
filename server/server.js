@@ -15,6 +15,8 @@ app.use(cors())
 
 //开放uploads文件夹
 app.use('/uploads', express.static(__dirname + '/uploads'))
+//开放nodeserver文件夹
+app.use('/nodeserver', express.static(__dirname + '/nodeserver'))
 //连接服务器
 require('./mysql/mysql.js')(app)
 // require('./route/admin/productProfile/index')(app)

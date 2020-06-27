@@ -487,7 +487,8 @@ export default {
 <style scoped>
 .editrepairrecord {
   background-color: #f0f0f0;
-   min-height:95vh ;
+   height:95vh ;
+   overflow-y:auto;
   padding: 0 0 1rem 0;
 }
 .header {

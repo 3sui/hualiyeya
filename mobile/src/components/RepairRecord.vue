@@ -46,7 +46,7 @@
       v-model="value"
       shape="round"
       background="#ffffff"
-      placeholder="企业、设备编号、状态、时间"
+      placeholder="搜索企业、设备编号、状态、时间"
       show-action
       @search="onSearch"
       @cancel="onCancel"
@@ -260,7 +260,8 @@ export default {
 <style scoped>
 .repairrecord {
   background-color: #f0f0f0;
-  min-height: 95vh;
+  height: 95vh;
+   overflow-y:auto
 }
 .header {
   background-color: white;

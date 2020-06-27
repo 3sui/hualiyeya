@@ -74,7 +74,7 @@
             <p>测点数:{{device.count?device.count:0}}</p>
           </van-col>
           <van-col span="4">
-            <div class="state">{{device.status}}</div>
+            <div class="state" :class="device.status!=='正常'?'alarmstate':'nomalstate'">{{device.status}}</div>
           </van-col>
         </van-row>
       </div>
@@ -124,7 +124,7 @@ export default {
     Iamge(path) {
       let userAvatar = "";
       if (path) {
-        userAvatar = axios.defaults.baseURL.slice(0, -4) + path.slice(0, -4);
+        userAvatar = axios.defaults.baseURL.slice(0, -4) + path.substring(0,path.lastIndexOf("."));
       }
 
       return path !== null ? userAvatar : imgUrl;
@@ -271,7 +271,8 @@ export default {
 <style scoped>
 .devicemanage {
   background-color: #f0f0f0;
-  min-height: 95vh;
+  height: 95vh;
+  overflow-y:auto
 }
 .devicemanage .header {
   background-color: white;
@@ -369,9 +370,18 @@ export default {
   height: 7rem;
   line-height: 7rem;
   word-wrap: break-word;
-  color: #0dbc79;
+  /* color: #0dbc79; */
   font-weight: bold;
 }
+
+.devicemanage .device_item  .alarmstate{
+   color: #EB6379;
+}
+.devicemanage .device_item .nomalstate{
+color: #0dbc79;
+}
+
+
 
 .search-item{
   padding-left:  1rem;

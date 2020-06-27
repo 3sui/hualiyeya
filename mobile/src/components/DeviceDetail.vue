@@ -55,18 +55,18 @@
           <van-col span="10">
             <div class="point-detail">
               <p>
-                <van-icon color="blue"  name="points" size="1rem" />
-                <span class="point-name"> {{point.point_name}}</span>
+                <van-icon color="blue" name="points" size="1rem" />
+                <span class="point-name">{{point.point_name}}</span>
               </p>
               <p>
                 <span class="limit">
-                  <van-icon color="blue" size="1rem" name="arrow-up" /> 上限值
+                  <van-icon color="blue" size="1rem" name="arrow-up" />上限值
                 </span>
                 {{point.up_limit}}
               </p>
               <p>
                 <span class="limit">
-                  <van-icon color="blue" size="1rem" name="arrow-down" /> 下限值
+                  <van-icon color="blue" size="1rem" name="arrow-down" />下限值
                 </span>
                 {{point.down_limit}}
               </p>
@@ -74,7 +74,10 @@
           </van-col>
           <van-col span="14">
             <div class="point-detail">
-              <p class="current" :class="point.current>=point.down_limit&&point.current<=point.up_limit?'success':'danger'">{{point.current}}</p>
+              <p
+                class="current"
+                :class="point.current>=point.down_limit&&point.current<=point.up_limit?'success':'danger'"
+              >{{point.current}}</p>
               <p class="current-label">实际值</p>
               <p style="text-align:center">
                 <span class="timestemp"></span>
@@ -145,7 +148,7 @@ export default {
       // ],
       data: [],
       list: [],
-      imgpath:''
+      imgpath: ""
     };
   },
   created() {
@@ -158,7 +161,7 @@ export default {
   methods: {
     //获取设备详情
     getData() {
-      this.imgpath=this.$route.query.file_path
+      this.imgpath = this.$route.query.file_path;
       let data = {
         params: {
           id: this.$route.query.id
@@ -205,21 +208,21 @@ export default {
             let array = Object.values(result);
             let time = result.created_time;
             // console.log(time);
-            
+
             this.data = array.slice(4, 4 + this.list.length);
-            this.data.push(time)
+            this.data.push(time);
             // console.log(this.data);
           } else {
             for (let i = 0; i < this.list.length; i++) {
               this.data.push("-");
             }
-            this.data.push("最近没有测点数据")
+            this.data.push("最近没有测点数据");
           }
           // console.log(this.data);
         })
-        .then(()=>{
-          this.dispaly()
-        })
+        .then(() => {
+          this.dispaly();
+        });
     },
 
     //整理数据
@@ -229,9 +232,9 @@ export default {
         item.point_name = element.cp_name;
         item.up_limit = element.limit_up;
         item.down_limit = element.limit_down;
-        item.current=this.data[index]*element.k;
-        item.timestemp=this.data[this.data.length-1]
-        this.pointlist.push(item)
+        item.current = this.data[index] * element.k;
+        item.timestemp = this.data[this.data.length - 1];
+        this.pointlist.push(item);
       });
     },
 
@@ -239,32 +242,38 @@ export default {
     Iamge(path) {
       let userAvatar = "";
       if (path) {
-        userAvatar = axios.defaults.baseURL.slice(0, -4) + path.slice(0, -4);
+        userAvatar =
+          axios.defaults.baseURL.slice(0, -4) +
+          path.substring(0, path.lastIndexOf("."));
       }
       return path !== null ? userAvatar : imgUrl;
     },
-    
+
     //下载手册
-  review(id){
-   
-  },
+    review(id) {
+      this.$router.push({
+        path: "/Review",
+        query:{
+          id:id
+        }
+      });
+    },
 
-  //返回
-  back(){
-this.$router.push({
-  path:'/DeviceManage'
-})
+    //返回
+    back() {
+      this.$router.push({
+        path: "/DeviceManage"
+      });
+    }
   }
-  }
-
-  
 };
 </script>
 
 <style >
 .devicemanage {
   background-color: #f0f0f0;
-  min-height: 95vh;
+  height: 95vh;
+  overflow-y:auto
 }
 .header {
   background-color: white;
@@ -376,13 +385,13 @@ this.$router.push({
   font-size: 1.5rem;
   line-height: 1.5rem;
   font-weight: bold;
-  margin-top:0.4rem;
+  margin-top: 0.4rem;
 }
-.point-detail .success{
+.point-detail .success {
   color: #0dbc79;
 }
-.point-detail .danger{
- color: #DD4F42;
+.point-detail .danger {
+  color: #dd4f42;
 }
 
 .point-detail .current-label {
