@@ -60,7 +60,7 @@
         @click="goDeviceDetail(device.id,device.file_path)"
       >
         <van-row :gutter="20">
-          <van-col span="10">
+          <van-col span="9">
             <div class="img">
               <van-image width="100%" height="100%" fit="cover" :src="Iamge(device.file_path)" />
             </div>
@@ -73,7 +73,7 @@
             <p>出厂编号:{{device.eq}}</p>
             <p>测点数:{{device.count?device.count:0}}</p>
           </van-col>
-          <van-col span="4">
+          <van-col span="5">
             <div class="state">{{device.status}}</div>
           </van-col>
         </van-row>
