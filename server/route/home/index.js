@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-18 11:10:04
- * @LastEditTime: 2020-06-18 20:41:51
+ * @LastEditTime: 2020-06-28 02:28:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\home\index.js
@@ -22,15 +22,17 @@ module.exports = app => {
         }
         if (req.user.role == 1) {
             console.log('超级');
+            //查找维修记录的数目
             sql = `select * from repair where is_deleted = 0`
             let a = await connection(sql)
             results.repair = a.length
             console.log(results.repair);
 
-            sql = `select message title,created_time date,id from alarm where is_deleted = 0 and is_handled = 0`
+            //查找已读和未读的报警信息
+            sql = `select message title,created_time date,id from alarm where is_deleted = 0 and is_handled = 0 order by ts desc`
             a = await connection(sql)
             results.unread = a
-            sql = `select message title,created_time date,id from alarm where is_deleted = 0 and is_handled = 1`
+            sql = `select message title,created_time date,id from alarm where is_deleted = 0 and is_handled = 1 order by date desc`
             a = await connection(sql)
             results.read = a
 
@@ -53,12 +55,12 @@ module.exports = app => {
             let a = await connection(sql)
             results.repair = a.length
 
-            sql = `select message title,a.created_time date,a.id from alarm a left outer join device d on a.device_eq = d.eq where a.is_deleted = 0 and a.is_handled = 0 and d.enterprise_id = ${req.user.enterprise_id}`
+            sql = `select message title,a.created_time date,a.id from alarm a left outer join device d on a.device_eq = d.eq where a.is_deleted = 0 and a.is_handled = 0 and d.enterprise_id = ${req.user.enterprise_id} order by ts`
             console.log(req.user.enterprise_id);
 
             a = await connection(sql)
             results.unread = a
-            sql = `select message title,a.created_time date,a.id from alarm a left outer join device d on a.device_eq = d.eq where a.is_deleted = 0 and a.is_handled = 1 and d.enterprise_id = ${req.user.enterprise_id}`
+            sql = `select message title,a.created_time date,a.id from alarm a left outer join device d on a.device_eq = d.eq where a.is_deleted = 0 and a.is_handled = 1 and d.enterprise_id = ${req.user.enterprise_id} order by ts desc`
             a = await connection(sql)
             results.read = a
             console.log(results);
@@ -82,12 +84,12 @@ module.exports = app => {
             let a = await connection(sql)
             results.repair = a.length
 
-            sql = `select message title,a.created_time date,a.id from alarm a left outer join device d on a.device_eq = d.eq left outer join user_device ud on d.id = ud.device_id where a.is_deleted = 0 and a.is_handled = 0 and ud.user_id = ${req.user.id}`
+            sql = `select message title,a.created_time date,a.id from alarm a left outer join device d on a.device_eq = d.eq left outer join user_device ud on d.id = ud.device_id where a.is_deleted = 0 and a.is_handled = 0 and ud.user_id = ${req.user.id} order by ts`
             // console.log(req.user.enterprise_id);
 
             a = await connection(sql)
             results.unread = a
-            sql = `select message title,a.created_time date,a.id from alarm a left outer join device d on a.device_eq = d.eq left outer join user_device ud on d.id = ud.device_id where a.is_deleted = 0 and a.is_handled = 1 and ud.user_id = ${req.user.id}`
+            sql = `select message title,a.created_time date,a.id from alarm a left outer join device d on a.device_eq = d.eq left outer join user_device ud on d.id = ud.device_id where a.is_deleted = 0 and a.is_handled = 1 and ud.user_id = ${req.user.id} order by ts desc`
             a = await connection(sql)
             results.read = a
             console.log(results);

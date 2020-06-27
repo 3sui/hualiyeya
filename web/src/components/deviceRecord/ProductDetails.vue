@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 10:56:10
- * @LastEditTime: 2020-06-24 11:21:23
+ * @LastEditTime: 2020-06-28 01:27:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\ProductDetails.vue
@@ -97,7 +97,20 @@
                     </div>
                 </el-col>
             </el-row>
-            <div class="plugins-tips">维修记录</div>
+            <div class="plugins-tips">设备文档</div>
+            <div class="d-flex ai-start jc-start flex-wrap px-5">
+                <a
+                    target="_blank"
+                    :href="axios.defaults.baseURL.slice(0, -4) + item.file_path"
+                    :underline="false"
+                    style="margin: 15px 15px 0 0"
+                    v-for="(item, index) in tableData.wordList"
+                    :key="index"
+                >
+                    <el-button size="mini" type="warning">{{item.file_name}} 下载</el-button>
+                </a>
+            </div>
+            <div class="plugins-tips mt-5">维修记录</div>
             <el-timeline>
                 <el-timeline-item
                     :timestamp="item.date"
@@ -202,6 +215,7 @@ export default {
                     if (res.data.success) {
                         this.$set(this.tableData, 'info', res.data.info[0]);
                         this.$set(this.tableData, 'imgList', res.data.imgList);
+                        this.$set(this.tableData, 'wordList', res.data.wordList);
                         this.$set(this.tableData, 'repair', res.data.repair);
 
                         res.data.imgList.forEach(item => {

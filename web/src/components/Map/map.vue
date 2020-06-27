@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-04-28 16:25:21
- * @LastEditTime: 2020-06-24 09:48:46
+ * @LastEditTime: 2020-06-27 18:39:09
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\vue-manage-system\src\components\page\map.vue
@@ -105,7 +105,7 @@
                         fit="scale-down"
                     ></el-image>
                 </div>
-                <div class="fs-lg">
+                <div class="fs-lg device_info">
                     <p>设备id: {{drawerData.eq}}</p>
                     <p>设备名称: {{drawerData.device_name}}</p>
                     <p>设备型号: {{drawerData.device_model}}</p>
@@ -325,6 +325,9 @@ export default {
     width: 90px;
     height: 90px;
     background: red;
+}
+.device_info p{
+    line-height: 40px;
 }
 </style>
 <style>

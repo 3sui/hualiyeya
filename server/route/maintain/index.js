@@ -1,8 +1,7 @@
-
 /*
  * @Author: your name
  * @Date: 2020-06-14 14:08:41
- * @LastEditTime: 2020-06-18 20:15:50
+ * @LastEditTime: 2020-06-28 03:03:11
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\maintain\index.js
@@ -61,21 +60,31 @@ module.exports = app => {
 
     //设备监控
     router.get('/fetchAlarmRecord', authMiddle, async (req, res) => {
-
+        let offset = (req.query.offset - 1) * 10
 
         let sql
         let results = {}
+        results.success = true
+        console.log(offset);
+
         if (req.user.role == 1) {
-            sql = `select *,a.created_time, a.id from alarm a left outer join device d on a.device_eq = d.eq where a.is_deleted = 0 order by a.is_handled,a.ts desc`
+            sql = `select *,a.created_time, a.id from alarm a left outer join device d on a.device_eq = d.eq where a.is_deleted = 0 order by a.is_handled,a.ts desc limit 10 offset ${offset}`
+            results.data = await connection(sql)
+            sql = `select count(*) from alarm where is_deleted = 0`
+            let a = await connection(sql)
+            results.pageTotal = a[0]['count(*)']
+
         } else if (req.user.role == 2) {
             sql = `select *,a.created_time, a.id from alarm a left outer join device d on a.device_eq = d.eq where a.is_deleted = 0 and d.enterprise_id = ${req.user.enterprise_id} order by a.is_handled,a.ts desc`
+            results.data = await connection(sql)
+
         } else if (req.user.role == 3) {
             sql = `select *,a.created_time, a.id from alarm a inner join device d on a.device_eq = d.eq inner join user_device ud on d.id = ud.device_id where a.is_deleted = 0 and ud.user_id = ${req.user.id} order by a.is_handled,a.ts desc`
             console.log(sql);
+            results.data = await connection(sql)
+
 
         }
-        results.success = true
-        results.data = await connection(sql)
         console.log(results);
         res.send(results)
     })

@@ -85,7 +85,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="Cancel">取 消</el-button>
-                <el-button type="primary" @click="Confirm(form)">确 定</el-button>
+                <el-button type="primary" @click="Confirm('form')">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -166,7 +166,7 @@ export default {
             })
                 .then(() => {
                     let query = {
-                        id: this.tableData[index + this.pageSize * (this.pageIndex - 1)].id
+                        id: row.id
                     };
                     this.$axios
                         .post('/dataSettings/DeleteIndustry', query)
@@ -216,9 +216,9 @@ export default {
                 if (valid) {
                     if (this.isAdd) {
                         // this.query.industry_name=this.form.industry_name
-                        let date = new Date();
-                        this.form.created_time = date.getTime();
-                        console.log(date);
+                        // let date = new Date();
+                        // this.form.created_time = date.getTime();
+                        // console.log(date);
                         this.$axios
                             .post('/dataSettings/AddIndustry', this.form)
                             .then(res => {
@@ -230,7 +230,7 @@ export default {
                             });
                     } else {
                         this.form.id = this.idx;
-                        delete this.form['created_time'];
+                        // delete this.form['created_time'];
                         //  let date =new Date(this.form.created_time)
                         // this.form.created_time =  date.getTime();
                         this.$axios
@@ -262,7 +262,9 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
-            this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
+            window.console.log(row);
+            this.idx = row.id;
+            // this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
             this.form = row;
             this.editVisible = true;
             this.isAdd = false;

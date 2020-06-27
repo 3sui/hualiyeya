@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-07 10:52:41
- * @LastEditTime: 2020-06-16 16:58:10
+ * @LastEditTime: 2020-06-28 02:22:29
  * @LastEditors: Please set LastEditors
  * @Description: 测点详情
  * @FilePath: \vue-manage-system\src\components\view\MeasuringPointDetails.vue
@@ -103,7 +103,7 @@
                     :key="index"
                 >
                     <template slot-scope="scope">
-                        <div>{{scope.row[item.cp_id] * limit[item.cp_id].k}}</div>
+                        <div>{{+(scope.row[item.cp_id]/4096 * (limit[item.cp_id].up - limit[item.cp_id].down) + +limit[item.cp_id].down).toFixed(2)}}</div>
                     </template>
                 </el-table-column>
                 <el-table-column prop="ts" label="数据时间">
@@ -231,7 +231,7 @@ export default {
                         window.console.log(limit_down);
 
                         data.info.forEach(item => {
-                            info.push(item[a] * arr[a].k);
+                            info.push((item[a] / 4096) * (arr[a].up - arr[a].down) + arr[a].down);
                             date.push(Moment(+item.ts).format('HH:mm:ss'));
                         });
                         // window.console.log(date);

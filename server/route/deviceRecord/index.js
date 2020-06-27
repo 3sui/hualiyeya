@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 10:34:44
- * @LastEditTime: 2020-06-24 11:01:50
+ * @LastEditTime: 2020-06-28 01:22:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\deviceRecord\index.js
@@ -22,7 +22,7 @@ module.exports = app => {
 
         if (req.user.role === 1) {
             console.log('超级');
-            sql = "select * from device where is_deleted = 0"
+            sql = "select d.*,dt.typename from device d inner join device_type dt on dt.id = d.device_type where d.is_deleted = 0"
         } else if (req.user.role === 2) {
             console.log('企业');
             sql = `select * from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
@@ -249,6 +249,9 @@ module.exports = app => {
         results.info = await connection(sql) //设备基本信息
         sql = `select * from file_store where device_id = '${id}' and type = 'img'`
         results.imgList = await connection(sql) //设备图片
+
+        sql = `select * from file_store where device_id = '${id}' and type = 'word'`
+        results.wordList = await connection(sql) //设备文件
 
         sql = `select eq from device where id = '${id}' and is_deleted = 0`
         let eq = await connection(sql)

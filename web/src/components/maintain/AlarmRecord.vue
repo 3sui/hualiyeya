@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-07 13:46:11
- * @LastEditTime: 2020-06-24 16:54:26
+ * @LastEditTime: 2020-06-28 03:03:49
  * @LastEditors: Please set LastEditors
  * @Description: 报警记录
  * @FilePath: \vue-manage-system\src\components\view\AlarmRecord.vue
@@ -73,7 +73,7 @@
                     </el-col>
                 </el-row>
                 <el-table
-                    :data="showData"
+                    :data="tableData"
                     border
                     class="table"
                     ref="multipleTable"
@@ -83,13 +83,17 @@
                     <!-- <el-table-column type="selection" width="55" align="center"></el-table-column> -->
                     <el-table-column prop="id" label="序号" width="55" align="center" type="index"></el-table-column>
                     <el-table-column prop="device_eq" label="设备ID"></el-table-column>
-                    <el-table-column prop="device_type" label="设备种类"></el-table-column>
-                    <el-table-column prop="device_name" label="设备名称"></el-table-column>
+                    <el-table-column prop="device_type" label="设备种类" width="55"></el-table-column>
+                    <el-table-column prop="device_name" label="设备名称" width="120"></el-table-column>
 
                     <el-table-column prop="cp_name" label="测点名称"></el-table-column>
                     <el-table-column prop="limit_up" label="上限值"></el-table-column>
                     <el-table-column prop="limit_down" label="下限值"></el-table-column>
-                    <el-table-column prop="cp_value" label="报警值"></el-table-column>
+                    <el-table-column prop="cp_value" label="报警值">
+                        <template slot-scope="scope">
+                            <div>{{(+scope.row.cp_value).toFixed(2)}}</div>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="created_time" label="最近报警日期">
                         <template
                             slot-scope="scope"
@@ -104,7 +108,7 @@
                             >{{scope.row.is_handled == '0'? '未处理' : '已处理'}}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="300" align="center">
+                    <el-table-column label="操作" width="100" align="center">
                         <template slot-scope="scope">
                             <el-button
                                 v-if="scope.row.is_handled == 0"
@@ -231,16 +235,17 @@ export default {
         getData() {
             axios({
                 method: 'get',
-                url: '/maintain/fetchAlarmRecord'
+                url: '/maintain/fetchAlarmRecord',
+                params: { offset: this.query.pageIndex }
             }).then(res => {
                 window.console.log(res);
                 if (res.data.success) {
                     this.tableData = res.data.data;
-                    this.showData = this.tableData.slice(
-                        (this.query.pageIndex - 1) * this.query.pageSize,
-                        this.query.pageIndex * this.query.pageSize
-                    );
-                    this.pageTotal = res.data.data.length;
+                    // this.showData = this.tableData.slice(
+                    //     (this.query.pageIndex - 1) * this.query.pageSize,
+                    //     this.query.pageIndex * this.query.pageSize
+                    // );
+                    this.pageTotal = res.data.pageTotal;
                     window.console.log(res.data);
                 } else {
                     window.console.log('服务器错误');

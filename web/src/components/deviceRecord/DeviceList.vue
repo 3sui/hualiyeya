@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-24 16:41:38
+ * @LastEditTime: 2020-06-28 01:57:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -127,7 +127,7 @@
                 <el-table-column label="序号" width="55" align="center" type="index"></el-table-column>
                 <el-table-column prop="eq" label="设备ID"></el-table-column>
                 <el-table-column prop="device_name" label="设备名称"></el-table-column>
-                <el-table-column prop="device_type" label="设备种类"></el-table-column>
+                <el-table-column prop="typename" label="设备种类"></el-table-column>
                 <el-table-column prop="device_description" label="型号描述"></el-table-column>
                 <el-table-column prop="device_supplier" label="客户名称"></el-table-column>
                 <!-- <el-table-column prop="CustomerIndustry" label="客户行业"></el-table-column> -->
@@ -246,8 +246,14 @@
                     <el-form-item label="测点单位">
                         <el-input v-model="item.unit"></el-input>
                     </el-form-item>
-                    <el-form-item label="计算系数值">
+                    <!-- <el-form-item label="计算系数值">
                         <el-input v-model="item.k"></el-input>
+                    </el-form-item>-->
+                    <el-form-item label="量程上限值">
+                        <el-input v-model="item.up"></el-input>
+                    </el-form-item>
+                    <el-form-item label="量程下限值">
+                        <el-input v-model="item.down"></el-input>
                     </el-form-item>
                     <el-form-item label="上限值">
                         <el-input v-model="item.limit_up"></el-input>
@@ -400,7 +406,7 @@ export default {
                 for (let key in item) {
                     // window.console.log(i, item[i]);
                     if ((item[key] + '').includes(this.query.msg + '')) {
-                        return true;    
+                        return true;
                     }
                 }
             });
@@ -546,7 +552,8 @@ export default {
                 cp_id: 'cp' + (this.formSetting.point.length + 1),
                 cp_name: '',
                 unit: '',
-                k: '',
+                up: '',
+                down: '',
                 limit_up: '',
                 limit_down: ''
             });
