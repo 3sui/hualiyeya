@@ -36,7 +36,7 @@
               设备状态:
               <van-tag
                 round
-                :type="device.status==='正常'?'success':'danger'"
+                :type="device.status==='正常'?'success':(device.status==='报警'?'danger':'default')"
                 size="medium"
               >{{device.status}}</van-tag>
             </p>
@@ -52,7 +52,7 @@
       <div class="point-title">测点详情</div>
       <div class="point-item" v-for="point in pointlist">
         <van-row>
-          <van-col span="10">
+          <van-col span="12">
             <div class="point-detail">
               <p>
                 <van-icon color="blue" name="points" size="1rem" />
@@ -72,11 +72,11 @@
               </p>
             </div>
           </van-col>
-          <van-col span="14">
+          <van-col span="12">
             <div class="point-detail">
               <p
                 class="current"
-                :class="point.current>=point.down_limit&&point.current<=point.up_limit?'success':'danger'"
+                :class="Number(point.current)>=Number(point.down_limit)&&Number(point.current)<=Number(point.up_limit)?'success':'danger'"
               >{{point.current}}</p>
               <p class="current-label">实际值</p>
               <p style="text-align:center">
@@ -88,10 +88,10 @@
         </van-row>
       </div>
       <div class="sub">
-        <van-button type="info" class="look" round block @click="review(device.id)">查看设备手册</van-button>
+        <van-button type="info"  round block @click="review(device.id)">查看设备手册</van-button>
       </div>
       <div class="sub">
-        <van-button type="default" class="look" round block @click="back">返回</van-button>
+        <van-button type="default"  round block @click="back">返回</van-button>
       </div>
     </div>
   </div>
@@ -232,7 +232,8 @@ export default {
         item.point_name = element.cp_name;
         item.up_limit = element.limit_up;
         item.down_limit = element.limit_down;
-        item.current = this.data[index] * element.k;
+        item.current = this.data[index] * (element.up-element.down)/4095;
+        item.current=item.current.toFixed(1)
         item.timestemp = this.data[this.data.length - 1];
         this.pointlist.push(item);
       });
@@ -409,12 +410,9 @@ export default {
   font-weight: bold;
 }
 
-.look {
-  margin: 1rem 0;
-}
 
 .sub {
   width: 80%;
-  margin: auto;
+  margin: 1rem auto;
 }
 </style>

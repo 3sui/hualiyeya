@@ -117,6 +117,7 @@
       <van-field
         readonly
         clickable
+        default-date
         required
         name="calendar"
         :value="query.date"
@@ -175,9 +176,9 @@
       />
       <div class="sub">
         <van-button round block type="info" native-type="submit">提交</van-button>
-      </div>
+      </div> 
     </van-form>
-    <div class="sub">
+    <div class="back">
       <van-button round block type="default"  @click="back">返回</van-button>
     </div>
   </div>
@@ -479,6 +480,12 @@ export default {
 
 .sub {
   width: 80%;
-  margin: 1rem auto;
+  margin:1rem auto;
+  
+}
+
+.back{
+   width: 80%;
+  margin: 1rem auto 2rem auto;
 }
 </style>
