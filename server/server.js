@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:03:27
- * @LastEditTime: 2020-06-19 14:36:36
+ * @LastEditTime: 2020-06-28 03:20:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\server.js
@@ -17,6 +17,8 @@ app.use(cors())
 app.use('/uploads', express.static(__dirname + '/uploads'))
 //开放nodeserver文件夹
 app.use('/nodeserver', express.static(__dirname + '/nodeserver'))
+app.use('/nodeServer', express.static(__dirname + '/nodeServer/uploads'))
+
 //连接服务器
 require('./mysql/mysql.js')(app)
 // require('./route/admin/productProfile/index')(app)
@@ -30,6 +32,8 @@ require('./route/product/repair')(app)
 require('./route/maintain/index')(app)
 require('./route/monitor/index')(app)
 require('./route/home/index')(app)
+
+require('./route/upload/index')(app)
 
 
 require('./route/mobile/index')(app)
@@ -49,19 +53,19 @@ app.use((err, req, res, next) => {
     })
 })
 
-app.listen(8085, (err) => {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log('服务器已连接,端口号8085');
-    }
-})
-
-// app.listen(8890, (err) => {
+// app.listen(8085, (err) => {
 //     if (err) {
 //         console.log(err);
-
 //     } else {
-//         console.log('服务器已连接,端口号8890');
+//         console.log('服务器已连接,端口号8085');
 //     }
 // })
+
+app.listen(8890, (err) => {
+    if (err) {
+        console.log(err);
+
+    } else {
+        console.log('服务器已连接,端口号8890');
+    }
+})

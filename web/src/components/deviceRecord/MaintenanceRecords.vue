@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 15:04:18
- * @LastEditTime: 2020-06-18 22:20:53
+ * @LastEditTime: 2020-06-24 16:42:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\MaintenanceRecords.vue
@@ -26,7 +26,7 @@
                                 icon="el-icon-lx-add"
                                 class="handle-del mr10"
                                 @click="$router.push('./addNewMaintenance')"
-                            >新增</el-button> -->
+                            >新增</el-button>-->
                             <el-button
                                 type="primary"
                                 icon="el-icon-delete"
@@ -39,9 +39,11 @@
                     <el-col :span="18">
                         <div class="product-status">
                             <el-input
-                                v-model="query.name"
-                                placeholder="请输入关键字"
+                                prefix-icon="el-icon-search"
+                                v-model.trim="query.msg"
+                                placeholder="请输入您需要搜素的内容"
                                 class="handle-input mr10"
+                                @input="handleSearch"
                             ></el-input>
                             <!-- <div class="block">
                                 <el-date-picker
@@ -55,19 +57,19 @@
                                     :picker-options="pickerOptions"
                                 ></el-date-picker>
                             </div>-->
-                            <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                            <!-- <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                             <el-button
                                 type="primary"
                                 plain
                                 icon="el-icon-refresh"
                                 @click="refresh"
-                            >重置</el-button>
+                            >重置</el-button>-->
                         </div>
                     </el-col>
                 </el-row>
             </div>
             <el-table
-                :data="tableData.slice((pageIndex-1)*pageSize,pageIndex*pageSize)"
+                :data="showData"
                 border
                 class="table"
                 ref="multipleTable"
@@ -78,9 +80,10 @@
                 <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
                 <el-table-column prop="enterprise_name" label="客户名称"></el-table-column>
 
-                <el-table-column prop="eq" label="设备ID"></el-table-column>
-                <el-table-column prop="typename" label="设备种类"></el-table-column>
-                <el-table-column prop="device_name" label="设备名称"></el-table-column>
+                <el-table-column prop="device_eq" label="设备ID"></el-table-column>
+
+                <!-- <el-table-column prop="typename" label="设备种类"></el-table-column>
+                <el-table-column prop="device_name" label="设备名称"></el-table-column>-->
                 <!-- <el-table-column prop="Model" label="型号描述"></el-table-column>
                 <el-table-column prop="SerialNumber" label="出厂编号"></el-table-column>
                 <el-table-column prop="StartTime" label="服务提出日期"></el-table-column>-->
@@ -94,6 +97,8 @@
                 <el-table-column prop="cause" label="原因"></el-table-column>
 
                 <el-table-column prop="repair_person" label="维修人"></el-table-column>
+                <el-table-column prop="state" label="处理状态"></el-table-column>
+
                 <el-table-column prop="created_time" label="维修时间">
                     <template
                         slot-scope="scope"
@@ -182,11 +187,21 @@ export default {
                 ]
             },
             tableData: [],
-            query: {},
+            showData: [],
+            query: {
+                province: '', //省份
+                city: '', //市
+                county: '', //区县
+                kind: '', //种类
+                status: '', //状态
+                switch: '', //开关机
+                msg: '', //关键字
+                date: '', //筛选日期
+                pageIndex: 1, //当前页数
+                pageSize: 10 //每页显示个数选择器的选项设置
+            },
             value1: '',
             value2: '',
-            pageIndex: 1,
-            pageSize: 10,
 
             multipleSelection: [],
             delList: [],
@@ -222,8 +237,12 @@ export default {
                     window.console.log(res);
                     if (res.status === 200) {
                         this.tableData = res.data;
+                        this.showData = this.tableData.slice(
+                            (this.query.pageIndex - 1) * this.query.pageSize,
+                            this.query.pageIndex * this.query.pageSize
+                        );
                         this.pageTotal = res.data.length;
-                        window.console.log(res.data);
+                        window.console.log(res.data.length);
                     } else {
                         window.console.log('服务器错误');
                     }
@@ -233,25 +252,33 @@ export default {
 
         // 查看详情
         handleDetail(index, row) {
+            window.console.log(row);
             this.$router.push({
                 path: './MaintenanceDetails',
                 query: {
-                    id: row.id
+                    eq: row.device_eq
                 }
             });
         },
 
         // 触发搜索按钮
         handleSearch() {
-            this.tableData = this.tableData.filter((item, index) => {
+            this.query.pageIndex = 1;
+            this.showData = this.tableData.filter((item, index) => {
                 // return item.Address == '竹林北路256号';
                 for (let key in item) {
                     // window.console.log(i, item[i]);
-                    if ((item[key] + '').includes(this.query.msg)) {
+                    if ((item[key] + '').includes(this.query.msg + '')) {
                         return true;
                     }
                 }
             });
+            this.pageTotal = this.showData.length;
+
+            this.showData = this.showData.slice(
+                (this.query.pageIndex - 1) * this.query.pageSize,
+                this.query.pageIndex * this.query.pageSize
+            );
         },
 
         // 触发重置按钮
@@ -338,7 +365,8 @@ export default {
         },
         // 分页导航
         handlePageChange(val) {
-            this.pageIndex = val;
+            this.$set(this.query, 'pageIndex', val);
+
             this.getData();
         }
     }

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 10:56:10
- * @LastEditTime: 2020-06-22 17:07:58
+ * @LastEditTime: 2020-06-28 01:27:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\ProductDetails.vue
@@ -12,47 +12,62 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-copy"></i> 设备列表
+                    <i class="el-icon-lx-copy"></i>
+                    设备列表
                 </el-breadcrumb-item>
                 <el-breadcrumb-item>设备详情</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-button
-                type="primary"
-                icon="el-icon-lx-back"
-                class="handle-del mr10 mb-30"
-                @click="$router.go(-1)"
-            >返回</el-button>
-            <!-- <el-button type="primary" icon="el-icon-edit" class="handle-del mr10 mb-30">编辑</el-button> -->
-            <div style="float: right;display: flex;justify: space-between">
-                <el-upload
-                    multiple
-                    :data="{id: $route.query.id,
-                            type: 'word'}"
-                    :headers="getAuthHeaders()"
-                    class="upload-demo"
-                    ref="uploadWord"
-                    action
-                    :http-request="uploading"
-                    :file-list="fileListWord"
-                    list-type="text"
-                    :limit="3"
-                    :on-exceed="handleExceed3"
-                    :before-remove="beforeRemove"
-                    accept=".pdf, .doc, .docx"
-                    :auto-upload="false"
-                >
-                    <el-button size="small" type="primary">上传文档</el-button>
+            <div class="mb-2 d-flex jc-between">
+                <div>
+                    <el-button
+                        type="primary"
+                        icon="el-icon-lx-back"
+                        class="handle-del mr10 mb-30"
+                        @click="$router.go(-1)"
+                    >返回</el-button>
+                </div>
+                <!-- <el-button type="primary" icon="el-icon-edit" class="handle-del mr10 mb-30">编辑</el-button> -->
+                <div style="float: right;display:flex;margin-bottom: 10px">
+                    <div>
+                        <el-upload
+                            multiple
+                            :headers="getAuthHeaders()"
+                            class="upload-demo"
+                            ref="uploadWord"
+                            action
+                            :http-request="uploading"
+                            :file-list="fileListWord"
+                            list-type="text"
+                            :limit="1"
+                            :on-exceed="handleExceed3"
+                            :before-remove="beforeRemove"
+                            accept=".pdf, .doc, .docx"
+                            :auto-upload="false"
+                        >
+                            <el-button size="small" type="primary">上传文档</el-button>
 
-                    <!-- <span slot="tip" class="el-upload__tip ml-2">只能上传pdf/word文件，且不超过2MB，最多上传3份文档</span> -->
-                </el-upload>
-                <el-button
-                    class="ml-3"
-                    size="small"
-                    type="primary"
-                    @click="()=>{$refs['uploadWord'].submit()}"
-                >确认上传</el-button>
+                            <!-- <span slot="tip" class="el-upload__tip ml-2">只能上传pdf/word文件，且不超过2MB，最多上传3份文档</span> -->
+                        </el-upload>
+                        <div v-if="percentage1">
+                            校验进度
+                            <el-progress :percentage="percentage1"></el-progress>
+                        </div>
+                        <div v-if="percentage2">
+                            上传进度
+                            <el-progress :percentage="percentage2"></el-progress>
+                        </div>
+                    </div>
+                    <div>
+                        <el-button
+                            class="ml-3"
+                            size="small"
+                            type="primary"
+                            @click="()=>{$refs['uploadWord'].submit()}"
+                        >确认上传</el-button>
+                    </div>
+                </div>
             </div>
             <div class="plugins-tips">设备信息</div>
             <el-row :gutter="20" class="mb-30" v-if="tableData.info">
@@ -63,17 +78,15 @@
                         <p>设备名称: {{tableData.info.device_name}}</p>
                         <p>型号描述: {{tableData.info.device_description}}</p>
                         <p>设备种类: {{tableData.info.device_type}}</p>
-                        <p>上次维修日期: {{tableData.info.LastMaintenance}}</p>
                         <p>创建人: {{tableData.info.created_by}}</p>
                         <p>创建日期: {{tableData.info.created_time}}</p>
                     </div>
                 </el-col>
                 <el-col :span="12">
                     <div class="ml-50">
-                        <p>开关机:{{tableData.info.is_on}}</p>
+                        <p>开关机:{{tableData.info.is_on == 0? '关机': '开机'}}</p>
                         <p>客户名称:{{tableData.info.device_supplier}}</p>
                         <p>安装地址:{{tableData.info.address}}</p>
-                        <p>客户行业:{{tableData.info.CustomerIndustry}}</p>
                         <div class="demo-image__preview">
                             <el-image
                                 style="width: 100px; height: 100px"
@@ -84,16 +97,61 @@
                     </div>
                 </el-col>
             </el-row>
-            <div class="plugins-tips">维修记录</div>
+            <div class="plugins-tips">设备文档</div>
+            <div class="d-flex ai-start jc-start flex-wrap px-5">
+                <a
+                    target="_blank"
+                    :href="axios.defaults.baseURL.slice(0, -4) + item.file_path"
+                    :underline="false"
+                    style="margin: 15px 15px 0 0"
+                    v-for="(item, index) in tableData.wordList"
+                    :key="index"
+                >
+                    <el-button size="mini" type="warning">{{item.file_name}} 下载</el-button>
+                </a>
+            </div>
+            <div class="plugins-tips mt-5">维修记录</div>
             <el-timeline>
                 <el-timeline-item
-                    :timestamp="item.created_time"
+                    :timestamp="item.date"
                     placement="top"
                     v-for="(item, index) in tableData.repair"
                     :key="index"
                 >
                     <el-card>
-                        <table>
+                        <el-table :data="[item]" style="width: 100%">
+                            <el-table-column label="服务提出时间" width="180">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.created_time}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="故障类型" width="180">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.type}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="故障现象" width="180">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.phenomenon}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="可能产生的原因">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.cause}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="排除办法">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.methods}}</div>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="维修人" width="180">
+                                <template slot-scope="scope">
+                                    <div>{{scope.row.repair_person}}</div>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <!-- <table>
                             <thead>
                                 <tr>
                                     <th>服务提出时间</th>
@@ -101,8 +159,6 @@
                                     <th>故障现象</th>
                                     <th>可能产生的原因</th>
                                     <th>排除办法</th>
-                                    <!-- <th>故障部件供应商</th>
-                                    <th>是否更换部件</th>-->
                                     <th>维修人</th>
                                 </tr>
                                 <tr>
@@ -111,37 +167,11 @@
                                     <td>{{item.phenomenon}}</td>
                                     <td>{{item.cause}}</td>
                                     <td>{{item.methods}}</td>
-                                    <!-- <td>{{item.LastSupplier}}</td>
-                                    <td>{{item.more}}</td>-->
                                     <td>{{item.repair_person}}</td>
                                 </tr>
                             </thead>
-                        </table>
+                        </table>-->
                         <p class="mt-10">备注: {{item.More}}</p>
-                        <!-- <div class="annex">
-                            附件:
-                            <img
-                                width="100"
-                                src="http://127.0.0.1:5500/images/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85/u711.png"
-                                alt
-                            />
-                            <img
-                                width="100"
-                                src="http://127.0.0.1:5500/images/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85/u711.png"
-                                alt
-                            />
-                            <img
-                                width="100"
-                                src="http://127.0.0.1:5500/images/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85/u711.png"
-                                alt
-                            />
-                            <img
-                                width="100"
-                                src="http://127.0.0.1:5500/images/%E4%BA%A7%E5%93%81%E8%AF%A6%E6%83%85/u711.png"
-                                alt
-                            />
-                        </div>
-                        <p>王小虎 提交于 2018/4/12 20:46</p>-->
                     </el-card>
                 </el-timeline-item>
             </el-timeline>
@@ -158,7 +188,9 @@ export default {
             tableData: {},
             maintenanceList: [],
             srcList: [],
-            fileListWord: []
+            fileListWord: [],
+            percentage1: 0,
+            percentage2: 0
         };
     },
     created() {
@@ -183,6 +215,7 @@ export default {
                     if (res.data.success) {
                         this.$set(this.tableData, 'info', res.data.info[0]);
                         this.$set(this.tableData, 'imgList', res.data.imgList);
+                        this.$set(this.tableData, 'wordList', res.data.wordList);
                         this.$set(this.tableData, 'repair', res.data.repair);
 
                         res.data.imgList.forEach(item => {
@@ -196,7 +229,7 @@ export default {
         },
         handleExceed3(files, fileList) {
             this.$message.warning(
-                `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`
+                `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`
             );
         },
         //删除文件之前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止删除。
@@ -204,9 +237,10 @@ export default {
             return this.$confirm(`确定移除 ${file.name}？`);
         },
         uploading(params) {
+            let id = this.$route.query.id;
             window.console.log(params.file);
             let _this = this;
-            let baseUrl = 'http://localhost:5000';
+            let baseUrl = axios.defaults.baseURL;
             // for(let i in params.)
             let chunkSize = 5 * 1024 * 1024;
             let fileSize = 0;
@@ -236,7 +270,12 @@ export default {
                 window.console.log(456);
                 // 如果文件已存在, 就秒传
                 if (result.file) {
-                    alert('文件已秒传');
+                    _this.percentage1 = 0;
+
+                    _this.percentage2 = 0;
+                    _this.$refs['uploadWord'].clearFiles();
+
+                    _this.$message.warning('文件已存在');
                     return;
                 }
                 // let exit = false
@@ -285,6 +324,7 @@ export default {
                             end = start + chunkSize >= file.size ? file.size : start + chunkSize;
 
                         fileReader.readAsArrayBuffer(blobSlice.call(file, start, end));
+                        _this.percentage1 = currentChunk + 1;
                         // $('#checkProcessStyle').css({
                         //     width: currentChunk + 1 + '%'
                         // });
@@ -322,6 +362,7 @@ export default {
                         let index = await upload(i, fileMd5Value, chunks);
                         hasUploaded++;
                         let radio = Math.floor((hasUploaded / chunks) * 100);
+                        _this.percentage2 = radio;
                         // $('#uploadProcessStyle').css({
                         //     width: radio + '%'
                         // });
@@ -342,7 +383,7 @@ export default {
                     form.append('fileMd5Value', fileMd5Value);
                     _this
                         .axios({
-                            url: baseUrl + '/upload',
+                            url: baseUrl + '/uploads',
                             method: 'POST',
                             data: form, //刚刚构建的form数据对象
                             //async: true, //异步
@@ -360,14 +401,17 @@ export default {
 
             // 第四步: 通知服务器所有分片已上传完成
             function notifyServer(fileMd5Value) {
-                let url = baseUrl + '/merge?md5=' + fileMd5Value + '&fileName=' + file.name + '&size=' + file.size;
+                let url = baseUrl + '/merge?md5=' + fileMd5Value + '&fileName=' + file.name + '&size=' + file.size + '&deviceId=' + id;
                 _this
                     .$axios({
                         method: 'get',
                         url: url
                     })
                     .then(res => {
-                        alert('上传成功');
+                        _this.percentage1 = 0;
+                        _this.percentage2 = 0;
+                        _this.$refs['uploadWord'].clearFiles();
+                        _this.$message.success('文件上传成功');
                     });
                 // $.getJSON(url, function(data) {
                 //     alert('上传成功');

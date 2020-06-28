@@ -9,32 +9,25 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <div class="handle-box">
+            <div class="handle-box d-flex jc-between">
                 <el-button
                     type="primary"
                     class="handle-del mr10"
                     @click="AddData"
                     icon="el-icon-plus"
                 >新增</el-button>
-                <el-input v-model="keyword" placeholder="行业名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch(keyword)">搜索</el-button>
-
-                <!-- <div class="block datechoose">
-                    <span class="demonstration">创建日期</span>
-                    &nbsp;
-                    <el-date-picker
-                        v-model="date"
-                        type="daterange"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                    ></el-date-picker>
-                </div>-->
+                <el-input
+                    prefix-icon="el-icon-search"
+                    v-model.trim="query.msg"
+                    placeholder="请输入您需要搜素的内容"
+                    class="handle-input mr10"
+                    @input="handleSearch"
+                ></el-input>
             </div>
 
             <!-- 表格列 -->
             <el-table
-                :data="tableData.slice((pageIndex-1)*pageSize,pageIndex*pageSize)"
+                :data="showData"
                 border
                 class="table"
                 ref="multipleTable"
@@ -75,8 +68,8 @@
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :current-page="pageIndex"
-                    :page-size="pageSize"
+                    :current-page="query.pageIndex"
+                    :page-size="query.pageSize"
                     :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
@@ -92,7 +85,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="Cancel">取 消</el-button>
-                <el-button type="primary" @click="Confirm(form)">确 定</el-button>
+                <el-button type="primary" @click="Confirm('form')">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -105,10 +98,15 @@ export default {
         return {
             keyword: '',
             tableData: [],
+            showData: [],
+            query: {
+                msg: '', //关键字
+                date: '', //筛选日期
+                pageIndex: 1, //当前页数
+                pageSize: 10 //每页显示个数选择器的选项设置
+            },
             editVisible: false,
             pageTotal: 0,
-            pageIndex: 1,
-            pageSize: 10,
             form: {},
             rules: {
                 industry_name: [{ required: true, message: '请输入行业名称', trigger: 'blur' }]
@@ -129,9 +127,13 @@ export default {
             this.$axios
                 .get('/dataSettings/Industry')
                 .then(res => {
-                    console.log(res.data);
                     this.tableData = res.data;
-                    this.pageTotal = this.tableData.length;
+                    this.showData = this.tableData.slice(
+                        (this.query.pageIndex - 1) * this.query.pageSize,
+                        this.query.pageIndex * this.query.pageSize
+                    );
+                    this.pageTotal = res.data.length;
+                    window.console.log(res.data);
                 })
                 .catch(err => {
                     console.log(err);
@@ -139,24 +141,22 @@ export default {
         },
         // 触发搜索按钮
         handleSearch(value) {
-            if (value !== '') {
-                let query = {
-                    keyword: value
-                };
-                this.$axios.post('/dataSettings/SearchIndustry', query).then(res => {
-                    if (res.data) {
-                        this.tableData = res.data;
-                        this.pageTotal = this.tableData.length;
-                        window.console.log(res);
-                    } else {
-                        window.console.log('数据库异常');
+            this.query.pageIndex = 1;
+            this.showData = this.tableData.filter((item, index) => {
+                // return item.Address == '竹林北路256号';
+                for (let key in item) {
+                    // window.console.log(i, item[i]);
+                    if ((item[key] + '').includes(this.query.msg + '')) {
+                        return true;
                     }
-                });
-            } else {
-                this.getData();
-            }
-            //this.tableData = this.filterBy(this.tableAll, value);
-            //this.pageTotal = this.tableData.length;
+                }
+            });
+            this.pageTotal = this.showData.length;
+
+            this.showData = this.showData.slice(
+                (this.query.pageIndex - 1) * this.query.pageSize,
+                this.query.pageIndex * this.query.pageSize
+            );
         },
         // 删除操作
         handleDelete(index, row) {
@@ -166,7 +166,7 @@ export default {
             })
                 .then(() => {
                     let query = {
-                        id: this.tableData[index + this.pageSize * (this.pageIndex - 1)].id
+                        id: row.id
                     };
                     this.$axios
                         .post('/dataSettings/DeleteIndustry', query)
@@ -216,9 +216,9 @@ export default {
                 if (valid) {
                     if (this.isAdd) {
                         // this.query.industry_name=this.form.industry_name
-                        let date = new Date();
-                        this.form.created_time = date.getTime();
-                        console.log(date);
+                        // let date = new Date();
+                        // this.form.created_time = date.getTime();
+                        // console.log(date);
                         this.$axios
                             .post('/dataSettings/AddIndustry', this.form)
                             .then(res => {
@@ -230,7 +230,7 @@ export default {
                             });
                     } else {
                         this.form.id = this.idx;
-                        delete this.form['created_time'];
+                        // delete this.form['created_time'];
                         //  let date =new Date(this.form.created_time)
                         // this.form.created_time =  date.getTime();
                         this.$axios
@@ -262,7 +262,9 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
-            this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
+            window.console.log(row);
+            this.idx = row.id;
+            // this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
             this.form = row;
             this.editVisible = true;
             this.isAdd = false;
@@ -270,7 +272,9 @@ export default {
 
         // 分页导航
         handlePageChange(val) {
-            this.pageIndex = val;
+            window.console.log(val);
+            this.$set(this.query, 'pageIndex', val);
+            this.getData();
         }
     }
 };

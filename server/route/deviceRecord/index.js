@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 10:34:44
- * @LastEditTime: 2020-06-15 15:04:14
+ * @LastEditTime: 2020-06-28 01:22:41
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\deviceRecord\index.js
@@ -22,7 +22,7 @@ module.exports = app => {
 
         if (req.user.role === 1) {
             console.log('超级');
-            sql = "select * from device where is_deleted = 0"
+            sql = "select d.*,dt.typename from device d inner join device_type dt on dt.id = d.device_type where d.is_deleted = 0"
         } else if (req.user.role === 2) {
             console.log('企业');
             sql = `select * from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
@@ -44,7 +44,7 @@ module.exports = app => {
     //产品列表点击删除
     //企业用户没有权限
     router.get('/deleteProducts', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 405, '您没有权限进行删除操作')
+        assert(req.user.role < 2, 405, '您没有权限进行删除操作')
         let body = req.query
         let sql = 'update device set is_deleted = 1 WHERE id in (' + body.id + ')'
         console.log(sql);
@@ -55,6 +55,8 @@ module.exports = app => {
 
     //保存编辑内容
     router.post('/saveEdit', authMiddle, async (req, res) => {
+        assert(req.user.role < 2, 405, '您没有权限进行删除操作')
+
         let {
             id,
             device_name,
@@ -82,6 +84,8 @@ module.exports = app => {
 
     //获取设备配置信息
     router.get('/fetchSetting', authMiddle, async (req, res) => {
+        assert(req.user.role < 2, 405, '您没有权限进行删除操作')
+
         console.log(123)
 
         console.log(req.query)
@@ -98,6 +102,8 @@ module.exports = app => {
 
     //保存配置更新
     router.post('/saveSetting', authMiddle, async (req, res) => {
+        assert(req.user.role < 2, 405, '您没有权限进行删除操作')
+
         console.log(req.body)
         let eq = req.body.eq
         let point = req.body.point
@@ -146,7 +152,7 @@ module.exports = app => {
 
     //添加设备信息
     router.post('/addNewProduct', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 405, '您没有权限进行添加操作')
+        assert(req.user.role < 2, 405, '您没有权限进行添加操作')
         console.log(req.body);
         req.body.created_by = req.user.username
         let {
@@ -176,7 +182,7 @@ module.exports = app => {
         dest: __dirname + '/../../uploads'
     })
     router.post('/upload', authMiddle, upload.single('file'), async (req, res) => {
-        assert(req.user.role < 3, 405, '您没有权限进行添加操作')
+        assert(req.user.role < 2, 405, '您没有权限进行添加操作')
         const file = req.file
         const id = req.body.id
         const type = req.body.type
@@ -204,7 +210,7 @@ module.exports = app => {
 
     //配置设备阈值-------------------------------------------
     router.post('/settings', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 405, '您没有权限进行添加操作')
+        assert(req.user.role < 2, 405, '您没有权限进行添加操作')
 
         console.log(req.body);
         let eq = req.body.eq.id
@@ -236,13 +242,24 @@ module.exports = app => {
     //获取设备基本信息
     router.get('/getDeviceInfo', async (req, res) => {
         let id = req.query.id
+
         console.log(id)
-        let sql = `select * from device where id = '${id}'`
+        let sql = `select * from device where id = '${id}' and is_deleted = 0`
         let results = {}
         results.info = await connection(sql) //设备基本信息
         sql = `select * from file_store where device_id = '${id}' and type = 'img'`
         results.imgList = await connection(sql) //设备图片
-        sql = `select * from repair where device_id = '${id}'`
+
+        sql = `select * from file_store where device_id = '${id}' and type = 'word'`
+        results.wordList = await connection(sql) //设备文件
+
+        sql = `select eq from device where id = '${id}' and is_deleted = 0`
+        let eq = await connection(sql)
+        console.log(eq);
+
+        sql = `select * from repair where device_eq = '${eq[0].eq}' and is_deleted = 0`
+        console.log(sql);
+
         results.repair = await connection(sql) //维修记录
         results.success = true
         res.send(results)

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-03 15:08:38
- * @LastEditTime: 2020-06-18 22:52:30
+ * @LastEditTime: 2020-06-27 20:11:16
  * @LastEditors: Please set LastEditors
  * @Description: 用户管理
  * @FilePath: \web\src\components\DataSettings\Authority.vue
@@ -19,19 +19,24 @@
         </div>
 
         <div class="container">
-            <div class="handle-box">
+            <div class="handle-box d-flex jc-between">
                 <el-button
                     type="primary"
                     class="handle-del mr10"
                     @click="AddData"
                     icon="el-icon-plus"
                 >新增</el-button>
-                <el-input v-model="keyword" placeholder="企业/账号" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-input
+                    prefix-icon="el-icon-search"
+                    v-model.trim="query.msg"
+                    placeholder="请输入您需要搜素的内容"
+                    class="handle-input mr10"
+                    @input="handleSearch"
+                ></el-input>
             </div>
             <!-- 表格列 -->
             <el-table
-                :data="tableData.slice((pageIndex-1)*pageSize,pageIndex*pageSize)"
+                :data="showData"
                 border
                 class="table"
                 ref="multipleTable"
@@ -100,8 +105,8 @@
                 <el-pagination
                     background
                     layout="total, prev, pager, next"
-                    :current-page="pageIndex"
-                    :page-size="pageSize"
+                    :current-page="query.pageIndex"
+                    :page-size="query.pageSize"
                     :total="pageTotal"
                     @current-change="handlePageChange"
                 ></el-pagination>
@@ -240,6 +245,13 @@ export default {
             enterprises: [],
             keyword: '',
             tableData: [],
+            showData: [],
+            query: {
+                msg: '', //关键字
+                date: '', //筛选日期
+                pageIndex: 1, //当前页数
+                pageSize: 10 //每页显示个数选择器的选项设置
+            },
             editVisible: false,
             editVisibleAuth: false,
             editVisibleDealing: false,
@@ -320,13 +332,14 @@ export default {
                 url: '/dataSettings/fetchAuthList'
             })
                 .then(res => {
-                    if (res.data.success) {
-                        this.tableData = res.data.tableData;
-                        this.roles = res.data.roles;
-                        this.enterprises = res.data.enterprise;
-                        window.console.log(res.data);
-                        this.pageTotal = this.tableData.length;
-                    }
+                    // window.console.log(res.data);
+                    this.tableData = res.data.tableData;
+                    this.showData = this.tableData.slice(
+                        (this.query.pageIndex - 1) * this.query.pageSize,
+                        this.query.pageIndex * this.query.pageSize
+                    );
+                    this.pageTotal = res.data.length;
+                    // window.console.log(res.data);
                 })
                 .catch(err => {});
         },
@@ -557,15 +570,22 @@ export default {
 
         // 触发搜索按钮
         handleSearch() {
-            this.tableData = this.tableData.filter((item, index) => {
+            this.query.pageIndex = 1;
+            this.showData = this.tableData.filter((item, index) => {
                 // return item.Address == '竹林北路256号';
                 for (let key in item) {
                     // window.console.log(i, item[i]);
-                    if ((item[key] + '').includes(this.keyword)) {
+                    if ((item[key] + '').includes(this.query.msg + '')) {
                         return true;
                     }
                 }
             });
+            this.pageTotal = this.showData.length;
+
+            this.showData = this.showData.slice(
+                (this.query.pageIndex - 1) * this.query.pageSize,
+                this.query.pageIndex * this.query.pageSize
+            );
         },
 
         handlePageChange() {},

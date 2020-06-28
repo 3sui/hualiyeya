@@ -60,7 +60,7 @@
         @click="goDeviceDetail(device.id,device.file_path)"
       >
         <van-row :gutter="20">
-          <van-col span="10">
+          <van-col span="9">
             <div class="img">
               <van-image width="100%" height="100%" fit="cover" :src="Iamge(device.file_path)" />
             </div>

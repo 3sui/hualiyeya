@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-12 09:13:08
- * @LastEditTime: 2020-06-18 22:14:55
+ * @LastEditTime: 2020-06-28 01:53:50
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \web\src\components\deviceRecord\DeviceSettings.vue
@@ -42,7 +42,7 @@
                         >
                             <el-input v-model="item.unit"></el-input>
                         </el-form-item>
-                        <el-form-item
+                        <!-- <el-form-item
                             label="计算系数值"
                             :prop="'point.'+ index  + '.k'"
                             :rules="{
@@ -50,9 +50,27 @@
     }"
                         >
                             <el-input v-model="item.k"></el-input>
+                        </el-form-item>-->
+                        <el-form-item
+                            label="量程上限值"
+                            :prop="'point.'+ index  + '.up'"
+                            :rules="{
+      required: true, message: '量程上限值不能为空', trigger: 'blur'
+    }"
+                        >
+                            <el-input v-model="item.up"></el-input>
                         </el-form-item>
                         <el-form-item
-                            label="上限值"
+                            label="量程下限值"
+                            :prop="'point.'+ index  + '.down'"
+                            :rules="{
+      required: true, message: '量程下限值不能为空', trigger: 'blur'
+    }"
+                        >
+                            <el-input v-model="item.down"></el-input>
+                        </el-form-item>
+                        <el-form-item
+                            label="报警上限值"
                             :prop="'point.'+ index  + '.limit_up'"
                             :rules="{
       required: true, message: '上限值不能为空', trigger: 'blur'
@@ -61,7 +79,7 @@
                             <el-input v-model="item.limit_up"></el-input>
                         </el-form-item>
                         <el-form-item
-                            label="下限值"
+                            label="报警下限值"
                             :prop="'point.'+ index  + '.limit_down'"
                             :rules="{
       required: true, message: '下限值不能为空', trigger: 'blur'
@@ -72,8 +90,10 @@
                     </div>
                     <div style="text-align: right">
                         <el-button @click="submitForm('form')">提交</el-button>
-                        <el-button @click="addNewPoint">新增</el-button>
-                        <el-button @click="deletePoint">删除</el-button>
+                        <div style="text-align: center">
+                            <el-button @click="addNewPoint">新增</el-button>
+                            <el-button @click="deletePoint">删除</el-button>
+                        </div>
                     </div>
                 </el-form>
             </div>
@@ -93,7 +113,8 @@ export default {
                         cp_id: 'cp1',
                         cp_name: '',
                         unit: '',
-                        k: '',
+                        up: '',
+                        down: '',
                         limit_up: '',
                         limit_down: ''
                     }
@@ -115,7 +136,8 @@ export default {
                 cp_id: 'cp' + (this.form.point.length + 1),
                 cp_name: '',
                 unit: '',
-                k: '',
+                up: '',
+                down: '',
                 limit_up: '',
                 limit_down: ''
             });

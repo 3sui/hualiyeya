@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 14:19:13
- * @LastEditTime: 2020-06-22 10:49:41
+ * @LastEditTime: 2020-06-28 01:33:06
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\AddNewProduct.vue
@@ -22,24 +22,24 @@
             <div class="form-box">
                 <el-form ref="form" :rules="rules" :model="form" label-width="120px">
                     <el-form-item label="设备ID" prop="eq">
-                        <el-input v-model="form.eq" placeholder="例: 123456"></el-input>
+                        <el-input v-model.trim="form.eq" placeholder="例: 123456"></el-input>
                     </el-form-item>
 
                     <el-form-item label="设备名称" prop="device_name">
-                        <el-input v-model="form.device_name" placeholder="例: 设备一"></el-input>
+                        <el-input v-model.trim="form.device_name" placeholder="例: 设备一"></el-input>
                     </el-form-item>
                     <el-form-item label="设备型号" prop="device_model">
-                        <el-input v-model="form.device_model" placeholder="例: iphone11"></el-input>
+                        <el-input v-model.trim="form.device_model" placeholder="例: iphone11"></el-input>
                     </el-form-item>
                     <el-form-item label="型号描述" prop="device_description">
                         <el-input
                             type="textarea"
-                            v-model="form.device_description"
+                            v-model.trim="form.device_description"
                             placeholder="例: 这是一个设备"
                         ></el-input>
                     </el-form-item>
                     <el-form-item label="设备种类" prop="device_type">
-                        <el-select v-model="form.device_type" placeholder="请选择设备种类">
+                        <el-select v-model.trim="form.device_type" placeholder="请选择设备种类">
                             <el-option
                                 v-for="item in type"
                                 :key="item.id"
@@ -50,7 +50,7 @@
                     </el-form-item>
                     <el-form-item label="所属企业" prop="enterprise_id">
                         <el-select
-                            v-model="form.enterprise_id"
+                            v-model.trim="form.enterprise_id"
                             placeholder="请选择所属企业"
                             @change="fetchUserInfo(form.enterprise_id)"
                         >
@@ -63,7 +63,11 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="设备负责人" prop="principal">
-                        <el-select v-model="form.principal" placeholder="请选择负责人" :disabled="isTrue">
+                        <el-select
+                            v-model.trim="form.principal"
+                            placeholder="请选择负责人"
+                            :disabled="isTrue"
+                        >
                             <el-option
                                 v-for="item in user.filter(item => item.id == user_e)"
                                 :key="item.id"
@@ -73,10 +77,10 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="设备厂家" prop="device_supplier">
-                        <el-input v-model="form.device_supplier" placeholder="例: 航天云网"></el-input>
+                        <el-input v-model.trim="form.device_supplier" placeholder="例: 航天云网"></el-input>
                     </el-form-item>
                     <el-form-item label="详细地址" prop="address">
-                        <el-input v-model="form.address" placeholder="例: 江苏省常州市竹林北路265号"></el-input>
+                        <el-input v-model.trim="form.address" placeholder="例: 江苏省常州市竹林北路265号"></el-input>
                     </el-form-item>
 
                     <el-form-item label="上传图片">
@@ -171,6 +175,13 @@ export default {
                     {
                         required: true,
                         message: '请输入设备名称',
+                        trigger: 'blur'
+                    }
+                ],
+                device_model: [
+                    {
+                        required: true,
+                        message: '请输入设备型号',
                         trigger: 'blur'
                     }
                 ],

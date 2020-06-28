@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 10:56:38
- * @LastEditTime: 2020-06-19 14:35:50
+ * @LastEditTime: 2020-06-28 03:15:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\plugins\axios.js
@@ -18,12 +18,8 @@ axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  // baseURL: 'http://127.0.0.1:9999',
-  baseURL: 'http://localhost:8085/api',
-  // baseURL: 'http://10.159.24.78:8085/api',
-
-  // baseURL: 'http://58.216.47.110:9999',
-  // baseURL: 'http://58.216.47.108:8890/api',
+  // baseURL: 'http://localhost:8085/api',
+  baseURL: 'http://58.216.47.108:8890/api',
 
   // baseURL: process.env.baseURL || process.env.apiUrl || "",
   timeout: 60 * 1000, // Timeout
@@ -57,10 +53,10 @@ _axios.interceptors.response.use(
     // Do something with response error
     // window.console.log(error.response);
     if (error.response.data.message) {
-    //   Vue.prototype.$message({
-    //     type: 'error',
-    //     message: error.response.data.message
-    //   })
+      //   Vue.prototype.$message({
+      //     type: 'error',
+      //     message: error.response.data.message
+      //   })
       window.console.log(error.response.status);
       if (error.response.status === 401) {
         router.push('/login')

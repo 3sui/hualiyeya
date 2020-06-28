@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:46:57
- * @LastEditTime: 2020-06-08 10:51:30
+ * @LastEditTime: 2020-06-27 17:46:56
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\mysql\mysql.js
@@ -33,7 +33,8 @@ module.exports = app => {
                             resolve(rows)
                         }
                         // 结束会话
-                        connection.release()
+                        // connection.release()
+                        connection.destroy()
                     })
                 }
             })
@@ -43,12 +44,12 @@ module.exports = app => {
 
     var cnt = 0;
     var conn = function () {
-        connection.query('SELECT * FROM device'); //查询MySQL中数据库
+        query('SELECT * FROM device'); //查询MySQL中数据库
         cnt++;
         console.log("Mysql重连接成功! 次数:" + cnt);
     }
 
-    setInterval(conn, 100 * 10000); //循环执行
+    setInterval(conn, 50 * 10000); //循环执行
 
     return query
 }

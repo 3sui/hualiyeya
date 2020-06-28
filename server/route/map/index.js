@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-01 11:31:14
- * @LastEditTime: 2020-06-18 20:55:07
+ * @LastEditTime: 2020-06-23 18:30:57
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\server\route\map\index.js
@@ -43,7 +43,7 @@ module.exports = app => {
         let sql
         if (req.user.role === 1) {
             console.log('超级');
-            sql = "select d.*,u.username from device d inner join user_info u on d.principal = u.id where d.is_deleted = 0"
+            sql = "select d.*,u.username from device d left outer join user_info u on d.principal = u.id where d.is_deleted = 0"
         } else if (req.user.role === 2) {
             console.log('企业');
             sql = `select *,d.id from device d inner join user_info u on d.principal = u.id where d.enterprise_id = ${req.user.enterprise_id} and d.is_deleted = 0`
