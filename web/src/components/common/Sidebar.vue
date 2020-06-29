@@ -112,7 +112,7 @@ export default {
                         {
                             index: 'MaintenanceRecords',
                             title: '维修记录',
-                            auth: []
+                            auth: [2, 3 ,4]
                         }
                         // {
                         //     index: 'EquipmentMonitoring',
@@ -127,19 +127,19 @@ export default {
                     index: '2',
                     title: '远程监控',
 
-                    auth: [],
+                    auth: [2, 3, 4],
                     subs: [
                         {
                             index: 'EquipmentMonitoring',
                             // index: 'DeviceList',
 
                             title: '设备监控',
-                            auth: []
+                            auth: [2, 3, 4]
                         },
                         {
                             index: 'AlarmRecord',
                             title: '报警记录',
-                            auth: []
+                            auth: [2, 3, 4]
                         }
                     ]
                 },
@@ -153,22 +153,22 @@ export default {
                     index: '4',
                     title: '分析中心',
 
-                    auth: [2, 3],
+                    auth: [2, 3, 4],
                     subs: [
                         {
                             index: 'DeviceAnalysis',
                             title: '设备分析',
-                            auth: []
+                            auth: [2, 3, 4]
                         },
                         {
                             index: 'IndustryAnalysis',
                             title: '行业分析',
-                            auth: []
+                            auth: [2, 3, 4]
                         },
                         {
                             index: 'FaultAnalysis',
                             title: '故障分析',
-                            auth: []
+                            auth: [2, 3, 4]
                         }
                     ]
                 },
@@ -176,13 +176,13 @@ export default {
                     icon: 'el-icon-setting',
                     index: '5',
                     title: '基础数据管理',
-                    auth: [3],
+                    auth: [2, 3, 4],
 
                     subs: [
                         {
                             index: 'Industry',
                             title: '行业设置',
-                            auth: [2]
+                            auth: [2, 3, 4]
                             // subs: [
                             //     {
                             //         index: '',
@@ -193,7 +193,7 @@ export default {
                         {
                             index: 'Enterprise',
                             title: '企业管理',
-                            auth: [2]
+                            auth: [2, 3, 4]
                         },
                         // {
                         //     index: 'UserInfo',
@@ -203,17 +203,17 @@ export default {
                         {
                             index: 'DeviceType',
                             title: '设备类型',
-                            auth: [2]
+                            auth: [2, 3, 4]
                         },
                         {
                             index: 'FaultType',
                             title: '故障类型',
-                            auth: [2]
+                            auth: [2, 3, 4]
                         },
                         {
                             index: 'Authority',
                             title: '用户管理',
-                            auth: []
+                            auth: [2, 3, 4]
                         }
                     ]
                 }

@@ -35,7 +35,7 @@
                 @selection-change="handleSelectionChange"
             >
                 <!-- 复选框 -->
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <!-- <el-table-column type="selection" width="55" align="center"></el-table-column> -->
                 <!-- 序号 -->
                 <el-table-column type="index" label="序号" width="55" align="center"></el-table-column>
                 <!-- 行业名称 -->

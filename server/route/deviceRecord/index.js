@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 10:34:44
- * @LastEditTime: 2020-06-28 01:22:41
+ * @LastEditTime: 2020-06-29 16:16:27
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\deviceRecord\index.js
@@ -20,12 +20,12 @@ module.exports = app => {
     //企业用户能看到自己管理的设备
     router.get('/fetchAllDevice', authMiddle, async (req, res) => {
 
-        if (req.user.role === 1) {
+        if (req.user.role === 1 || req.user.role === 4) {
             console.log('超级');
             sql = "select d.*,dt.typename from device d inner join device_type dt on dt.id = d.device_type where d.is_deleted = 0"
         } else if (req.user.role === 2) {
             console.log('企业');
-            sql = `select * from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
+            sql = `select d.*,dt.typename from device d inner join device_type dt on dt.id = d.device_type where d.enterprise_id = ${req.user.enterprise_id} and d.is_deleted = 0`
         } else {
             console.log('普通');
             sql = `select ud.user_id uid, ud.device_id did, d.eq, d.device_name,d.created_time, d.device_type, d.device_supplier, d.address,d.device_description,d.is_on,d.status from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
@@ -55,7 +55,7 @@ module.exports = app => {
 
     //保存编辑内容
     router.post('/saveEdit', authMiddle, async (req, res) => {
-        assert(req.user.role < 2, 405, '您没有权限进行删除操作')
+        assert(req.user.role < 2, 405, '您没有权限进行编辑操作')
 
         let {
             id,
@@ -84,7 +84,7 @@ module.exports = app => {
 
     //获取设备配置信息
     router.get('/fetchSetting', authMiddle, async (req, res) => {
-        assert(req.user.role < 2, 405, '您没有权限进行删除操作')
+        assert(req.user.role < 2, 405, '您没有权限进行配置操作')
 
         console.log(123)
 
@@ -102,7 +102,7 @@ module.exports = app => {
 
     //保存配置更新
     router.post('/saveSetting', authMiddle, async (req, res) => {
-        assert(req.user.role < 2, 405, '您没有权限进行删除操作')
+        assert(req.user.role < 2, 405, '您没有权限进行更新操作')
 
         console.log(req.body)
         let eq = req.body.eq
@@ -128,6 +128,8 @@ module.exports = app => {
     //新增页面------------------------------------------------
     //获取新增页面基本信息
     router.get('/fetchCaseInfo', authMiddle, async (req, res) => {
+        assert(req.user.role < 2, 405, '您没有权限进行新增操作')
+
         let sql
         let results = {}
         sql = 'select * from device_type where is_deleted = 0'
@@ -244,7 +246,7 @@ module.exports = app => {
         let id = req.query.id
 
         console.log(id)
-        let sql = `select * from device where id = '${id}' and is_deleted = 0`
+        let sql = `select *,dt.typename from device d inner join device_type dt on dt.id = d.device_type where d.id = '${id}' and d.is_deleted = 0`
         let results = {}
         results.info = await connection(sql) //设备基本信息
         sql = `select * from file_store where device_id = '${id}' and type = 'img'`
@@ -269,7 +271,7 @@ module.exports = app => {
     //获取设备列表
     router.get('/fetchDevices', authMiddle, async (req, res) => {
 
-        if (req.user.role === 1) {
+        if (req.user.role === 1 || req.user.role === 4) {
             console.log('超级');
             sql = "select * from device where is_deleted = 0"
         } else if (req.user.role === 2) {

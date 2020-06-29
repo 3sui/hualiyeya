@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 16:21:18
- * @LastEditTime: 2020-06-24 16:45:01
+ * @LastEditTime: 2020-06-29 16:52:33
  * @LastEditors: Please set LastEditors
  * @Description: 设备监控
  * @FilePath: \vue-manage-system\src\components\view\EquipmentMonitoring.vue
@@ -140,7 +140,7 @@
                 ref="multipleTable"
                 header-cell-class-name="table-header"
             >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
+                <!-- <el-table-column type="selection" width="55" align="center"></el-table-column> -->
                 <el-table-column prop="id" label="序号" width="55" align="center" type="index"></el-table-column>
 
                 <el-table-column prop="eq" label="设备ID"></el-table-column>

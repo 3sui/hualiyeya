@@ -5,7 +5,7 @@ const {
 /*
  * @Author: your name
  * @Date: 2020-06-23 10:22:16
- * @LastEditTime: 2020-06-23 18:15:43
+ * @LastEditTime: 2020-06-29 16:30:45
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\upload\index.js
@@ -18,9 +18,15 @@ module.exports = app => {
     let router = app.router
     let uploadDir = '../../nodeServer/uploads'
     let connection = require('../../mysql/mysql')()
+    const authMiddle = require('../../middleware/auth')()
+
+    const assert = require('http-assert')
+
 
     // 检查文件的MD5
-    router.get('/check/file', (req, resp) => {
+    router.get('/check/file', authMiddle, (req, resp) => {
+        assert(req.user.role < 2, 405, '您没有权限进行上传操作')
+
         let query = req.query
         let fileName = query.fileName
         let fileMd5Value = query.fileMd5Value
@@ -75,10 +81,10 @@ module.exports = app => {
         mergeFiles(path.resolve(__dirname, uploadDir, md5), uploadDir, fileName, size)
         let sql = `insert into file_store (file_name, file_path, device_id, type) values ('${fileName}', '${url}', '${id}', 'word')`
         console.log(sql);
-        
+
         let result = await connection(sql)
         console.log(result, '-----------------------------------');
-        
+
         resp.send({
             stat: 1
         })

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-06-03 15:08:38
- * @LastEditTime: 2020-06-27 20:11:16
+ * @LastEditTime: 2020-06-29 14:22:12
  * @LastEditors: Please set LastEditors
  * @Description: 用户管理
  * @FilePath: \web\src\components\DataSettings\Authority.vue
@@ -116,7 +116,7 @@
         <!-- 新增弹出框 -->
         <el-dialog title="新增" :visible.sync="editVisible" width="30%" class="demo-ruleForm">
             <el-form ref="add" :rules="rules" :model="newUser" label-width="100px">
-                <el-form-item label="所属企业">
+                <el-form-item label="所属企业" prop="enterprise_id">
                     <el-select
                         v-model="newUser.enterprise_id"
                         placeholder="请选择所属企业"
@@ -172,7 +172,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="Cancel">取 消</el-button>
-                <el-button type="primary" @click="Confirm">确 定</el-button>
+                <el-button type="primary" @click="Confirm('add')">确 定</el-button>
             </span>
         </el-dialog>
 
@@ -338,7 +338,10 @@ export default {
                         (this.query.pageIndex - 1) * this.query.pageSize,
                         this.query.pageIndex * this.query.pageSize
                     );
-                    this.pageTotal = res.data.length;
+                    // this.$set(this.enterprises, 'enterprises', res.data.enterprises);
+                    this.enterprises = res.data.enterprise;
+                    this.roles = res.data.roles;
+                    this.pageTotal = res.data.tableData.length;
                     // window.console.log(res.data);
                 })
                 .catch(err => {});
@@ -401,32 +404,39 @@ export default {
         },
 
         //新增弹窗确定按钮
-        Confirm() {
-            axios({
-                method: 'post',
-                url: '/dataSettings/addNewUser',
-                data: this.newUser
-            })
-                .then(res => {
-                    if (res.data.success) {
-                        this.$message({
-                            type: 'success',
-                            message: res.data.message
-                        });
-                        this.addNewUserId = res.data.id;
-                        this.editVisible = false;
-                        this.getData();
-                    } else {
-                        this.$message({
-                            type: 'error',
-                            message: res.data.message
-                        });
-                    }
-                })
-                .then(res => {
-                    this.$refs.uploadAvatar.submit();
-                })
-                .catch(err => {});
+        Confirm(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    axios({
+                        method: 'post',
+                        url: '/dataSettings/addNewUser',
+                        data: this.newUser
+                    })
+                        .then(res => {
+                            if (res.data.success) {
+                                this.$message({
+                                    type: 'success',
+                                    message: res.data.message
+                                });
+                                this.addNewUserId = res.data.id;
+                                this.editVisible = false;
+                                this.getData();
+                            } else {
+                                this.$message({
+                                    type: 'error',
+                                    message: res.data.message
+                                });
+                            }
+                        })
+                        .then(res => {
+                            this.$refs.uploadAvatar.submit();
+                        })
+                        .catch(err => {});
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
 
         //分配设备按钮

@@ -183,80 +183,22 @@ export default {
         return {
             message: 'first',
             showHeader: false,
-            unread: [
-                {
-                    date: '2018-04-19 20:00:00',
-                    title: '设备1温度过高'
-                },
-                {
-                    date: '2018-04-19 21:00:00',
-                    title: '设备2温度过高'
-                },
-                {
-                    date: '2018-04-19 21:00:00',
-                    title: '设备3温度过高'
-                },
-                {
-                    date: '2018-04-19 21:00:00',
-                    title: '设备4温度过高'
-                }
-            ],
-            read: [
-                {
-                    date: '2018-04-19 20:00:00',
-                    title: '设备1温度过高'
-                }
-            ],
-            recycle: [
-                {
-                    date: '2018-04-19 20:00:00',
-                    title: '设备1温度过高'
-                }
-            ],
+            unread: [],
+            read: [],
+            recycle: [],
             name: localStorage.getItem('ms_username'),
 
             options: {
-                type: 'line',
+                type: 'bar',
                 title: {
-                    text: '最近一月设备报警数'
+                    text: '维修工维修数'
                 },
-                xRorate: 25,
-                labels: [
-                    '01',
-                    '02',
-                    '03',
-                    '04',
-                    '05',
-                    '06',
-                    '07',
-                    '08',
-                    '09',
-                    '10',
-                    '11',
-                    '12',
-                    '13',
-                    '14',
-                    '15',
-                    '16',
-                    '17',
-                    '18',
-                    '19',
-                    '20',
-                    '21',
-                    '22',
-                    '23',
-                    '24',
-                    '25',
-                    '26',
-                    '27',
-                    '28',
-                    '29',
-                    '30'
-                ],
+                // xRorate: 25,
+                labels: [0],
                 datasets: [
                     {
-                        label: '设备',
-                        data: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2]
+                        label: '设备数',
+                        data: [0]
                     }
                 ]
             },
@@ -376,6 +318,10 @@ export default {
                         this.run = res.data.run;
                         this.bed = res.data.bed;
                         this.deviceNum = res.data.deviceNum;
+                        this.$set(this.options, 'labels', res.data.rep_name);
+                        this.$set(this.options.datasets[0], 'data', res.data.rep_num);
+                        // this.options.labels = res.data.rep_name
+                        // this.options.datasets.data = res.data.rep_num
                     }
                 })
                 .catch(err => {

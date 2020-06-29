@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-01 11:31:14
- * @LastEditTime: 2020-06-23 18:30:57
+ * @LastEditTime: 2020-06-29 15:59:03
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\server\route\map\index.js
@@ -16,7 +16,7 @@ module.exports = app => {
     //获取设备数量
     router.get('/fetchDeviceNum', authMiddle, async (req, res) => {
         let sql
-        if (req.user.role === 1) {
+        if (req.user.role === 1 || req.user.role === 4) {
             console.log('超级');
             sql = "select COUNT(*) from device where is_deleted = 0"
         } else if (req.user.role === 2) {
@@ -41,7 +41,7 @@ module.exports = app => {
     //获取所有设备数据
     router.get('/fetchAllDevice', authMiddle, async (req, res) => {
         let sql
-        if (req.user.role === 1) {
+        if (req.user.role === 1 || req.user.role === 4) {
             console.log('超级');
             sql = "select d.*,u.username from device d left outer join user_info u on d.principal = u.id where d.is_deleted = 0"
         } else if (req.user.role === 2) {

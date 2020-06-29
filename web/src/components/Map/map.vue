@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-04-28 16:25:21
- * @LastEditTime: 2020-06-27 18:39:09
+ * @LastEditTime: 2020-06-29 16:02:19
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \远程监控平台\vue-manage-system\src\components\page\map.vue
@@ -29,7 +29,7 @@
                             <bml-marker-clusterer :averageCenter="true">
                                 <div v-for="(marker, i) of allDevice" :key="i">
                                     <bm-marker
-                                        :icon="{url: marker.status == '正常'? require('../../../public/bposition.png') : require('../../../public/rposition.png'), size: {width: 60, height: 60}}"
+                                        :icon="{url: marker.status == '正常'? require('../../../public/bposition.png') :  marker.status == '报警' ? require('../../../public/rposition.png') : require('../../../public/yposition.png'), size: {width: 60, height: 60}}"
                                         :dragging="true"
                                         animation="BMAP_ANIMATION_BOUNCE"
                                         :position="{lng: marker.lng, lat: marker.lat}"
@@ -45,7 +45,7 @@
                                             <p>公司: {{marker.device_supplier}}</p>
                                             <p>地址: {{marker.address}}</p>
                                             <p>设备ID: {{marker.eq}}</p>
-                                            <p>设备状态: {{marker.is_on?'开机':'关机'}}</p>
+                                            <p>设备状态: {{marker.is_on == '0'?'关机':'开机'}}</p>
                                             <p>设备报警: {{marker.status}}</p>
                                             <el-button
                                                 class="my-2"
@@ -326,7 +326,7 @@ export default {
     height: 90px;
     background: red;
 }
-.device_info p{
+.device_info p {
     line-height: 40px;
 }
 </style>

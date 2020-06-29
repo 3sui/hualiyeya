@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-07 13:46:11
- * @LastEditTime: 2020-06-28 03:03:49
+ * @LastEditTime: 2020-06-29 15:16:02
  * @LastEditors: Please set LastEditors
  * @Description: 报警记录
  * @FilePath: \vue-manage-system\src\components\view\AlarmRecord.vue
@@ -73,7 +73,7 @@
                     </el-col>
                 </el-row>
                 <el-table
-                    :data="tableData"
+                    :data="showData"
                     border
                     class="table"
                     ref="multipleTable"
@@ -82,8 +82,8 @@
                 >
                     <!-- <el-table-column type="selection" width="55" align="center"></el-table-column> -->
                     <el-table-column prop="id" label="序号" width="55" align="center" type="index"></el-table-column>
-                    <el-table-column prop="device_eq" label="设备ID"></el-table-column>
-                    <el-table-column prop="device_type" label="设备种类" width="55"></el-table-column>
+                    <el-table-column prop="device_eq" label="设备ID" width="85"></el-table-column>
+                    <el-table-column prop="typename" label="设备种类" width="55"></el-table-column>
                     <el-table-column prop="device_name" label="设备名称" width="120"></el-table-column>
 
                     <el-table-column prop="cp_name" label="测点名称"></el-table-column>
@@ -236,16 +236,15 @@ export default {
             axios({
                 method: 'get',
                 url: '/maintain/fetchAlarmRecord',
-                params: { offset: this.query.pageIndex }
             }).then(res => {
                 window.console.log(res);
                 if (res.data.success) {
                     this.tableData = res.data.data;
-                    // this.showData = this.tableData.slice(
-                    //     (this.query.pageIndex - 1) * this.query.pageSize,
-                    //     this.query.pageIndex * this.query.pageSize
-                    // );
-                    this.pageTotal = res.data.pageTotal;
+                    this.showData = this.tableData.slice(
+                        (this.query.pageIndex - 1) * this.query.pageSize,
+                        this.query.pageIndex * this.query.pageSize
+                    );
+                    this.pageTotal = this.tableData.length;
                     window.console.log(res.data);
                 } else {
                     window.console.log('服务器错误');

@@ -13,13 +13,13 @@
                         type="password"
                         placeholder="password"
                         v-model="param.password"
-                        @keyup.enter.native="submitForm()"
+                        @keyup.enter.native="submitForm('login')"
                     >
                         <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
                     </el-input>
                 </el-form-item>
                 <div class="login-btn">
-                    <el-button type="primary" @click="submitForm">登录</el-button>
+                    <el-button type="primary" @click="submitForm('login')">登录</el-button>
                 </div>
                 <!-- <p class="login-tips">Tips : 用户名和密码随便填。</p> -->
             </el-form>
@@ -42,27 +42,34 @@ export default {
         };
     },
     methods: {
-        submitForm() {
-            axios({
-                method: 'post',
-                url: '/login',
-                data: this.param
-            })
-                .then(res => {
-                    if (res.data.success) {
-                        this.$message.success('登录成功');
-                        localStorage.ms_username = res.data.ms_username;
-                        localStorage.token = res.data.token;
-                        localStorage.role = res.data.role;
-                        localStorage.avatar = res.data.avatar;
+        submitForm(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    axios({
+                        method: 'post',
+                        url: '/login',
+                        data: this.param
+                    })
+                        .then(res => {
+                            if (res.data.success) {
+                                this.$message.success('登录成功');
+                                localStorage.ms_username = res.data.ms_username;
+                                localStorage.token = res.data.token;
+                                localStorage.role = res.data.role;
+                                localStorage.avatar = res.data.avatar;
 
-                        this.$router.push('/');
-                        console.log(res.data);
-                    }
-                })
-                .catch(err => {
-                    window.console.log(err);
-                });
+                                this.$router.push('/');
+                                console.log(res.data);
+                            }
+                        })
+                        .catch(err => {
+                            this.$message.success(err);
+                        });
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         }
     }
 };

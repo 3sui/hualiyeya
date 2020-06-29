@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-18 11:10:04
- * @LastEditTime: 2020-06-28 02:28:02
+ * @LastEditTime: 2020-06-29 15:58:17
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\home\index.js
@@ -18,15 +18,31 @@ module.exports = app => {
     router.get('/fetchDeviceInfo', authMiddle, async (req, res) => {
         let sql
         let results = {
-            success: true
+            success: true,
+            rep_name: [],
+            rep_num: []
         }
-        if (req.user.role == 1) {
+        if (req.user.role == 1 || req.user.role == 4) {
             console.log('超级');
+            sql = `select ui.nickname from user_role ur inner join user_info ui on ur.user_id = ui.id where ur.role_id = 4 and ui.is_deleted = 0`
+            let r_person = await connection(sql)
+            console.log(r_person);
+
+            for (let i = 0; i < r_person.length; i++) {
+                sql = `select * from repair where repair_person = '${r_person[i].nickname}' and is_deleted = 0`
+                console.log(r_person[i].nickname);
+
+                console.log(sql);
+
+                results.rep_name.push(r_person[i].nickname)
+                results.rep_num.push((await connection(sql)).length)
+            }
             //查找维修记录的数目
+
             sql = `select * from repair where is_deleted = 0`
             let a = await connection(sql)
             results.repair = a.length
-            console.log(results.repair);
+            // console.log(results.repair);
 
             //查找已读和未读的报警信息
             sql = `select message title,created_time date,id from alarm where is_deleted = 0 and is_handled = 0 order by ts desc`
@@ -43,7 +59,7 @@ module.exports = app => {
             sql = `select * from device where status = '报警' and is_deleted = 0`
             a = await connection(sql)
             results.bed = a.length
-            console.log(results);
+            // console.log(results);
 
             sql = "select * from device where is_deleted = 0"
             a = await connection(sql)

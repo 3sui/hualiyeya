@@ -13,6 +13,8 @@ module.exports = app => {
 
     //获取维修表信息
     router.get('/Repair', authMiddle, async (req, res) => {
+        assert(req.user.role < 2, 405, '您没有权限查看维修记录')
+
         // let sql = "select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device_type.typename from repair,enterprise,device,device_type where (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id order by repair.created_time Desc"
         let sql = "select * from repair r where r.is_deleted = 0"
 
@@ -22,18 +24,21 @@ module.exports = app => {
     })
     //获取维修设备详情
     router.get('/RepairInfo', authMiddle, async (req, res) => {
+        assert(req.user.role < 2, 405, '您没有权限进行维修详情查看')
 
         let eq = req.query.eq
         // let sql = `select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device.device_supplier,device.device_model,device.device_description,device.address,device.principal,device_type.typename from repair,enterprise,device,device_type where repair.id=${id} and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id `
         let sql = `select * from repair r where device_eq = '${eq}'`
         console.log(sql);
-        
+
         let results = await connection(sql)
 
         res.send(results)
     })
     //添加维修记录表信息
     router.post('/AddRepair', authMiddle, async (req, res) => {
+        assert(req.user.role !== 4, 405, '您没有权限进行新增操作')
+
         let query = req.body;
 
         console.log(query)
@@ -45,6 +50,8 @@ module.exports = app => {
 
     //修改维修表信息
     router.post('/UpdateRepair', authMiddle, async (req, res) => {
+        assert(req.user.role < 2, 405, '您没有权限进行修改操作')
+
         let id = req.body.id;
         let query = req.body;
         let results = await connection(sql, query)
@@ -57,7 +64,9 @@ module.exports = app => {
 
 
     //单个删除维修表信息
-    router.get('/DeleteRepair', async (req, res) => {
+    router.get('/DeleteRepair', authMiddle, async (req, res) => {
+        assert(req.user.role < 2, 405, '您没有权限进行删除操作')
+
         let id = req.query.id;
         let sql = `update repair set is_deleted=1 where id in (${id}) `
         await connection(sql)
@@ -83,6 +92,8 @@ module.exports = app => {
     })
     //单个删除行业表信息
     router.get('/DeleteRepair', authMiddle, async (req, res) => {
+        assert(req.user.role < 2, 405, '您没有权限进行删除操作')
+
         let id = req.query.id;
         let sql = "update industry set is_deleted=1 where id=" + id
         let results = await connection(sql)

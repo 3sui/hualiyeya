@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 10:56:10
- * @LastEditTime: 2020-06-28 01:27:02
+ * @LastEditTime: 2020-06-29 09:11:38
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\ProductDetails.vue
@@ -77,7 +77,7 @@
                         <p>工作状态: {{tableData.info.status}}</p>
                         <p>设备名称: {{tableData.info.device_name}}</p>
                         <p>型号描述: {{tableData.info.device_description}}</p>
-                        <p>设备种类: {{tableData.info.device_type}}</p>
+                        <p>设备种类: {{tableData.info.typename}}</p>
                         <p>创建人: {{tableData.info.created_by}}</p>
                         <p>创建日期: {{tableData.info.created_time}}</p>
                     </div>
@@ -92,7 +92,16 @@
                                 style="width: 100px; height: 100px"
                                 :src="tableData.imgList[0]?(axios.defaults.baseURL.slice(0, -4) + tableData.imgList[0].file_path.split('.').shift()):''"
                                 :preview-src-list="srcList"
-                            ></el-image>
+                            >
+                                <div
+                                    slot="error"
+                                    class="image-slot"
+                                    style="width: 100px; height: 100px;font-size: 30px;background-color: #f5f7fa;color: #909399;text-align: center;line-height: 100px"
+                                >
+                                    <i class="el-icon-picture-outline"></i>
+                                    <!-- <i>您没有上传图片</i> -->
+                                </div>
+                            </el-image>
                         </div>
                     </div>
                 </el-col>

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-28 01:57:03
+ * @LastEditTime: 2020-06-29 09:14:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -255,10 +255,10 @@
                     <el-form-item label="量程下限值">
                         <el-input v-model="item.down"></el-input>
                     </el-form-item>
-                    <el-form-item label="上限值">
+                    <el-form-item label="报警上限值">
                         <el-input v-model="item.limit_up"></el-input>
                     </el-form-item>
-                    <el-form-item label="下限值">
+                    <el-form-item label="报警下限值">
                         <el-input v-model="item.limit_down"></el-input>
                     </el-form-item>
                 </div>

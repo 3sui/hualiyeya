@@ -452,7 +452,7 @@ module.exports = app => {
             eid
         } = req.query
         let results = {}
-        let sql = 'select * from user_device where user_id =' + id
+        let sql = `select * from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${id} and d.is_deleted = 0`
         results.with = await connection(sql)
         let oldId = []
         results.with.forEach(item => {
