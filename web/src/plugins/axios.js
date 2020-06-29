@@ -18,8 +18,8 @@ axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  // baseURL: 'http://localhost:8085/api',
-  baseURL: 'http://58.216.47.108:8890/api',
+  baseURL: 'http://localhost:8085/api',
+  // baseURL: 'http://58.216.47.108:8890/api',
 
   // baseURL: process.env.baseURL || process.env.apiUrl || "",
   timeout: 60 * 1000, // Timeout

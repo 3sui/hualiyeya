@@ -18,9 +18,9 @@
             <!-- </div>
 
             <div class="container">-->
-            <el-row :gutter="20">
-                <el-col :span="6" v-for="(industry,index) in industryTop" :key="index">
-                    <el-card shadow="hover" :body-style="{padding: '0px'}" v-if="index<4">
+            <el-row :gutter="20" type="flex">
+                <el-col  v-for="(industry,index) in industryTop" :key="index" v-if="index<5" :offset="index===0?0:1"   >
+                    <!-- <el-card shadow="hover" :body-style="{padding: '0px'}" v-if="index<5">
                         <div class="grid-content grid-con">
                             <div
                                 class="card-title"
@@ -30,14 +30,14 @@
                                 class="grid-con-icon"
                                 :class="backgroundstyle[index]"
                             >{{industry.sort}}</i>-->
-                            <div class="grid-cont-right">
+                            <!-- <div class="grid-cont-right"> -->
                                 <!-- <el-row>
                                     <div
                                         class="card-title"
                                         :class="style[index]"
                                     >{{industry.industryname}}</div>
                                 </el-row>-->
-                                <el-row :gutter="24">
+                                <!-- <el-row :gutter="24">
                                     <el-col :span="12">
                                         <div
                                             :class="style[index]"
@@ -55,6 +55,35 @@
                                 </el-row>
                             </div>
                         </div>
+                    </el-card>  -->
+                    <el-card
+                        shadow="hover"
+                        :body-style="{padding: '0px'}"
+                        :class="backgroundstyle[index]"
+                    
+                        class="elcard"
+                    >
+                        <el-row :gutter="20">
+                            <el-col :span="6" :offset="2">
+                                <span class="grid-content">
+                                    <i :class="iconlist[index]"></i>
+                                </span>
+                            </el-col>
+                            <el-col :span="7" :offset="1">
+                                <span class="grid-cont-right">
+                                    <div class="grid-num">{{industry.deviceNum}}</div>
+                                    <div class="grid_dev">设备数</div>
+                                </span>
+                            </el-col>
+                             <el-col :span="7" :offset="1">
+                                <span class="grid-cont-right">
+                                    <div class="grid-num">{{industry.enterpriseNum}}</div>
+                                    <div class="grid_dev">企业数</div>
+                                </span>
+                            </el-col>
+                        </el-row>
+
+                        <div class="card-title">{{industry.industryname}}</div>
                     </el-card>
                 </el-col>
             </el-row>
@@ -173,11 +202,12 @@ export default {
             //     sort: 8
             // }
             // ],
-            style: ['s1', 's2', 's3', 's4'],
-            backgroundstyle: ['b1', 'b2', 'b3', 'b4'],
+            // style: ['s1', 's2', 's3', 's4'],
+            backgroundstyle: ['b1', 'b2', 'b3', 'b4', 'b5'],
             industrylist: [],
             devicenumlist: [],
-            enterprisenumlist: []
+            enterprisenumlist: [],
+            iconlist: ['el-icon-s-platform', 'el-icon-box', 'el-icon-suitcase', 'el-icon-data-analysis', 'el-icon-pie-chart']
         };
     },
     created() {
@@ -457,12 +487,27 @@ export default {
                                         offset: 1,
                                         color: colors[0].end
                                     }
-                                ])
+                                ]),
+                              
+								// label: {
+								// 	show: true, //开启显示
+								// 	position: 'left', //在上方显示
+								// 	textStyle: { //数值样式
+								// 		color: 'black',
+								// 		fontSize: 16
+								// 	}
+								// }
+					
+
                             }
                         },
                         label: {
                             normal: {
-                                show: false
+                                show: true,
+                                	position: 'left', //在上方显示
+									textStyle: { //数值样式
+										color: 'black',
+										fontSize: 12}
                             }
                         },
                         data: lastYearData,
@@ -503,7 +548,11 @@ export default {
                         },
                         label: {
                             normal: {
-                                show: false
+                                show: true,
+                                position: 'right', //在上方显示
+									textStyle: { //数值样式
+										color: 'black',
+										fontSize: 12}
                             }
                         },
                         data: thisYearData,
@@ -541,14 +590,15 @@ export default {
 </script>
 
 <style scoped>
-.el-row {
+/* .el-row {
     margin-bottom: 20px;
-}
+} */
 
 .grid-content {
-    display: flex;
-    align-items: center;
-    height: 120px;
+    height: 70px;
+    line-height: 70px;
+    font-size: 50px;
+    color: white;
 }
 
 .grid-cont-right {
@@ -559,15 +609,29 @@ export default {
     height: 120px;
 }
 
+.elcard {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'open sans';
+    border-radius: 10px;
+    padding-top:10px ;
+}
 .grid-num {
-    font-size: 50px;
-    font-weight: bold;
+    color: white;
+    font-size: 30px;
+    font-weight: 500;
     /* margin-bottom: 10px; */
-    height: 90px;
-    line-height: 90px;
+    height: 50px;
+    line-height: 50px;
+    font-family: 'open sans';
+    text-align: left;
 }
 .grid_dev {
-    font-size: 18px;
+    font-size: 14px;
+    height: 20px;
+    line-height: 20px;
+    color: white;
+    text-align: left;
+    font-weight: 500;
 }
 
 .grid-con-icon {
@@ -578,18 +642,21 @@ export default {
     line-height: 120px;
     color: #fff;
 }
-
 .card-title {
-    text-align: center;
+    text-align: left;
     font-size: 20px;
-    font-weight: bold;
+    /* font-weight: bold; */
     color: white;
-    letter-spacing: 0.5em;
-    width: 50%;
-    line-height: 120px;
-    height: 120px;
-    background-color: #f0f0f0;
+    letter-spacing: 0.2em;
+    /* width: 50%; */
+    line-height: 50px;
+    height: 50px;
+    /* padding-left: 25px; */
+    font-family: 'open sans';
+    text-align: center;
+    /* background-color: #f0f0f0; */
 }
+
 .s1 {
     color: #eb6379;
 }
@@ -605,21 +672,28 @@ export default {
 .s4 {
     color: #69d3ab;
 }
-
 .b1 {
-    background-color: #eb6379;
-}
-
-.b3 {
-    background-color: #eea03c;
+    /* background-color: #13aaf9; */
+    background-image: linear-gradient(90deg, #13aaee, #13aaff);
 }
 
 .b2 {
-    background-color: darkturquoise;
+    /* background-color: #968cec; */
+    background-image: linear-gradient(90deg, #968cdd, #968cee);
 }
 
 .b4 {
-    background-color: #69d3ab;
+    /* background-color: darkturquoise; */
+    background-image: linear-gradient(90deg, #00cedd, #00ceee);
+}
+
+.b3 {
+    /* background-color: #f5a1e2; */
+    background-image: linear-gradient(90deg, #f5a1dd, #f5a1ee);
+}
+.b5 {
+    /* background-color: #f8bb90; */
+    background-image: linear-gradient(90deg, #f8bb88, #f8bb99);
 }
 .container {
     padding-top: 15px;

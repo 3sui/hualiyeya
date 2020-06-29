@@ -30,7 +30,7 @@ require('./route/dataSettings/index')(app)
 require('./route/analysis/index')(app)
 require('./route/product/repair')(app)
 require('./route/maintain/index')(app)
-require('./route/monitor/index')(app)
+// require('./route/monitor/index')(app)
 require('./route/home/index')(app)
 
 require('./route/upload/index')(app)
