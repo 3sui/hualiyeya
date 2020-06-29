@@ -115,6 +115,7 @@
       <van-field
         readonly
         clickable
+        default-date
         required
         name="calendar"
         :value="query.date"
@@ -176,7 +177,7 @@
        
       </div> 
       </van-form>
-      <div class="sub">
+      <div class="back">
        
         <van-button round block type="default"  @click="back">返回</van-button>
       </div>
@@ -515,8 +516,14 @@ export default {
   margin: 1rem 0;
 }
 
-.sub {
+.editrepairrecord .sub {
   width: 80%;
-  margin: 1rem auto;
+  margin:  auto
+ 
+}
+
+.back{
+   width: 80%;
+  margin: 1rem auto 2rem auto;
 }
 </style>

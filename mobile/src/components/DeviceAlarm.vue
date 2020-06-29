@@ -1,16 +1,16 @@
 <template>
   <div class="devicealarm">
-    <div class="header">
-      <van-row>
-        <van-col span="12">
+    <div class="header1">
+      <!-- <van-row>
+        <van-col span="12"> -->
           <span class="title">报警记录</span>
-        </van-col>
+        <!-- </van-col>
         <van-col span="3" offset="9">
-          <span class="alarm">
+          <span class="alarm"> -->
             <!-- <van-icon name="bell" dot /> -->
-          </span>
+          <!-- </span>
         </van-col>
-      </van-row>
+      </van-row> -->
     </div>
 
     <van-search
@@ -26,7 +26,7 @@
    
 
     <div class="record_container">
-      <div class="record_item" v-for="record in recordlist" @click="handel(record.id)">
+      <div class="record_item" v-for="record in recordlist" @click="handel(record.id)" :key='record'>
         <div class="item-title">
           <van-row :gutter="20">
             <van-col span="2">
@@ -44,13 +44,13 @@
         </div>
         <div class="item-content">
           <van-row :gutter="20">
-            <van-col span="16">
+            <van-col span="18">
               <p>设备编号：{{record.device_eq}}</p>
               <p>测点名称：{{record.cp_name}}</p>
-              <p>测点值：{{record.cp_value}}</p>
-              <p>报警时间：{{record.created_time}}</p>
+              <p>测点值：{{Number(record.cp_value).toFixed(1)}}</p>
+              <p>报警时间：{{getDate(record.ts)}}</p>
             </van-col>
-            <van-col span="8">
+            <van-col span="6">
               <div
                 class="mark"
                 :class="record.is_handled==='1'?'success':'danger'"
@@ -60,7 +60,7 @@
         </div>
       </div>
     </div>
-  <van-empty v-if="recordlist.length===0?true:false" description="未获取报警记录信息" />
+  <van-empty v-if="recordlist.length!==0?false:true" description="未获取报警记录信息" />
     <van-pagination
       v-model="currentPage"
       :total-items="totalitems"
@@ -120,6 +120,7 @@ import {
   Pagination,
   Empty
 } from "vant";
+import Timefomat from '../time/time';
 export default {
   name: "DeviceAlarm",
   components: {
@@ -143,12 +144,15 @@ export default {
       list: [],
       recordlist: [],
       currentPage: 0,
-      totalitems: 0
+      totalitems: 0,
+    
     };
   },
   watch:{
-    $$route(){
-      getCurrentPage()
+    $route(){
+      this.getCurrentPage()
+      this.getCount();
+      this.getData();
     }
   },
 
@@ -170,11 +174,17 @@ export default {
         }
       });
     },
+    //时间转化
+    getDate(date){
+           
+       return Timefomat.Todate(Number(date)) 
+    },
+    
 
     //获取当前页面
     getCurrentPage(){
-     console.log("page" in this.$route.query)
-    this.currentPage = "page" in this.$route.query == true ? Number(this.$route.query.page) : 1;
+    console.log("page" in this.$route.query)
+    this.currentPage = "page" in this.$route.query ? Number(this.$route.query.page) : 1;
     console.log(this.currentPage);
     
     },
@@ -182,7 +192,7 @@ export default {
     //获取报警总数
 
     getCount() {
-      this.$axios.get("/mobile/AlarmRecordCount").then(res => {
+         this.$axios.get("/mobile/AlarmRecordCount").then(res => {
         // console.log(res.data);
         if (res.data !== null || res.data.length > 0) {
           this.totalitems = res.data[0].count;
@@ -192,9 +202,13 @@ export default {
     //获取报警信息
     getData() {
       let startid = (this.currentPage - 1) * 10;
+      let data={
+        startid: startid,
+        // keyword:this.vlaue
+      }
 
       this.$axios
-        .post("/mobile/AlarmRecord", { startid: startid })
+        .post("/mobile/AlarmRecord",data)
         .then(res => {
           // console.log(res.data);
           if (res.data !== null || res.data.length > 0) {
@@ -205,7 +219,7 @@ export default {
           this.list.forEach(element => {
             let timebefore = "";
             let datenow = new Date().getTime();
-            let datealarm = new Date(element.created_time).getTime();
+            let datealarm = Number(element.ts)
             // console.log(datenow)
             // console.log(datealarm)
             let minites = parseInt((datenow - datealarm) / 60000);
@@ -232,7 +246,10 @@ export default {
         return (
           array.device_name.match(val) ||
           array.device_eq.match(val) ||
-          array.created_time.match(val)
+          this.getDate(array.ts).match(val) 
+
+         
+
         );
       });
     },
@@ -240,6 +257,7 @@ export default {
     //取消
     onCancel() {
       this.value = "";
+      this.currentPage=1
       this.recordlist = [];
       this.getData();
       // location.reload()
@@ -266,7 +284,7 @@ export default {
   height: 95vh;
   overflow-y: auto;
 }
-.header {
+.devicealarm .header1 {
   background-color: white;
   height: 8vh;
   /* margin-bottom: 0.5vh; */
@@ -385,4 +403,12 @@ export default {
 .devicealarm .van-empty{
 height: 69%;
 }
+
+.van-pagination{
+  padding: 0 1rem;
+  
+}
+/* .van-pagination__item{
+  border: 1px solid #f0f0f0;
+} */
 </style>

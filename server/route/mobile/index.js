@@ -11,7 +11,7 @@ module.exports = app => {
 
     //获取维修表信息
     router.get('/Repair', authMiddle, async (req, res) => {
-
+      
         let sql = '';
         if (req.user.role === 4) {
             sql = `select * from repair where repair_person='${req.user.nickname}'and is_deleted = 0   order by repair.date Desc`
@@ -19,9 +19,11 @@ module.exports = app => {
             //     sql = `select repair.*,device.eq,device.device_name from repair,device where device.enterprise_id= ${req.user.enterprise_id} and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id order by repair.date Desc`
             // } else if (req.user.role === 3) {
             //     sql = `select repair.*,device.eq,device.device_name from repair,device,user_device where user_device.user_id= ${req.user.id}  and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id  and user_device.device_id=device.id order by repair.date Desc`
-        } else (
+        } else if (req.user.role === 1) {
             sql = `select * from repair where is_deleted = 0  order by date Desc`
-        )
+        }else{
+            sql = `select r.*,d.enterprise_id from repair r  left outer join device d on r.device_eq=d.eq  where r.is_deleted = 0 and  d.enterprise_id=${req.user.enterprise_id} order by r.date Desc`
+        }
         console.log(sql);
 
         let results = await connection(sql)
@@ -50,7 +52,7 @@ module.exports = app => {
     })
     //添加维修记录表信息
     router.post('/AddRepair', authMiddle, async (req, res) => {
-        // assert(req.user.role == 1 || req.user.role == 4, 403, '您无权访问')
+        assert( req.user.role == 4, 403, '您无权访问')
         let query = req.body;
 
         console.log(query)
@@ -250,10 +252,36 @@ module.exports = app => {
 
 
     //获取企业报警信息
+    // router.post('/AlarmRecord', authMiddle, async (req, res) => {
+    //     let startid=req.body.startid;
+    //     let keyword=req.body.keyword;
+     
+    //     let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0 and a.device_eq like '%${keyword}%' or d.device_name like '%${keyword}%'  order by a.ts desc limit ${startid},10`
+    //     console.log(sql);
+    //     let results = await connection(sql)
+    //     console.log(results)
+    //     if (results) {
+    //         res.send(results)
+    //     }
+    // })
+//获取设备报警总数
+    // router.post('/AlarmRecordCount', authMiddle, async (req, res) => {
+    //     let keyword = req.body.keyword;
+    //     let sql = `select count(a.id) count  from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0 and a.device_eq like '%${keyword}%' or d.device_name like '%${keyword}%' order by a.ts desc`
+    //     console.log(sql);
+    //     let results = await connection(sql)
+    //     console.log(results)
+    //     if (results) {
+    //         res.send(results)
+    //     }
+    // })
+
+       //获取企业报警信息
     router.post('/AlarmRecord', authMiddle, async (req, res) => {
         let startid=req.body.startid;
-        // console.log(enterprise_id);
-        let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0  order by a.created_time desc limit ${startid},10`
+        // let keyword=req.body.keyword;
+
+        let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0  order by a.ts desc limit ${startid},10`
         console.log(sql);
         let results = await connection(sql)
         console.log(results)
@@ -261,11 +289,11 @@ module.exports = app => {
             res.send(results)
         }
     })
-//获取设备报警总数
+
+    //获取设备报警总数
     router.get('/AlarmRecordCount', authMiddle, async (req, res) => {
-        // let enterprise_id = req.user.enterprise_id;
-        // console.log(enterprise_id);
-        let sql = `select count(a.id) count  from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0  order by a.created_time desc`
+        // let keyword = req.body.keyword;
+        let sql = `select count(a.id) count  from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0  order by a.ts desc`
         console.log(sql);
         let results = await connection(sql)
         console.log(results)

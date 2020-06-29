@@ -15,7 +15,8 @@ module.exports = app => {
     router.get('/EnterprisesByIndustry', authMiddle, async (req, res) => {
         assert(req.user.role < 2, 403, '您无权访问')
 
-        let sql = `select device.eq,enterprise.enterprise_name,industry.industry_name from device,enterprise,industry where (device.is_deleted = 0 or device.is_deleted is NULL)and (device.enterprise_id=enterprise.id) and (enterprise.industry_id=industry.id)`
+        // let sql = `select device.eq,enterprise.enterprise_name,industry.industry_name from device,enterprise,industry where (device.is_deleted = 0 or device.is_deleted is NULL)and (device.enterprise_id=enterprise.id) and (enterprise.industry_id=industry.id)`
+        let sql = `select ie.*,d.eq from (select i.industry_name,e.id from (select distinct industry_name,id from industry where is_deleted=0 or is_deleted='0') i left outer join (select * from enterprise where is_deleted=0 or is_deleted='0')e on i.id=e.industry_id) ie left join (select * from device where is_deleted=0 or is_deleted='0') d on ie.id=d.enterprise_id `
         
         let results = await connection(sql)
         var resultlist = results
@@ -44,23 +45,41 @@ module.exports = app => {
 
             //获得设备数
             industryContainer[nameItem].forEach(item => {
+
                 //设备数累加
-                deviceNum++
+                if(item.eq!==null){
+                      deviceNum++
+                }
+              
             })
 
             //获得企业数
             var enterpriseContainer = {};
 
             industryContainer[nameItem].forEach(item => {
+                console.log(">>>>>>>>>>");
+                console.log(item);
+                
+                
 
-                enterpriseContainer[item.enterprise_name] = enterpriseContainer[item.enterprise_name] || [];
+                enterpriseContainer[item.id] = enterpriseContainer[item.id] || [];
                 // console.log(enterpriseContainer)
                 //当逻辑或||时，找到为true的分项就停止处理，并返回该分项的值，否则执行完，并返回最后分项的值。
-                enterpriseContainer[item.enterprise_name].push(item);
+                enterpriseContainer[item.id].push(item);
             })
             // console.log(enterpriseContainer)
             var enterprise_id = Object.keys(enterpriseContainer);
-            enterpriseNum = enterprise_id.length
+            console.log(enterprise_id);
+            var enterprise_list = enterprise_id.filter(function (s) {
+                if(s!=='null')
+                return s; // 注：IE9(不包含IE9)以下的版本没有trim()方法
+            });
+            console.log(enterprise_list);
+            
+            
+            enterpriseNum = enterprise_list.length
+            console.log(enterpriseNum);
+            
             industryTotal.push({
                 'industryname': nameItem,
                 'deviceNum': deviceNum,
@@ -69,8 +88,15 @@ module.exports = app => {
         })
         //对json进行降序排序函数
         var colId = "deviceNum"
+        var entId="enterpriseNum"
         var desc = function (x, y) {
-            return (x[colId] < y[colId]) ? 1 : -1
+            if (x[colId] === y[colId]){
+                return (x[entId] < y[entId]? 1:-1)
+
+            }else{
+                return (x[colId] < y[colId]) ? 1 : -1
+            }
+            
         }
         //降序排序
         industryTotal.sort(desc);
@@ -90,7 +116,8 @@ module.exports = app => {
     router.get('/DeviceByType', authMiddle, async (req, res) => {
         assert(req.user.role < 2, 403, '您无权访问')
 
-        let sql = `select device.eq,device_type.typename from device,device_type where (device.is_deleted = 0 or device.is_deleted is NULL)and (device.device_type=device_type.id)  `
+        // let sql = `select device.eq,device_type.typename from device,device_type where (device.is_deleted = 0 or device.is_deleted is NULL)and (device.device_type=device_type.id)  `
+        let sql =`select dt.typename ,dt.id,d.eq from (select distinct typename,id from device_type where is_deleted=0)  dt  left outer join  (select * from device where is_deleted = 0)  d  on dt.id=d.device_type `
         let results = await connection(sql)
         if (results) {
 
@@ -113,7 +140,14 @@ module.exports = app => {
             TypeName.forEach(nameItem => {
                 let count = 0;
                 nameContainer[nameItem].forEach(item => {
-                    count++
+                    // console.log(">>>>>>>>>>>>>>>>");
+                    
+                    // console.log(item);
+                    if(item.eq!==null){
+                         count++
+                    }
+                    
+                   
                 });
                 deviceTypeTotal.push({
                     'device_type': nameItem,
@@ -146,7 +180,8 @@ module.exports = app => {
     router.get('/FaultByType', authMiddle, async (req, res) => {
         assert(req.user.role < 2, 403, '您无权访问')
 
-        let sql = `select id,type from repair where (is_deleted = 0 or is_deleted is NULL) `
+        // let sql = `select id,type from repair where (is_deleted = 0 or is_deleted is NULL) `
+        let sql =`select f.fault_type as type,r.id from (select distinct fault_type  from fault_type where is_deleted=0)  f  left outer join  (select * from  repair where is_deleted = 0) r  on f.fault_type=r.type `
         let results = await connection(sql)
         if (results) {
 
@@ -169,7 +204,14 @@ module.exports = app => {
             TypeName.forEach(nameItem => {
                 let count = 0;
                 nameContainer[nameItem].forEach(item => {
-                    count++
+                    // console.log(">>>>>>>>>>>>>>>>>>>");
+                    
+                    // console.log(item);
+                    if(item.id!==null){
+                        count++
+                    }
+                    
+                    
                 });
                 FaultTypeTotal.push({
                     'fault_type': nameItem,

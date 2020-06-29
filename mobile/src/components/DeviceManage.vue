@@ -74,7 +74,7 @@
             <p>测点数:{{device.count?device.count:0}}</p>
           </van-col>
           <van-col span="5">
-            <div class="state" :class="device.status!=='正常'?'alarmstate':'nomalstate'">{{device.status}}</div>
+            <div class="state" :class="device.status==='正常'?'nomalstate':(device.status==='报警'?'alarmstate':'nostate')">{{device.status}}</div>
           </van-col>
         </van-row>
       </div>
@@ -387,6 +387,10 @@ export default {
 }
 .devicemanage .device_item .nomalstate{
 color: #0dbc79;
+}
+
+.devicemanage .device_item .nostate{
+color:#848484;
 }
 
 
