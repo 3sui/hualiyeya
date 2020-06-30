@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:03:27
- * @LastEditTime: 2020-06-28 03:20:27
+ * @LastEditTime: 2020-06-29 17:54:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\server.js
@@ -53,19 +53,19 @@ app.use((err, req, res, next) => {
     })
 })
 
-app.listen(8085, (err) => {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log('服务器已连接,端口号8085');
-    }
-})
-
-// app.listen(8890, (err) => {
+// app.listen(8085, (err) => {
 //     if (err) {
 //         console.log(err);
-
 //     } else {
-//         console.log('服务器已连接,端口号8890');
+//         console.log('服务器已连接,端口号8085');
 //     }
 // })
+
+app.listen(8890, (err) => {
+    if (err) {
+        console.log(err);
+
+    } else {
+        console.log('服务器已连接,端口号8890');
+    }
+})
