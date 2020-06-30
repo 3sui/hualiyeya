@@ -74,12 +74,12 @@
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
                         >修改权限</el-button>
-                        <el-button
+                        <!-- <el-button
                             type="text"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDealing(scope.$index, scope.row)"
-                        >分配设备</el-button>
+                        >分配设备</el-button> -->
                         <el-button
                             type="text"
                             icon="el-icon-refresh"

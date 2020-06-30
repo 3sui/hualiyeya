@@ -291,6 +291,15 @@ export default {
                 industry_id: ''
             };
         },
+//获取企业名称列表
+        getenterpriselist() {
+            let list = [];
+            this.tableData.forEach(element => {
+                list.push(element.enterprise_name);
+            });
+            return list;
+        },
+
         //添加确认
         Confirm(formName) {
             // if (this.form.enterprise_name === '' || this.form.enterprise_name === null) {
@@ -298,6 +307,14 @@ export default {
             // } else if (this.form.industry_id === '' || this.form.industry_id === null) {
             //     this.$message.error(`行业不能为空`);
             // } else {
+            let arrylist = this.getenterpriselist();
+            console.log(arrylist);
+            
+            if (arrylist.indexOf(this.form.enterprise_name)!==-1) {
+                this.$message.error(`企业名称不能重复`);
+                
+            }else{
+
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     if (this.isAdd) {
@@ -338,7 +355,7 @@ export default {
                 }
             });
 
-            // }
+            }
         },
         //取消
         Cancel() {

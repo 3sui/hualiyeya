@@ -183,9 +183,9 @@ module.exports = app => {
     router.get('/devicelist', authMiddle, async (req, res) => {
         let sql = '';
         if (req.user.role === 2) {
-            sql = `select * from (select d.*,dll.count  from  device d left outer join (select dl.eq,count(cp_id) as count   from  devicedata_limit dl where  dl.is_deleted=0 GROUP BY  dl.eq ) as dll on d.eq=dll.eq where  d.is_deleted = 0 and d.enterprise_id= ${req.user.enterprise_id}) dd LEFT outer  JOIN (select f.device_id ,f.file_path from file_store f where f.type='img' ) as ff on dd.id = ff.device_id `
+            sql = `select sss.* from (select * from (select d.*,dll.count  from  device d left outer join (select dl.eq,count(cp_id) as count   from  devicedata_limit dl where  dl.is_deleted=0 GROUP BY  dl.eq ) as dll on d.eq=dll.eq where  d.is_deleted = 0 and d.enterprise_id= ${req.user.enterprise_id}) dd LEFT outer  JOIN (select f.device_id ,f.file_path from file_store f where f.type='img' ) as ff on dd.id = ff.device_id) sss GROUP BY sss.id`
         } else if (req.user.role === 1) {
-            sql = `select * from (select d.*,dll.count  from  device d left outer join (select dl.eq,count(cp_id) as count   from  devicedata_limit dl where  dl.is_deleted=0 GROUP BY  dl.eq ) as dll on d.eq=dll.eq where  d.is_deleted = 0 ) dd LEFT outer  JOIN (select f.device_id ,f.file_path from file_store f where f.type='img' ) as ff on dd.id = ff.device_id `
+            sql = `select sss.* from (select *  from (select  d.*,dll.count  from  device d left outer join (select dl.eq,count(cp_id) as count   from  devicedata_limit dl where  dl.is_deleted=0 GROUP BY  dl.eq ) as dll on d.eq=dll.eq where  d.is_deleted = 0 ) dd LEFT outer  JOIN (select f.device_id ,f.file_path from file_store f where f.type='img' ) as ff on dd.id = ff.device_id )sss GROUP BY sss.id `
         }
         let results = await connection(sql)
         if (results) {

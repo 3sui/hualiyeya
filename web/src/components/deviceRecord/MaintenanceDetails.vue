@@ -26,18 +26,18 @@
                     <div class="demo-image__preview">
                         <el-image
                             style="width: 320px; height: 160px"
-                            :src="url"
+                            :src="url "
                             :preview-src-list="srcList"
                         ></el-image>
                     </div>
 
-                    <div class="keyvalue">客户名称：{{deviceDetail.enterprise_name}}</div>
-                    <div class="keyvalue">设备ID：{{deviceDetail.eq}}</div>
-                    <div class="keyvalue">设备种类：{{deviceDetail.typename}}</div>
-                    <div class="keyvalue">设备名称：{{deviceDetail.device_name}}</div>
-                    <div class="keyvalue">设备厂家：{{deviceDetail.device_supplier}}</div>
-                    <div class="keyvalue">设备型号：{{deviceDetail.device_model}}</div>
-                    <div class="keyvalue">安装地址：{{deviceDetail.address}}</div>
+                    <div class="keyvalue">客户名称：{{form.enterprise_name}}</div>
+                    <div class="keyvalue">设备ID：{{form.device_eq}}</div>
+                    <div class="keyvalue">设备种类：{{form.typename}}</div>
+                    <div class="keyvalue">设备名称：{{form.device_name}}</div>
+                    <div class="keyvalue">设备厂家：{{form.device_supplier}}</div>
+                    <div class="keyvalue">设备型号：{{form.device_model}}</div>
+                    <div class="keyvalue">安装地址：{{form.address}}</div>
                 </el-col>
                 <el-col :span="14" :offset="1">
                     <el-form
@@ -95,7 +95,7 @@
                         </el-form-item>
                     </el-form>
                     <el-row :gutter="20">
-                        <el-col :offset="6" :span="3">
+                        <!-- <el-col :offset="6" :span="3">
                             <el-button type="primary" size="meduim" @click="handelEdit">编辑</el-button>
                         </el-col>
                         <el-col :offset="2" :span="3">
@@ -105,9 +105,9 @@
                                 @click="onSubmit"
                                 :disabled="saveEnable"
                             >保存</el-button>
-                        </el-col>
-                        <el-col :offset="2" :span="3">
-                            <el-button type="primary" size="meduim" @click="Cancel">取消</el-button>
+                        </el-col>-->
+                        <el-col :offset="9" :span="6">
+                            <el-button type="primary" size="meduim" @click="Cancel">返回</el-button>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -117,17 +117,14 @@
 </template>
 
 <script>
+import imgPath from '../../assets/img/device.jpg';
 export default {
     name: 'MaintenanceDetails',
     data() {
         return {
             // tableData: {},
-            url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-            srcList: [
-                'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-                'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-            ],
+            url: '',
+            srcList: [],
             deviceDetail: {},
 
             form: {
@@ -154,8 +151,46 @@ export default {
     created() {
         this.getDeviceIDAndInfo();
         this.getFaultType();
+        this.getDeviceImage();
     },
     methods: {
+        Iamge(path) {
+            let userAvatar = '';
+            if (path) {
+                userAvatar = axios.defaults.baseURL.slice(0, -4) + path.substring(0, path.lastIndexOf('.'));
+            }
+
+            return path !== null ? userAvatar : imgUrl;
+        },
+        //获取设备图片
+        getDeviceImage() {
+            this.$axios
+                .post('/RepairImage', { eq: this.$route.query.eq })
+                .then(res => {
+                    console.log('>>>>>>>>>>>>>>>>>>>>>');
+
+                    console.log(res.data);
+
+                    if (res.data.length === 0) {
+                        this.url = imgPath;
+                        this.srcList.push(this.url);
+                    } else {
+                        let arraylist= res.data
+                        arraylist.forEach(element => {
+                            let path = element.file_path;
+                            let item= axios.defaults.baseURL.slice(0, -4) + path.substring(0, path.lastIndexOf('.'));
+                             this.srcList.push(item)
+                        })
+                        console.log(this.srcList);
+                        
+                        this.url = this.srcList[0];
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
         //获取故障类型、故障现象选项
         getFaultType() {
             this.$axios

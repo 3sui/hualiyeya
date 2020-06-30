@@ -20,7 +20,7 @@
             <div>
                 <el-button
                     type="primary"
-                    icon="el-icon-delete"
+                    
                     class="handle-del mr10 mb-30"
                     @click="$router.go(-1)"
                 >返回</el-button>

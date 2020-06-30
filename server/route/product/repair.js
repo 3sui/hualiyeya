@@ -11,6 +11,7 @@ module.exports = app => {
     const assert = require('http-assert')
 
 
+
     //获取维修表信息
     router.get('/Repair', authMiddle, async (req, res) => {
         assert(req.user.role < 2, 405, '您没有权限查看维修记录')
@@ -28,13 +29,30 @@ module.exports = app => {
 
         let eq = req.query.eq
         // let sql = `select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device.device_supplier,device.device_model,device.device_description,device.address,device.principal,device_type.typename from repair,enterprise,device,device_type where repair.id=${id} and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id `
-        let sql = `select * from repair r where device_eq = '${eq}'`
+        // let sql = `select * from (select * from (select * from repair  where device_eq = '${eq}' and is_deleted=0) r left outer join device d on r.device_eq=d.eq) rr left outer join device_type dt on rr.device_type=dt.id`
+
+        let sql = `select son.*,dt.typename from (select r.*,d.device_type,d.device_name,d.device_supplier,d.address,d.device_model,d.device_description from (select * from repair  where device_eq = '${eq}' and is_deleted=0) r left outer join device d on r.device_eq=d.eq) son left outer join device_type dt on son.device_type = dt.id`
         console.log(sql);
 
         let results = await connection(sql)
 
         res.send(results)
     })
+
+
+    //根据eq获取设备图片列表
+    router.post('/RepairImage', authMiddle, async (req, res) => {
+        assert(req.user.role < 2, 405, '您没有权限查看维修记录')
+        let eq=req.body.eq
+        let sql = `select f.file_path from device d,file_store f  where d.eq='${eq}' and d.id=f.device_id and f.type='img'`
+
+        let results = await connection(sql)
+        
+        // console.log(results)
+        res.send(results)
+    })
+
+
     //添加维修记录表信息
     router.post('/AddRepair', authMiddle, async (req, res) => {
         assert(req.user.role !== 4, 405, '您没有权限进行新增操作')

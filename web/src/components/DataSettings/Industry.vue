@@ -158,6 +158,11 @@ export default {
                 this.query.pageIndex * this.query.pageSize
             );
         },
+        //获取行业关联企业信息判断是否可以删除
+getIndustryAndEnterprise(){
+
+},
+
         // 删除操作
         handleDelete(index, row) {
             // 二次确认删除
@@ -198,10 +203,10 @@ export default {
             };
         },
         //获取行业列表
-        getenterpriselist() {
+        getindustrylist() {
             let list = [];
             this.tableData.forEach(element => {
-                list.push(element.enterprise_name);
+                list.push(element.industry_name);
             });
             return list;
         },
@@ -212,6 +217,15 @@ export default {
             // } else if (this.form.industry_name.length > 128) {
             //     this.$message.error(`行业名称过长`);
             // } else {
+            let arrylist = this.getindustrylist();
+            console.log(arrylist);
+            
+            if (arrylist.indexOf(this.form.industry_name)!==-1) {
+                this.$message.error(`行业名称不能重复`);
+                
+            }else{
+
+            
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     if (this.isAdd) {
@@ -251,6 +265,7 @@ export default {
                     return false;
                 }
             });
+        }
 
             // }
         },

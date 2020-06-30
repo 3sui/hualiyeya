@@ -77,11 +77,11 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog :title="isAdd?'新增':'编辑'" :visible.sync="editVisible" width="30%">
+        <el-dialog :title="isAdd?'新增':'编辑'" :visible.sync="editVisible" width="40%">
             <el-form ref="form" :model="form" label-width="100px">
                 <el-form-item
                     prop="typename"
-                    label="设备类型名称"
+                    label="设备类型"
                     :rules="{required: true, message: '请输入设备类型名称', trigger: 'blur'}"
                 >
                     <el-input v-model="form.typename"></el-input>
@@ -212,6 +212,14 @@ export default {
             // } else if (this.form.typename.length > 128) {
             //     this.$message.error(`设备名称过长`);
             // } else {
+             let arrylist = this.getdevicetypeelist();
+            console.log(arrylist);
+            
+            if (arrylist.indexOf(this.form.typename)!==-1) {
+                this.$message.error(`设备类型名称不能重复`);
+                
+            }else{
+
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     if (this.isAdd) {
@@ -252,6 +260,7 @@ export default {
                     return false;
                 }
             });
+            }
         },
         //取消
         Cancel() {

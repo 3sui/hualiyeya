@@ -42,7 +42,7 @@
       </van-col>
     </van-row>-->
     <van-search
-    class="search-item"
+      class="search-item"
       v-model="value"
       shape="round"
       background="#ffffff"
@@ -94,8 +94,7 @@
         </van-swipe-cell>
       </div>
     </div>
-    
-    
+
     <van-empty v-if="recordlist.length===0?true:false" description="未获取维修记录信息" />
   </div>
 </template>
@@ -126,7 +125,7 @@ export default {
     [VanImage.name]: VanImage,
     [SwipeCell.name]: SwipeCell,
     [Button.name]: Button,
-    [Empty.name]:Empty
+    [Empty.name]: Empty
   },
   data() {
     return {
@@ -137,13 +136,12 @@ export default {
       colors: [
         "#EB6379",
         "#69D3AB",
-       
-        "#EEA03C", 
-         "#39CCCC",   
+
+        "#EEA03C",
+        "#39CCCC",
         "#75649B",
-        "#23A9F2", 
-        "#53CFE9",
-        
+        "#23A9F2",
+        "#53CFE9"
       ],
       state: []
     };
@@ -206,7 +204,6 @@ export default {
     onSearch(val) {
       this.recordlist = this.recordlist.filter(array => {
         return (
-         
           array.state.match(val) ||
           // array.type.match(val) ||
           array.device_eq.match(val) ||
@@ -219,7 +216,7 @@ export default {
     //取消
     onCancel() {
       this.value = "";
-      this.recordlist=[]
+      this.recordlist = [];
       this.getData();
       // location.reload()
     },
@@ -229,13 +226,13 @@ export default {
     getRole() {
       if (localStorage) {
         let user_role = localStorage.getItem("role");
-        if (user_role === "4" ) {
+        if (user_role === "4") {
           this.rolecheck = true;
         } else {
-          return ;
+          return;
         }
       } else {
-        return ;
+        return;
       }
     },
     //企业用户进入维修记录详情，只能查看
@@ -265,7 +262,7 @@ export default {
 .repairrecord {
   background-color: #f0f0f0;
   height: 95vh;
-   overflow-y:auto
+  overflow-y: auto;
 }
 .header {
   background-color: white;
@@ -338,6 +335,9 @@ export default {
   height: 2rem;
   line-height: 2rem;
   margin: 0;
+  white-space: nowrap;
+  word-break: keep-all;
+  text-overflow: ellipsis;
 }
 /* .item-content p{
     margin: 0;
@@ -359,20 +359,18 @@ export default {
   height: 100%;
 }
 
-.search-item{
+.search-item {
   padding-left: 1rem;
   padding-right: 1rem;
- 
 }
 
-.search-item .van-search__action{
-/* background-color:  #F7F8FA; */
-border-radius: 1rem;
-/* border: 1px solid #f0f0f0; */
-width: 12%;
-text-align: center;
-margin-left: 0.1rem;
-color: #1989FA;
+.search-item .van-search__action {
+  /* background-color:  #F7F8FA; */
+  border-radius: 1rem;
+  /* border: 1px solid #f0f0f0; */
+  width: 12%;
+  text-align: center;
+  margin-left: 0.1rem;
+  color: #1989fa;
 }
-
 </style>
