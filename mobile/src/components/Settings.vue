@@ -13,7 +13,10 @@
         </div>
 
         <div class="user">{{user}}</div>
-        <div class="sub">
+         <div class="sub">
+          <van-button round block type="info" class="quit" @click="EditPassword">修改密码</van-button>
+        <!-- </div>
+        <div class="sub"> -->
           <van-button round block type="danger" class="quit" @click="quit">退出</van-button>
         </div>
       </div>
@@ -56,6 +59,13 @@ export default {
       // console.log();
       localStorage.clear();
       this.$router.push("/Login");
+    },
+    EditPassword(){
+      this.$router.push(
+        {
+          path:"/modifyPassword"
+        }
+      )
     }
   }
 };
@@ -98,7 +108,7 @@ export default {
 
 .quit {
   width: 95%;
-  margin: 20% auto 0 auto;
+  margin: 1rem auto 0 auto;
 }
 
 .user {
@@ -110,6 +120,6 @@ export default {
 
 .sub{
   width: 80%;
-  margin: auto;
+  margin: 5rem auto 0 auto;
 }
 </style>

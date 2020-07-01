@@ -120,6 +120,14 @@ const routes = [
       }
     },
     {
+      path: '/modifyPassword',
+      name: 'modifyPassword',
+      component: () => import('../components/modifyPassword'),
+      meta: {
+        title: '修改密码'
+      }
+    },
+    {
       path: '/404',
       component: () => import( /* webpackChunkName: "404" */ '../components/404.vue'),
       meta: {

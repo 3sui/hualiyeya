@@ -60,9 +60,15 @@ export default {
         id: this.$route.query.id
       };
       this.$axios.post("/mobile/files", query).then(res => {
-        if (res.data != null || res.data.length > 0) {
+        console.log(res.data.length);
+        
+        if (res.data !== null || res.data.length > 0) {
+          console.log(111111);
+          
           this.filelist = res.data;
         } else {
+          console.log(2222222);
+          
           this.emptyshow = true;
         }
       });
