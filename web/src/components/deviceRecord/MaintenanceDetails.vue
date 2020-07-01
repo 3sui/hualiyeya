@@ -18,6 +18,11 @@
             </el-breadcrumb>
         </div>
         <div class="container">
+    <div class="handle-box d-flex jc-between">
+                 <el-button type="primary" size="meduim" @click="Cancel">返回</el-button>
+             
+            </div>
+
             <!-- <el-button type="primary" class="handle-del mr10 mb-30" @click="$router.go(-1)">返回</el-button>
             <el-button type="primary" class="handle-del mr10 mb-30" @click="handelEdit">编辑</el-button>-->
             <div class="plugins-tips">设备维修详情</div>
@@ -106,9 +111,9 @@
                                 :disabled="saveEnable"
                             >保存</el-button>
                         </el-col>-->
-                        <el-col :offset="9" :span="6">
+                        <!-- <el-col :offset="9" :span="6">
                             <el-button type="primary" size="meduim" @click="Cancel">返回</el-button>
-                        </el-col>
+                        </el-col> -->
                     </el-row>
                 </el-col>
             </el-row>

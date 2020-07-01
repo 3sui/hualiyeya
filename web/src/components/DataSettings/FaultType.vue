@@ -123,7 +123,8 @@ export default {
             pageSize: 10,
             form: {},
             isAdd: true,
-            idx: 1
+            idx: 1,
+            checkdelete: false
         };
     },
     created() {
@@ -169,26 +170,29 @@ export default {
                 this.query.pageIndex * this.query.pageSize
             );
         },
+
         // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    let query = {
-                        id: row.id
-                    };
-                    this.$axios.post('/dataSettings/DeleteFaultType', query).then(res => {
-                        //console.log(res);
-                        this.pageIndex = 1;
-                        this.getData();
-                        this.$message.success('删除成功');
-                    });
+         handleDelete(index, row) {
+       
+            
+                this.$confirm('确定要删除吗？', '提示', {
+                    type: 'warning'
                 })
-                .catch(err => {
-                    console.log(err);
-                });
+                    .then(() => {
+                        let query = {
+                            id: row.id
+                        };
+                        this.$axios.post('/dataSettings/DeleteFaultType', query).then(res => {
+                            //console.log(res);
+                            this.pageIndex = 1;
+                            this.getData();
+                            this.$message.success('删除成功');
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            
         },
         // 多选操作
         handleSelectionChange(val) {

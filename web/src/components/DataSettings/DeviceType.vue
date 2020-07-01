@@ -115,7 +115,8 @@ export default {
             pageSize: 10,
             form: {},
             isAdd: true,
-            idx: 1
+            idx: 1,
+            checkdelete:false
         };
     },
     created() {
@@ -161,8 +162,29 @@ export default {
                 this.query.pageIndex * this.query.pageSize
             );
         },
+
+         //获取设备种类关联设备表判断是否可以删除
+        async getDeviceTypeAndDevice(id) {
+            await this.$axios.post('/dataSettings/CheckDeviceTypeId', { id: id }).then(res => {
+                if (res.data.length !== 0) {
+                    this.checkdelete = false;
+                    console.log('>>>>>>>>>');
+                } else {
+                    this.checkdelete = true;
+                }
+            });
+        },
         // 删除操作
-        handleDelete(index, row) {
+   async handleDelete(index, row) {
+       
+            
+            await this.getDeviceTypeAndDevice(row.id);
+            let flag = this.checkdelete;
+            console.log(flag);
+
+            if (!flag) {
+                this.$message.error('有设备关联设备种类，请解除关联后删除！');
+            } else {
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
@@ -181,6 +203,7 @@ export default {
                 .catch(err => {
                     console.log(err);
                 });
+            }
         },
         // 多选操作
         handleSelectionChange(val) {

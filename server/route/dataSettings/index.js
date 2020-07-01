@@ -42,7 +42,20 @@ module.exports = app => {
 
         res.send(results)
     })
+//根据行业id获取是否有设备关联
 
+    
+    router.post('/CheckIndustryId', authMiddle, async (req, res) => {
+        assert(req.user.role === 1, 403, '您无权访问')
+
+        let id = req.body.id;
+        let sql = `select * from enterprise where industry_id=${id} and  is_deleted=0` 
+        let results = await connection(sql)
+console.log(results);
+
+        res.send(results)
+
+    })
 
     //单个删除行业表信息
     router.post('/DeleteIndustry', authMiddle, async (req, res) => {
@@ -105,6 +118,26 @@ module.exports = app => {
         let sql = "update device_type set ? where id=" + id
         let results = await connection(sql, query)
         res.send(results)
+    })
+    //根据id判断是否可以删除设备类型
+    // router.post('/CheckDeviceTypeId', authMiddle, async (req, res) => {
+    //     assert(req.user.role === 1, 403, '您无权访问')
+
+    //     let id = req.body.id;
+    //     let sql = "update device_type set is_deleted=1 where id=" + id
+    //     let results = await connection(sql)
+    //     res.send(results)
+    // })
+
+    router.post('/CheckDeviceTypeId', authMiddle, async (req, res) => {
+        assert(req.user.role === 1, 403, '您无权访问')
+        let id = req.body.id;
+        let sql = `select * from device where device_type=${id} and  is_deleted=0`
+        let results = await connection(sql)
+        console.log(results);
+
+        res.send(results)
+
     })
 
 
@@ -218,6 +251,18 @@ module.exports = app => {
         let sql = "update enterprise set ? where id=" + id
         let results = await connection(sql, query)
         res.send(results)
+    })
+//根据企业id判断是否关联设备表和用户表
+
+    router.post('/checkEnterpriseID', authMiddle, async (req, res) => {
+        assert(req.user.role === 1, 403, '您无权访问')
+
+        let id = req.body.id;
+        let sql1 =`select * from enterprise e, device d where e.id = d.enterprise_id and d.is_deleted = 0 and e.id = ${id}`
+        let sql2 = `select * from enterprise e, user_info u where e.id = u.enterprise_id and u.is_deleted = 0 and e.id = ${id}`
+        let result1 = await connection(sql1)
+        let result2 = await connection(sql2)
+        res.send(result1.length+result2.length)
     })
 
 

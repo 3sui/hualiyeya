@@ -19,7 +19,7 @@ module.exports = app => {
             username
         } = req.body
         console.log(password)
-        let sql = "select password,id,nickname,avatar,phone from user_info where username = ? and is_deleted = 0"
+        let sql = "select password,id,nickname,avatar,phone,username from user_info where username = ? and is_deleted = 0"
         let row = await connection(sql, username)
         assert(row.length, 422, '用户不存在')
         assert(row[0].password === password, 422, '密码不正确')
@@ -28,6 +28,7 @@ module.exports = app => {
             id: row[0].id
         }, app.get('secret'))
         result.ms_username = row[0].nickname
+        result.username = row[0].username
         result.success = true
         result.avatar = row[0].avatar
         result.phone = row[0].phone

@@ -94,6 +94,7 @@ module.exports = app => {
 
         var form = new formidable.IncomingForm({
             uploadDir: 'nodeServer/tmp'
+           
         })
         // console.log(form);
 

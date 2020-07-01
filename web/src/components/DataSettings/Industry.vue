@@ -112,7 +112,8 @@ export default {
                 industry_name: [{ required: true, message: '请输入行业名称', trigger: 'blur' }]
             },
             isAdd: true,
-            idx: 1
+            idx: 1,
+            checkdelete: false
         };
     },
     created() {
@@ -159,35 +160,51 @@ export default {
             );
         },
         //获取行业关联企业信息判断是否可以删除
-getIndustryAndEnterprise(){
-
-},
+        async getIndustryAndEnterprise(id) {
+            await this.$axios.post('/dataSettings/CheckIndustryId', { id: id }).then( res => {
+                if (res.data.length !== 0) {
+                   this.checkdelete = false;
+                    console.log('>>>>>>>>>');                   
+                } else {
+                    this.checkdelete = true;
+                }
+            });
+        },
 
         // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    let query = {
-                        id: row.id
-                    };
-                    this.$axios
-                        .post('/dataSettings/DeleteIndustry', query)
-                        .then(res => {
-                            // console.log(res);
-                            this.pageIndex = 1;
-                            this.getData();
-                            this.$message.success('删除成功');
+       async handleDelete(index, row) {
+            await this.getIndustryAndEnterprise(row.id)
+                let flag = this.checkdelete;
+                console.log(flag);
+                
+                if (!flag) {
+                    this.$message.error('有企业关联行业，请解除关联后删除！');
+                } else {
+                    // 二次确认删除
+                    this.$confirm('确定要删除吗？', '提示', {
+                        type: 'warning'
+                    })
+                        .then(() => {
+                            let query = {
+                                id: row.id
+                            };
+                            this.$axios
+                                .post('/dataSettings/DeleteIndustry', query)
+                                .then(res => {
+                                    // console.log(res);
+                                    this.pageIndex = 1;
+                                    this.getData();
+                                    this.$message.success('删除成功');
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
                         })
                         .catch(err => {
                             console.log(err);
                         });
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+                }
+           
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -219,53 +236,50 @@ getIndustryAndEnterprise(){
             // } else {
             let arrylist = this.getindustrylist();
             console.log(arrylist);
-            
-            if (arrylist.indexOf(this.form.industry_name)!==-1) {
-                this.$message.error(`行业名称不能重复`);
-                
-            }else{
 
-            
-            this.$refs[formName].validate(valid => {
-                if (valid) {
-                    if (this.isAdd) {
-                        // this.query.industry_name=this.form.industry_name
-                        // let date = new Date();
-                        // this.form.created_time = date.getTime();
-                        // console.log(date);
-                        this.$axios
-                            .post('/dataSettings/AddIndustry', this.form)
-                            .then(res => {
-                                console.log(res.data);
-                                this.getData();
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
+            if (arrylist.indexOf(this.form.industry_name) !== -1) {
+                this.$message.error(`行业名称不能重复`);
+            } else {
+                this.$refs[formName].validate(valid => {
+                    if (valid) {
+                        if (this.isAdd) {
+                            // this.query.industry_name=this.form.industry_name
+                            // let date = new Date();
+                            // this.form.created_time = date.getTime();
+                            // console.log(date);
+                            this.$axios
+                                .post('/dataSettings/AddIndustry', this.form)
+                                .then(res => {
+                                    console.log(res.data);
+                                    this.getData();
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        } else {
+                            this.form.id = this.idx;
+                            // delete this.form['created_time'];
+                            //  let date =new Date(this.form.created_time)
+                            // this.form.created_time =  date.getTime();
+                            this.$axios
+                                .post('/dataSettings/updateIndustry', this.form)
+                                .then(res => {
+                                    console.log(res.data);
+                                    this.getData();
+                                    this.$message.success('修改成功');
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        }
+                        this.editVisible = false;
+                        this.form = {};
                     } else {
-                        this.form.id = this.idx;
-                        // delete this.form['created_time'];
-                        //  let date =new Date(this.form.created_time)
-                        // this.form.created_time =  date.getTime();
-                        this.$axios
-                            .post('/dataSettings/updateIndustry', this.form)
-                            .then(res => {
-                                console.log(res.data);
-                                this.getData();
-                                this.$message.success('修改成功');
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
+                        console.log('error submit!!');
+                        return false;
                     }
-                    this.editVisible = false;
-                    this.form = {};
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
-        }
+                });
+            }
 
             // }
         },

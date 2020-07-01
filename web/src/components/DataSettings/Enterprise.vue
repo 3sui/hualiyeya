@@ -181,7 +181,8 @@ export default {
                 ]
             },
             isAdd: true,
-            idx: 1
+            idx: 1,
+            checkdelete: false
             // rules: {
             //     enterprise_name: [
             //         { required: true, message: '请输入企业名称', trigger: 'blur' },
@@ -250,31 +251,53 @@ export default {
                 this.query.pageIndex * this.query.pageSize
             );
         },
+        //获取企业关联设备信息、用户信息判断是否可以删除
+        async getEnterpriseDeviceUser(id) {
+            await this.$axios.post('/dataSettings/checkEnterpriseID', { id: id }).then(res => {
+                console.log(res.data);
+
+                if (res.data !== 0) {
+                    this.checkdelete = false;
+                    console.log('>>>>>>>>>');
+                } else {
+                    this.checkdelete = true;
+                }
+            });
+        },
+
         // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
-                type: 'warning'
-            })
-                .then(() => {
-                    let query = {
-                        id: row.id
-                    };
-                    this.$axios
-                        .post('/dataSettings/DeleteEnterprise', query)
-                        .then(res => {
-                            // console.log(res);
-                            this.pageIndex = 1;
-                            this.getData();
-                            this.$message.success('删除成功');
-                        })
-                        .catch(err => {
-                            console.log(err);
-                        });
+        async handleDelete(index, row) {
+            await this.getEnterpriseDeviceUser(row.id);
+            let flag = this.checkdelete;
+            console.log(flag);
+
+            if (!flag) {
+                this.$message.error('有企业关联设备或用户，请解除关联后删除！');
+            } else {
+                // 二次确认删除
+                this.$confirm('确定要删除吗？', '提示', {
+                    type: 'warning'
                 })
-                .catch(err => {
-                    console.log(err);
-                });
+                    .then(() => {
+                        let query = {
+                            id: row.id
+                        };
+                        this.$axios
+                            .post('/dataSettings/DeleteEnterprise', query)
+                            .then(res => {
+                                // console.log(res);
+                                this.pageIndex = 1;
+                                this.getData();
+                                this.$message.success('删除成功');
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -291,7 +314,7 @@ export default {
                 industry_id: ''
             };
         },
-//获取企业名称列表
+        //获取企业名称列表
         getenterpriselist() {
             let list = [];
             this.tableData.forEach(element => {
@@ -309,52 +332,49 @@ export default {
             // } else {
             let arrylist = this.getenterpriselist();
             console.log(arrylist);
-            
-            if (arrylist.indexOf(this.form.enterprise_name)!==-1) {
+
+            if (arrylist.indexOf(this.form.enterprise_name) !== -1) {
                 this.$message.error(`企业名称不能重复`);
-                
-            }else{
-
-            this.$refs[formName].validate(valid => {
-                if (valid) {
-                    if (this.isAdd) {
-                        // let date = new Date();
-                        // this.form.created_time = date.getTime();
-                        // console.log(date);
-                        this.$axios
-                            .post('/dataSettings/AddEnterprise', this.form)
-                            .then(res => {
-                                console.log(res.data);
-                                this.getData();
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
+            } else {
+                this.$refs[formName].validate(valid => {
+                    if (valid) {
+                        if (this.isAdd) {
+                            // let date = new Date();
+                            // this.form.created_time = date.getTime();
+                            // console.log(date);
+                            this.$axios
+                                .post('/dataSettings/AddEnterprise', this.form)
+                                .then(res => {
+                                    console.log(res.data);
+                                    this.getData();
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        } else {
+                            this.form.id = this.idx;
+                            delete this.form['industry_name'];
+                            delete this.form['created_time'];
+                            // let date =new Date(this.form.created_time )
+                            // this.form.created_time =  date.getTime();
+                            this.$axios
+                                .post('/dataSettings/updateEnterprise', this.form)
+                                .then(res => {
+                                    console.log(res.data);
+                                    this.getData();
+                                    this.$message.success('修改成功');
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        }
+                        this.editVisible = false;
+                        this.form = {};
                     } else {
-                        this.form.id = this.idx;
-                        delete this.form['industry_name'];
-                        delete this.form['created_time'];
-                        // let date =new Date(this.form.created_time )
-                        // this.form.created_time =  date.getTime();
-                        this.$axios
-                            .post('/dataSettings/updateEnterprise', this.form)
-                            .then(res => {
-                                console.log(res.data);
-                                this.getData();
-                                this.$message.success('修改成功');
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
+                        console.log('error submit!!');
+                        return false;
                     }
-                    this.editVisible = false;
-                    this.form = {};
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
-
+                });
             }
         },
         //取消
@@ -365,7 +385,7 @@ export default {
         },
         // 编辑操作
         handleEdit(index, row) {
-            this.idx = row.id
+            this.idx = row.id;
             // this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
             // delete row['industry_name'];
             this.form = row;

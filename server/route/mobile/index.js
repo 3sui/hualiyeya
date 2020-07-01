@@ -345,7 +345,7 @@ module.exports = app => {
     router.post('/download', authMiddle, async (req, res) => {
         // console.log(req);
 
-        var currFile = path.resolve(__dirname, '../../'+ req.body.path),
+        var currFile = path.resolve(__dirname, '../../nodeserver/uploads/' + req.body.file_name),
             fileName = req.body.file_name,
             fReadStream;
        
@@ -371,6 +371,31 @@ module.exports = app => {
         });
 
     });
+
+
+    //修改密码
+    router.post('/ModifyPassword', authMiddle, async (req, res) => {
+        let username = req.body.username;
+        let password = req.body.password;
+        let newpassword = req.body.newpassword;
+        
+        let sql = `select * from user_info u where u.username='${username}' and u.password ='${password}' and is_deleted=0`
+        // console.log(sql);
+        let results = await connection(sql)
+        console.log(results);
+        
+        // console.log(results)
+        assert(results.length!==0, 422, '原用户名、密码不正确')
+        let id=results[0].id
+        let sql2=`update user_info set password='${newpassword}' where id=${id}`
+        let result2 = await connection(sql2)
+        console.log(result2);
+        if (result2.affectedRows===1){
+            res.send('success')
+        }
+        
+        
+    })
 
 
 

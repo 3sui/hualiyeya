@@ -397,7 +397,7 @@ export default {
     font-size: 20px;
     /* font-weight: bold; */
     color: white;
-    letter-spacing: 0.2em;
+    /* letter-spacing: 0.2em; */
     /* width: 50%; */
     line-height: 50px;
     height: 50px;
