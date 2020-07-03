@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-07 10:52:41
- * @LastEditTime: 2020-06-28 02:22:29
+ * @LastEditTime: 2020-07-03 11:15:32
  * @LastEditors: Please set LastEditors
  * @Description: 测点详情
  * @FilePath: \vue-manage-system\src\components\view\MeasuringPointDetails.vue
@@ -85,16 +85,25 @@
                     </el-col>
                 </el-row>
             </div>-->
+            <div class="block mt-2" style="float: right">
+                <!-- <span class="demonstration">显示总数</span> -->
+                <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page.sync="pageIndex"
+                :page-size="100"
+                layout="total, prev, pager, next"
+                :total="tableData.info.length">
+                </el-pagination>
+            </div>
             <el-table
-                :data="tableData.info"
+                :data="tableData.info.slice((pageIndex -1)*10, pageIndex *10)"
                 border
                 class="table"
                 ref="multipleTable"
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <!-- <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="序号" width="55" align="center"></el-table-column>-->
                 <el-table-column prop="eq" label="设备ID"></el-table-column>
                 <el-table-column
                     :prop="item.cp_id"
@@ -112,6 +121,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            
             <!-- <div class="pagination">
                 <el-pagination
                     background
@@ -182,7 +192,8 @@ export default {
             schart: [],
             value1: '',
             value2: '',
-            limit: {}
+            limit: {},
+            pageIndex: 1
         };
     },
 
