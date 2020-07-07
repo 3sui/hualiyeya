@@ -237,8 +237,10 @@ export default {
             // } else {
              let arrylist = this.getdevicetypeelist();
             console.log(arrylist);
+            let temp=this.form.typename
+            console.log(temp);
             
-            if (arrylist.indexOf(this.form.typename)!==-1) {
+            if (arrylist.indexOf(temp)!==-1) {
                 this.$message.error(`设备类型名称不能重复`);
                 
             }else{
