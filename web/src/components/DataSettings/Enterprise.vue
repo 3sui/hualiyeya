@@ -106,7 +106,7 @@
             class="demo-ruleForm"
         >
             <el-form ref="form" :model="form" label-width="100px" :rules="rules">
-                <el-form-item label="企业名称" prop="enterprise_name">
+                <el-form-item label="企业名称" prop="enterprise_name" v-if="isAdd === true">
                     <el-input v-model="form.enterprise_name"></el-input>
                 </el-form-item>
                 <el-form-item label="行业" prop="industry_id">
@@ -134,7 +134,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="Cancel">取 消</el-button>
-                <el-button type="primary" @click=" Confirm('form') ">确 定</el-button>
+                <el-button type="primary" @click="Confirm('form') ">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -275,7 +275,7 @@ export default {
                 this.$message.error('有企业关联设备或用户，请解除关联后删除！');
             } else {
                 // 二次确认删除
-                this.$confirm('确定要删除吗？', '提示', {
+                this.$('确定要删除吗？', '提示', {
                     type: 'warning'
                 })
                     .then(() => {
@@ -333,49 +333,66 @@ export default {
             let arrylist = this.getenterpriselist();
             console.log(arrylist);
 
-            if (arrylist.indexOf(this.form.enterprise_name) !== -1) {
-                this.$message.error(`企业名称不能重复`);
-            } else {
-                this.$refs[formName].validate(valid => {
-                    if (valid) {
-                        if (this.isAdd) {
-                            // let date = new Date();
-                            // this.form.created_time = date.getTime();
-                            // console.log(date);
-                            this.$axios
-                                .post('/dataSettings/AddEnterprise', this.form)
-                                .then(res => {
-                                    console.log(res.data);
+            // if (arrylist.indexOf(this.form.enterprise_name) !== -1) {
+            //     this.$message.error(`企业名称不能重复`);
+            // } else {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    if (this.isAdd) {
+                        // let date = new Date();
+                        // this.form.created_time = date.getTime();
+                        console.log(123);
+                        this.$axios
+                            .post('/dataSettings/AddEnterprise', this.form)
+                            .then(res => {
+                                console.log(res.data);
+                                if (res.data.success === true) {
+                                    console.log(456);
+
+                                    this.$message.success(res.data.message);
                                     this.getData();
-                                })
-                                .catch(err => {
-                                    console.log(err);
-                                });
-                        } else {
-                            this.form.id = this.idx;
-                            delete this.form['industry_name'];
-                            delete this.form['created_time'];
-                            // let date =new Date(this.form.created_time )
-                            // this.form.created_time =  date.getTime();
-                            this.$axios
-                                .post('/dataSettings/updateEnterprise', this.form)
-                                .then(res => {
-                                    console.log(res.data);
-                                    this.getData();
-                                    this.$message.success('修改成功');
-                                })
-                                .catch(err => {
-                                    console.log(err);
-                                });
-                        }
-                        this.editVisible = false;
-                        this.form = {};
+                                } else {
+                                    console.log(789);
+
+                                    this.$message.error(res.data.message);
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
                     } else {
-                        console.log('error submit!!');
-                        return false;
+                        this.form.id = this.idx;
+                        delete this.form['industry_name'];
+                        delete this.form['created_time'];
+                        // let date =new Date(this.form.created_time )
+                        // this.form.created_time =  date.getTime();
+                        this.$axios
+                            .post('/dataSettings/updateEnterprise', this.form)
+                            .then(res => {
+                                if (res.data.success === true) {
+                                    console.log(456);
+
+                                    this.$message.success(res.data.message);
+                                    this.getData();
+                                } else {
+                                    console.log(789);
+                                    this.$refs[formName].resetFields();
+                                    this.$message.error(res.data.message);
+                                    this.getData();
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
                     }
-                });
-            }
+                    this.editVisible = false;
+                    this.form = {};
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+            // }
         },
         //取消
         Cancel() {

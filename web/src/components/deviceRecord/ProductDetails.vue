@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 10:56:10
- * @LastEditTime: 2020-06-29 09:11:38
+ * @LastEditTime: 2020-07-03 16:57:33
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\ProductDetails.vue
@@ -421,6 +421,7 @@ export default {
                         _this.percentage2 = 0;
                         _this.$refs['uploadWord'].clearFiles();
                         _this.$message.success('文件上传成功');
+                        _this.getDeviceIDAndInfo()
                     });
                 // $.getJSON(url, function(data) {
                 //     alert('上传成功');

@@ -15,6 +15,13 @@ export default new Router({
                 title: '自述文件'
             },
             children: [{
+                    path: '/ChangePassword',
+                    component: () => import( /* webpackChunkName: "dashboard" */ '../components/common/ChangePassword.vue'),
+                    meta: {
+                        title: '修改密码',
+                        auth: []
+                    }
+                }, {
                     path: '/dashboard',
                     component: () => import( /* webpackChunkName: "dashboard" */ '../components/home/Dashboard.vue'),
                     meta: {

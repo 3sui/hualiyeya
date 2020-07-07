@@ -11,7 +11,7 @@ module.exports = app => {
 
     //获取维修表信息
     router.get('/Repair', authMiddle, async (req, res) => {
-      
+
         let sql = '';
         if (req.user.role === 4) {
             sql = `select * from repair where repair_person='${req.user.nickname}'and is_deleted = 0   order by repair.date Desc`
@@ -21,7 +21,7 @@ module.exports = app => {
             //     sql = `select repair.*,device.eq,device.device_name from repair,device,user_device where user_device.user_id= ${req.user.id}  and (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id  and user_device.device_id=device.id order by repair.date Desc`
         } else if (req.user.role === 1) {
             sql = `select * from repair where is_deleted = 0  order by date Desc`
-        }else{
+        } else {
             sql = `select r.*,d.enterprise_id from repair r  left outer join device d on r.device_eq=d.eq  where r.is_deleted = 0 and  d.enterprise_id=${req.user.enterprise_id} order by r.date Desc`
         }
         console.log(sql);
@@ -52,7 +52,7 @@ module.exports = app => {
     })
     //添加维修记录表信息
     router.post('/AddRepair', authMiddle, async (req, res) => {
-        assert( req.user.role == 4, 403, '您无权访问')
+        assert(req.user.role == 4, 403, '您无权访问')
         let query = req.body;
 
         console.log(query)
@@ -255,7 +255,7 @@ module.exports = app => {
     // router.post('/AlarmRecord', authMiddle, async (req, res) => {
     //     let startid=req.body.startid;
     //     let keyword=req.body.keyword;
-     
+
     //     let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0 and a.device_eq like '%${keyword}%' or d.device_name like '%${keyword}%'  order by a.ts desc limit ${startid},10`
     //     console.log(sql);
     //     let results = await connection(sql)
@@ -264,7 +264,7 @@ module.exports = app => {
     //         res.send(results)
     //     }
     // })
-//获取设备报警总数
+    //获取设备报警总数
     // router.post('/AlarmRecordCount', authMiddle, async (req, res) => {
     //     let keyword = req.body.keyword;
     //     let sql = `select count(a.id) count  from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0 and a.device_eq like '%${keyword}%' or d.device_name like '%${keyword}%' order by a.ts desc`
@@ -276,9 +276,9 @@ module.exports = app => {
     //     }
     // })
 
-       //获取企业报警信息
+    //获取企业报警信息
     router.post('/AlarmRecord', authMiddle, async (req, res) => {
-        let startid=req.body.startid;
+        let startid = req.body.startid;
         // let keyword=req.body.keyword;
 
         let sql = `select a.*,d.device_name from alarm a left join device d  on a.device_eq=d.eq  where a.is_deleted=0  order by a.ts desc limit ${startid},10`
@@ -345,15 +345,18 @@ module.exports = app => {
     router.post('/download', authMiddle, async (req, res) => {
         // console.log(req);
 
-        var currFile = path.resolve(__dirname, '../../nodeserver/uploads/' + req.body.file_name),
+        var currFile = path.resolve(__dirname, '../../nodeServer/uploads/' + req.body.file_name),
             fileName = req.body.file_name,
             fReadStream;
             
        
         
+        console.log(currFile);
+
+
         fs.exists(currFile, function (exist) {
             console.log(exist);
-            
+
             if (exist) {
                 res.set({
                     "Content-type": "application/octet-stream",
@@ -379,23 +382,23 @@ module.exports = app => {
         let username = req.body.username;
         let password = req.body.password;
         let newpassword = req.body.newpassword;
-        
+
         let sql = `select * from user_info u where u.username='${username}' and u.password ='${password}' and is_deleted=0`
         // console.log(sql);
         let results = await connection(sql)
         console.log(results);
-        
+
         // console.log(results)
-        assert(results.length!==0, 422, '原用户名、密码不正确')
-        let id=results[0].id
-        let sql2=`update user_info set password='${newpassword}' where id=${id}`
+        assert(results.length !== 0, 422, '原用户名、密码不正确')
+        let id = results[0].id
+        let sql2 = `update user_info set password='${newpassword}' where id=${id}`
         let result2 = await connection(sql2)
         console.log(result2);
-        if (result2.affectedRows===1){
+        if (result2.affectedRows === 1) {
             res.send('success')
         }
-        
-        
+
+
     })
 
 
