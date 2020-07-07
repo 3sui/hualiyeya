@@ -296,7 +296,7 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = row.id;
-            this.form = row;
+            this.form = JSON.parse(JSON.stringify(row));
             this.editVisible = true;
             this.isAdd = false;
         },
