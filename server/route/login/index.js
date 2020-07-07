@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 14:22:53
- * @LastEditTime: 2020-06-08 17:20:49
+ * @LastEditTime: 2020-07-03 15:36:18
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\login\index.js
@@ -12,6 +12,7 @@ module.exports = app => {
     const router = express.Router()
     const jwt = require('jsonwebtoken')
     const assert = require('http-assert')
+    const authMiddle = require('../../middleware/auth')()
 
     router.post('/', async (req, res) => {
         const {
@@ -34,9 +35,37 @@ module.exports = app => {
         result.phone = row[0].phone
         let result2 = await connection(`select * from user_role where user_id = ${row[0].id}`)
         result.role = result2[0].role_id
-        console.log(result);
-        
         res.send(result)
+    })
+
+    router.post('/changePass', authMiddle, async (req, res) => {
+        console.log(req.body)
+        console.log(req.user);
+
+        let {
+            oldPass,
+            newPass,
+            checkPass
+        } = req.body
+        let sql
+
+        let results = {}
+        if (oldPass == req.user.password) {
+            if (newPass == req.user.password) {
+                results.success = false
+                results.message = '没有更新密码'
+            } else {
+                results.success = true
+                sql = `update user_info set password = '${newPass}' where id = ${req.user.id}`
+                await connection(sql)
+                results.message = '密码修改成功'
+            }
+
+        } else {
+            results.success = false
+            results.message = '原始密码输入错误,请重试'
+        }
+        res.send(results)
     })
 
 
