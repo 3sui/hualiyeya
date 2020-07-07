@@ -294,7 +294,7 @@ export default {
             window.console.log(row);
             this.idx = row.id;
             // this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
-            this.form = row;
+            this.form = JSON.parse(JSON.stringify(row));
             this.editVisible = true;
             this.isAdd = false;
         },

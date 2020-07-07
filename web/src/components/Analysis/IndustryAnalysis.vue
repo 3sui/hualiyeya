@@ -19,7 +19,7 @@
 
             <div class="container">-->
             <el-row :gutter="20" type="flex">
-                <el-col  v-for="(industry,index) in industryTop" :key="index" v-if="index<5" :offset="index===0?0:1"   >
+                <el-col  v-for="(industry,index) in industryTop" :key="index" v-if="index<5"  >
                     <!-- <el-card shadow="hover" :body-style="{padding: '0px'}" v-if="index<5">
                         <div class="grid-content grid-con">
                             <div
@@ -307,7 +307,7 @@ export default {
                     },
                     legend: {
                         top: '5%',
-                        right: '5%',
+                        right: '15%',
                         itemWidth: 20,
                         itemHeight: 8,
                         // itemGap: 343,
@@ -329,11 +329,11 @@ export default {
                         },
                         {
                             show: false,
-                            left: '51%',
-                            top: '15%',
+                            left: '52%',
+                            top: '20%',
                             bottom: '8%',
                             //    containLabel: true,
-                            width: '0%'
+                            width: '2%'
                         },
                         {
                             show: false,
@@ -371,7 +371,8 @@ export default {
                         },
                         {
                             gridIndex: 1,
-                            show: false
+                            show: false,
+                          
                         },
                         {
                             gridIndex: 2,
@@ -427,7 +428,9 @@ export default {
                             },
                             axisLabel: {
                                 show: true,
-                                padding: [30, 0, 0, 0],
+                                boundaryGap:true,
+                                // top:'20%',
+                                // padding: [30, 0, 0, 0],
                                 textStyle: {
                                     color: '#000',
                                     fontSize: 14

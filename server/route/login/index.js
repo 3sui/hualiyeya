@@ -34,6 +34,8 @@ module.exports = app => {
         result.phone = row[0].phone
         let result2 = await connection(`select * from user_role where user_id = ${row[0].id}`)
         result.role = result2[0].role_id
+        console.log(result);
+        
         res.send(result)
     })
 

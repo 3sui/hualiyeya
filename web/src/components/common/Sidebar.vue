@@ -123,7 +123,7 @@ export default {
                     ]
                 },
                 {
-                    icon: 'el-icon-lx-calendar',
+                    icon: 'el-icon-monitor',
                     index: '2',
                     title: '远程监控',
 

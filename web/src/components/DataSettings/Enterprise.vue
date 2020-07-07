@@ -388,7 +388,7 @@ export default {
             this.idx = row.id;
             // this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
             // delete row['industry_name'];
-            this.form = row;
+           this.form = JSON.parse(JSON.stringify(row));
             // delete this.form['industry_name']
             this.editVisible = true;
             this.isAdd = false;

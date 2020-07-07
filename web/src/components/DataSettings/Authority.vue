@@ -498,6 +498,11 @@ export default {
 
         //删除操作
         handleDelete(index, row) {
+            if(row.username===localStorage.username){
+                this.$message.error('超级管理员不能删除自己的账号！'); 
+            }else{
+
+          
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
@@ -524,6 +529,7 @@ export default {
                 .catch(err => {
                     console.log(err);
                 });
+            }
         },
 
         //重置密码
