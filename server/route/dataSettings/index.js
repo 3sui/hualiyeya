@@ -42,16 +42,16 @@ module.exports = app => {
 
         res.send(results)
     })
-//根据行业id获取是否有设备关联
+    //根据行业id获取是否有设备关联
 
-    
+
     router.post('/CheckIndustryId', authMiddle, async (req, res) => {
         assert(req.user.role === 1, 403, '您无权访问')
 
         let id = req.body.id;
-        let sql = `select * from enterprise where industry_id=${id} and  is_deleted=0` 
+        let sql = `select * from enterprise where industry_id=${id} and  is_deleted=0`
         let results = await connection(sql)
-console.log(results);
+        console.log(results);
 
         res.send(results)
 
@@ -233,36 +233,63 @@ console.log(results);
     //添加企业表信息
     router.post('/AddEnterprise', authMiddle, async (req, res) => {
         assert(req.user.role === 1, 403, '您无权访问')
-
+        let sql
         let query = req.body;
+        let results = {}
+        sql = `select * from enterprise where enterprise_name = '${query.enterprise_name}'`
+        let a = await connection(sql, query)
+        console.log(a);
 
-        console.log(query)
-        let sql = "insert into enterprise set ? "
-        let results = await connection(sql, query)
-        res.send(results)
+        if (a.length == 0) {
+            results.success = true
+            sql = "insert into enterprise set ? "
+            await connection(sql, query)
+            results.message = '添加成功'
+            res.send(results)
+        } else {
+            results.success = false
+
+            results.message = '企业名称不能重复'
+            res.send(results)
+
+        }
+
     })
 
     //修改企业表信息
     router.post('/UpdateEnterprise', authMiddle, async (req, res) => {
         assert(req.user.role === 1, 403, '您无权访问')
-
+        let sql
         let id = req.body.id;
         let query = req.body;
-        let sql = "update enterprise set ? where id=" + id
-        let results = await connection(sql, query)
-        res.send(results)
+        let results = {}
+        sql = `select * from enterprise where enterprise_name = '${query.enterprise_name}'`
+        let a = await connection(sql)
+        // if (a.length == 0) {
+            results.success = true
+            sql = "update enterprise set ? where id=" + id
+            await connection(sql, query)
+            results.message = '修改成功'
+            res.send(results)
+        // } else {
+        //     results.success = false
+
+        //     results.message = '企业名称不能重复'
+        //     res.send(results)
+
+        // }
     })
-//根据企业id判断是否关联设备表和用户表
+    //根据企业id判断是否关联设备表和用户表
 
     router.post('/checkEnterpriseID', authMiddle, async (req, res) => {
         assert(req.user.role === 1, 403, '您无权访问')
 
         let id = req.body.id;
-        let sql1 =`select * from enterprise e, device d where e.id = d.enterprise_id and d.is_deleted = 0 and e.id = ${id}`
+        let sql1 = `select * from enterprise e, device d where e.id = d.enterprise_id and d.is_deleted = 0 and e.id = ${id}`
         let sql2 = `select * from enterprise e, user_info u where e.id = u.enterprise_id and u.is_deleted = 0 and e.id = ${id}`
         let result1 = await connection(sql1)
         let result2 = await connection(sql2)
-        res.send(result1.length+result2.length)
+        res.send(result1.length + result2.length)
     })
 
 
