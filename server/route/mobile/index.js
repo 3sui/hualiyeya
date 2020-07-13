@@ -348,6 +348,9 @@ module.exports = app => {
         var currFile = path.resolve(__dirname, '../../nodeServer/uploads/' + req.body.file_name),
             fileName = req.body.file_name,
             fReadStream;
+            
+       
+        
         console.log(currFile);
 
 

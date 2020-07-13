@@ -268,7 +268,7 @@ export default {
                     // },
                     data: this.faulttypelist,
                     axisLabel: {
-                        margin: 100,
+                        margin: 120,
                         fontSize: 14,
                         align: 'left',
                         color: '#333',

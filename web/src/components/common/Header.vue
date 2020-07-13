@@ -5,7 +5,7 @@
             <i v-if="!collapse" class="el-icon-s-fold"></i>
             <i v-else class="el-icon-s-unfold"></i>
         </div>
-        <div class="logo">设备远程运维系统</div>
+        <div class="logo">设备远程诊断系统</div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
@@ -79,7 +79,7 @@ export default {
         // 用户名下拉菜单选择事件
         handleCommand(command) {
             if (command == 'loginout') {
-                localStorage.removeItem('ms_username');
+                localStorage.clear()
                 this.$router.push('/login');
             }
             if (command == 'changePassword') {

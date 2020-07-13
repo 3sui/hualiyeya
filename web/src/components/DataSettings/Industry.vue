@@ -235,7 +235,11 @@ export default {
             //     this.$message.error(`行业名称过长`);
             // } else {
             let arrylist = this.getindustrylist();
+            console.log(this.form.industry_name);
             console.log(arrylist);
+            
+            
+            console.log(arrylist.indexOf(this.form.industry_name));
 
             if (arrylist.indexOf(this.form.industry_name) !== -1) {
                 this.$message.error(`行业名称不能重复`);
@@ -294,7 +298,7 @@ export default {
             window.console.log(row);
             this.idx = row.id;
             // this.idx = this.tableData[index + (this.pageIndex - 1) * this.pageSize].id;
-            this.form = row;
+            this.form = JSON.parse(JSON.stringify(row));
             this.editVisible = true;
             this.isAdd = false;
         },
