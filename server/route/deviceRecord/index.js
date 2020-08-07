@@ -90,7 +90,7 @@ module.exports = app => {
 
         console.log(req.query)
         let eq = req.query.eq
-        let sql = `select * from devicedata_limit where eq = '${eq}'`
+        let sql = `select * from devicedata_limit where eq = '${eq}' order by cp_id asc`
         let a = await connection(sql)
         console.log(a)
         let results = {

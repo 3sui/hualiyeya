@@ -1,6 +1,6 @@
 <template>
   <div class="login" :style="note">
-    <div class="title">设备远程管理系统</div>
+    <div class="title">设备远程诊断系统</div>
     <div class="content">
       <!-- <van-divider style="margin:0" /> -->
       <div class="vactor">
