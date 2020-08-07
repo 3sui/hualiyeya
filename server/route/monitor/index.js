@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-17 09:21:33
- * @LastEditTime: 2020-06-29 09:58:40
+ * @LastEditTime: 2020-08-07 14:14:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\monitor\index.js
@@ -37,10 +37,12 @@ module.exports = app => {
         let b = await connection(sql)
         let openD = []
         async function cItem(arr, aItem) {
+            console.log(arr);
+
             for (let i = 0; i < arr.length; i++) {
                 let cItem = arr[i]
                 sql = `update device set status = '正常' where eq = '${cItem.eq}' and is_deleted = 0`
-                // console.log(cItem, 90);
+                console.log(cItem, 90);
 
                 await connection(sql)
 
@@ -144,6 +146,8 @@ module.exports = app => {
                 // console.log(sql);
 
                 await connection(sql)
+                console.log(b);
+
                 let arr = b.filter(bItem => {
                     return bItem.eq == aItem.eq
                 })
@@ -161,7 +165,7 @@ module.exports = app => {
 
     setInterval(() => {
         monitor()
-    }, 61000);
+    }, 6100);
 
     // monitor()
 

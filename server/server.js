@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-05-08 09:03:27
- * @LastEditTime: 2020-07-02 15:01:11
+ * @LastEditTime: 2020-08-07 13:38:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\server.js
@@ -30,7 +30,7 @@ require('./route/dataSettings/index')(app)
 require('./route/analysis/index')(app)
 require('./route/product/repair')(app)
 require('./route/maintain/index')(app)
-// require('./route/monitor/index')(app)
+require('./route/monitor/index')(app)
 require('./route/home/index')(app)
 
 require('./route/upload/index')(app)
