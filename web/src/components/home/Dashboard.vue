@@ -232,6 +232,7 @@ export default {
                 datasets: [
                     {
                         data: [3]
+                       
                     }
                 ]
             },
