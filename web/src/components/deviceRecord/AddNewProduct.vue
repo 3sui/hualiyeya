@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 14:19:13
- * @LastEditTime: 2020-06-28 01:33:06
+ * @LastEditTime: 2020-08-11 10:03:24
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\AddNewProduct.vue
@@ -62,7 +62,7 @@
                             ></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="设备负责人" prop="principal">
+                    <!-- <el-form-item label="设备负责人" prop="principal">
                         <el-select
                             v-model.trim="form.principal"
                             placeholder="请选择负责人"
@@ -75,7 +75,7 @@
                                 :value="item.id"
                             ></el-option>
                         </el-select>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item label="设备厂家" prop="device_supplier">
                         <el-input v-model.trim="form.device_supplier" placeholder="例: 航天云网"></el-input>
                     </el-form-item>
@@ -161,7 +161,7 @@ export default {
                 device_supplier: '',
                 address: '',
                 device_model: '',
-                principal: []
+                // principal: []
             },
             rules: {
                 eq: [
@@ -206,13 +206,13 @@ export default {
                         trigger: 'change'
                     }
                 ],
-                principal: [
-                    {
-                        required: true,
-                        message: '请选择负责人',
-                        trigger: 'change'
-                    }
-                ],
+                // principal: [
+                //     {
+                //         required: true,
+                //         message: '请选择负责人',
+                //         trigger: 'change'
+                //     }
+                // ],
                 device_supplier: [
                     {
                         required: true,

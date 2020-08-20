@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-17 09:21:33
- * @LastEditTime: 2020-08-07 14:14:20
+ * @LastEditTime: 2020-08-07 15:42:48
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\monitor\index.js
@@ -165,7 +165,7 @@ module.exports = app => {
 
     setInterval(() => {
         monitor()
-    }, 6100);
+    }, 61000);
 
     // monitor()
 

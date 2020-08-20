@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 10:34:44
- * @LastEditTime: 2020-06-29 16:16:27
+ * @LastEditTime: 2020-08-10 11:24:54
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\deviceRecord\index.js
@@ -33,9 +33,13 @@ module.exports = app => {
 
         }
         let row = await connection(sql)
+        sql = `select * from device_type where is_deleted = 0`
+        let deviceType = await connection(sql)
+
         let data = {
             success: true,
-            data: row
+            data: row,
+            deviceType
         }
         res.send(data)
 
@@ -44,10 +48,12 @@ module.exports = app => {
     //产品列表点击删除
     //企业用户没有权限
     router.get('/deleteProducts', authMiddle, async (req, res) => {
+        console.log(123);
+
         assert(req.user.role < 2, 405, '您没有权限进行删除操作')
         let body = req.query
         let sql = 'update device set is_deleted = 1 WHERE id in (' + body.id + ')'
-        console.log(sql);
+        console.log(body);
         console.log(body.id);
         await connection(sql)
         res.send('数据删除成功')
@@ -61,16 +67,18 @@ module.exports = app => {
             id,
             device_name,
             address,
+            device_type,
             device_supplier,
             device_description
         } = req.body
         console.log(req.body);
-        let sql = 'update device set device_name = ?, address = ?, device_supplier = ?, device_description = ? where id = ?'
+        let sql = 'update device set device_name = ?, address = ?, device_supplier = ?, device_description = ?,device_type = ? where id = ?'
         await connection(sql, [
             device_name,
             address,
             device_supplier,
             device_description,
+            device_type,
             id
         ])
         let results = {

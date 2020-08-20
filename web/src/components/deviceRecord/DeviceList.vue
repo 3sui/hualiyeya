@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-06-29 09:14:00
+ * @LastEditTime: 2020-08-20 09:15:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -128,6 +128,7 @@
                 <el-table-column prop="eq" label="设备ID"></el-table-column>
                 <el-table-column prop="device_name" label="设备名称"></el-table-column>
                 <el-table-column prop="typename" label="设备种类"></el-table-column>
+                <el-table-column prop="device_description" label="设备型号"></el-table-column>
                 <el-table-column prop="device_description" label="型号描述"></el-table-column>
                 <el-table-column prop="device_supplier" label="客户名称"></el-table-column>
                 <!-- <el-table-column prop="CustomerIndustry" label="客户行业"></el-table-column> -->
@@ -215,6 +216,16 @@
             <el-form ref="form" :model="form" label-width="90px" :rules="rules">
                 <el-form-item label="设备名称" prop="device_name">
                     <el-input v-model="form.device_name"></el-input>
+                </el-form-item>
+                <el-form-item label="设备类型" prop="device_name">
+                    <el-select v-model="form.typename" placeholder="请选择">
+                        <el-option
+                            v-for="item in deviceType"
+                            :key="item.id"
+                            :label="item.typename"
+                            :value="item.id"
+                        ></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="地址" prop="address">
                     <el-input v-model="form.address"></el-input>
@@ -325,6 +336,7 @@ export default {
             },
             tableData: [], //设备列表的数据
             showData: [], //展示的数据
+            deviceType: [], //设备种类
             multipleSelection: [],
             delList: [],
             editVisibleDevice: false,
@@ -381,9 +393,10 @@ export default {
                 method: 'get',
                 url: '/device/fetchAllDevice'
             })
-                .then(res => {
+                .then((res) => {
                     window.console.log(res);
                     if (res.data.success) {
+                        this.deviceType = res.data.deviceType;
                         this.tableData = res.data.data;
                         this.showData = this.tableData.slice(
                             (this.query.pageIndex - 1) * this.query.pageSize,
@@ -421,8 +434,10 @@ export default {
         // 删除操作
         handleDelete(index, row) {
             let idArr = [];
+            let eqArr = [];
             idArr.push(row.id);
-            window.console.log(idArr);
+            eqArr.push(row.eq);
+
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
@@ -432,10 +447,11 @@ export default {
                         method: 'get',
                         url: '/device/deleteProducts',
                         params: {
-                            id: idArr
+                            id: idArr,
+                            eq: eqArr
                         }
                     })
-                        .then(res => {
+                        .then((res) => {
                             window.console.log(res.data);
                             this.$message.success(res.data);
                             this.getData();
@@ -483,7 +499,7 @@ export default {
                             id: idArr
                         }
                     })
-                        .then(res => {
+                        .then((res) => {
                             window.console.log(res.data);
                             this.$message.success(res.data);
                             this.getData();
@@ -508,14 +524,14 @@ export default {
                 url: '/device/saveEdit',
                 data: this.form
             })
-                .then(res => {
+                .then((res) => {
                     if (res.data.success) {
                         this.editVisibleDevice = false;
                         this.$message.success(res.data.message);
                         this.getData();
                     }
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
         // 配置测点
         handleSetting(index, row) {
@@ -529,7 +545,7 @@ export default {
                     eq: row.eq
                 }
             })
-                .then(res => {
+                .then((res) => {
                     window.console.log(this.formSetting);
 
                     console.log(res.data);
@@ -539,7 +555,7 @@ export default {
                     }
                     window.console.log(this.formSetting);
                 })
-                .catch(err => {});
+                .catch((err) => {});
         },
 
         //
@@ -577,18 +593,18 @@ export default {
                         url: '/device/saveSetting',
                         data: this.formSetting
                     })
-                        .then(res => {
+                        .then((res) => {
                             window.console.log(res.data);
                             if (res.data.success) {
                                 this.$message.success(res.data.message);
                                 this.editVisibleSetting = false;
                             }
                         })
-                        .catch(err => {
+                        .catch((err) => {
                             throw err;
                         });
                 })
-                .catch(err => {
+                .catch((err) => {
                     throw err;
                 });
         },

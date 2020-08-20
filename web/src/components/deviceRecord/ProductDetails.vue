@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 10:56:10
- * @LastEditTime: 2020-07-03 16:57:33
+ * @LastEditTime: 2020-08-10 09:33:14
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\view\ProductDetails.vue
@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="plugins-tips">设备信息</div>
-            <el-row :gutter="20" class="mb-30" v-if="tableData.info">
+            <el-row :gutter="20" class="mb-30 fs-lg detail" v-if="tableData.info">
                 <el-col :span="12">
                     <div class="ml-50">
                         <p>设备ID: {{tableData.info.eq}}</p>
@@ -459,5 +459,8 @@ p {
 .annex img {
     margin: 10px 10px;
     vertical-align: middle;
+}
+.detail p{
+    line-height: 40px;
 }
 </style>

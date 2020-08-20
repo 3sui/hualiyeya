@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-14 14:08:41
- * @LastEditTime: 2020-06-29 15:15:31
+ * @LastEditTime: 2020-08-11 10:23:22
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\maintain\index.js
@@ -49,8 +49,8 @@ module.exports = app => {
         }
         let results = {}
         results.success = true
-        let sql = `select * from (select * from devicedata where eq = '${eq}' ORDER BY ts DESC limit ${date}) aa ORDER BY ts asc`
-
+        let sql = `select * from (select * from devicedata where eq = '${eq}' ORDER BY ts DESC limit ${date}) aa ORDER BY ts`
+        console.log(sql);
         results.info = await connection(sql)
         sql = `select * from devicedata_limit where eq = '${eq}'`
         results.delimit = await connection(sql)

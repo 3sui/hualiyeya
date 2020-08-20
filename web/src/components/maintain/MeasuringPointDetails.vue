@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-07 10:52:41
- * @LastEditTime: 2020-07-03 11:15:32
+ * @LastEditTime: 2020-08-11 11:31:09
  * @LastEditors: Please set LastEditors
  * @Description: 测点详情
  * @FilePath: \vue-manage-system\src\components\view\MeasuringPointDetails.vue
@@ -16,7 +16,7 @@
                 <el-breadcrumb-item>测点详情</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="container">
+        <div class="container" v-loading="loading">
             <div>
                 <el-button
                     type="primary"
@@ -88,10 +88,8 @@
             <div class="block mt-2" style="float: right">
                 <!-- <span class="demonstration">显示总数</span> -->
                 <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
                 :current-page.sync="pageIndex"
-                :page-size="100"
+                :page-size="10"
                 layout="total, prev, pager, next"
                 :total="tableData.info.length">
                 </el-pagination>
@@ -144,6 +142,7 @@ export default {
     name: 'MeasuringPointDetails',
     data() {
         return {
+            loading: false,
             tableData: [],
             multipleSelection: [],
             delList: [],
@@ -205,10 +204,10 @@ export default {
     created() {},
     mounted() {
         this.getData();
-        window.console.log(document.getElementById('myChart1'));
     },
     methods: {
         getData(date) {
+            this.loading = true;
             let eq = this.$route.query.eq;
             window.console.log(eq);
             axios({
@@ -334,6 +333,7 @@ export default {
                     }
                     this.limit = arr;
                     window.console.log(arr);
+                    this.loading = false;
                 })
                 .then(() => {
                     for (let i in this.schart) {
