@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2020-05-06 09:29:23
- * @LastEditTime: 2020-08-20 09:15:36
+ * @LastEditTime: 2020-08-24 15:17:46
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \vue-manage-system\src\components\page\ProductList.vue
@@ -218,7 +218,7 @@
                     <el-input v-model="form.device_name"></el-input>
                 </el-form-item>
                 <el-form-item label="设备类型" prop="device_name">
-                    <el-select v-model="form.typename" placeholder="请选择">
+                    <el-select v-model="form.device_type" placeholder="请选择">
                         <el-option
                             v-for="item in deviceType"
                             :key="item.id"

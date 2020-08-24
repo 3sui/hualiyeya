@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 10:34:44
- * @LastEditTime: 2020-08-10 11:24:54
+ * @LastEditTime: 2020-08-20 15:13:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\deviceRecord\index.js
