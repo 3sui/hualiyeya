@@ -8,6 +8,7 @@ module.exports = app => {
     const path = require("path") // 处理路径的模块
     const authMiddle = require('../../middleware/auth')()
     const assert = require('http-assert')
+    const md5 = require('md5')
 
 
     //获取行业表信息
@@ -266,11 +267,11 @@ module.exports = app => {
         sql = `select * from enterprise where enterprise_name = '${query.enterprise_name}'`
         let a = await connection(sql)
         // if (a.length == 0) {
-            results.success = true
-            sql = "update enterprise set ? where id=" + id
-            await connection(sql, query)
-            results.message = '修改成功'
-            res.send(results)
+        results.success = true
+        sql = "update enterprise set ? where id=" + id
+        await connection(sql, query)
+        results.message = '修改成功'
+        res.send(results)
         // } else {
         //     results.success = false
 
@@ -360,7 +361,7 @@ module.exports = app => {
         assert(req.user.role < 3, 403, '您无权访问')
 
         let id = req.body.id;
-        let sql = "update user_info set password='123456' where id=" + id
+        let sql = `update user_info set password='${md5('123456')}' where id=` + id
         await connection(sql)
         let results = {
             success: true,
@@ -442,7 +443,7 @@ module.exports = app => {
         sql = `insert into user_info (enterprise_id, username, nickname, phone, email, password) values (?,?,?,?,?,?)`
         console.log(sql);
 
-        results = await connection(sql, [enterprise_id, username, nickname, phone, email, '123456'])
+        results = await connection(sql, [enterprise_id, username, nickname, phone, email, md5('123456')])
         console.log(results)
         let ur_id = results.insertId
         sql = `insert into user_role (user_id, role_id) values (?,?)`

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-06-02 14:22:53
- * @LastEditTime: 2020-07-03 15:36:18
+ * @LastEditTime: 2020-08-25 15:15:20
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \server\route\login\index.js
@@ -13,6 +13,7 @@ module.exports = app => {
     const jwt = require('jsonwebtoken')
     const assert = require('http-assert')
     const authMiddle = require('../../middleware/auth')()
+    const md5 = require('md5')
 
     router.post('/', async (req, res) => {
         const {
@@ -23,7 +24,7 @@ module.exports = app => {
         let sql = "select password,id,nickname,avatar,phone,username from user_info where username = ? and is_deleted = 0"
         let row = await connection(sql, username)
         assert(row.length, 422, '用户不存在')
-        assert(row[0].password === password, 422, '密码不正确')
+        assert(row[0].password === md5(password), 422, '密码不正确')
         let result = {}
         result.token = jwt.sign({
             id: row[0].id
@@ -50,13 +51,13 @@ module.exports = app => {
         let sql
 
         let results = {}
-        if (oldPass == req.user.password) {
-            if (newPass == req.user.password) {
+        if (md5(oldPass) == req.user.password) {
+            if (md5(newPass) == req.user.password) {
                 results.success = false
                 results.message = '没有更新密码'
             } else {
                 results.success = true
-                sql = `update user_info set password = '${newPass}' where id = ${req.user.id}`
+                sql = `update user_info set password = '${md5(newPass)}' where id = ${req.user.id}`
                 await connection(sql)
                 results.message = '密码修改成功'
             }
@@ -69,7 +70,9 @@ module.exports = app => {
     })
 
 
-
+    router.get('/123', (req, res) => {
+        console.log(md5('cmqrL32b'));
+    })
     app.use('/api/login', router)
 
 }
