@@ -25,12 +25,12 @@ module.exports = app => {
 
     // 检查文件的MD5
     router.get('/check/file', authMiddle, (req, resp) => {
-        assert(req.user.role < 2, 405, '您没有权限进行上传操作')
+        // assert(req.user.role < 2, 405, '您没有权限进行上传操作')
 
         let query = req.query
         let fileName = query.fileName
         let fileMd5Value = query.fileMd5Value
-        // 获取文件Chunk列表
+            // 获取文件Chunk列表
 
         getChunkList(
 
@@ -68,7 +68,7 @@ module.exports = app => {
         })
     })
 
-    router.all('/merge', async (req, resp) => {
+    router.all('/merge', async(req, resp) => {
         let query = req.query
         let id = req.query.deviceId
         console.log('-------------------', id)
@@ -93,45 +93,45 @@ module.exports = app => {
     router.all('/uploads', (req, resp) => {
 
         var form = new formidable.IncomingForm({
-            uploadDir: 'nodeServer/tmp'
-           
-        })
-        // console.log(form);
+                uploadDir: 'nodeServer/tmp'
 
-        form.parse(req, function (err, fields, file) {
-
-            let index = fields.index
-            let total = fields.total
-            let fileMd5Value = fields.fileMd5Value
-
-            let folder = path.resolve(__dirname, '../../nodeServer/uploads', fileMd5Value)
-            folderIsExit(folder).then(val => {
-                let destFile = path.resolve(folder, fields.index)
-                console.log('----------->', file.data.path, destFile)
-                copyFile(file.data.path, destFile).then(
-                    successLog => {
-                        resp.send({
-                            stat: 1,
-                            desc: index
-                        })
-                    },
-                    errorLog => {
-                        resp.send({
-                            stat: 0,
-                            desc: 'Error'
-                        })
-                    }
-                )
             })
-        })
-        // 文件夹是否存在, 不存在则创建文件
+            // console.log(form);
+
+        form.parse(req, function(err, fields, file) {
+
+                let index = fields.index
+                let total = fields.total
+                let fileMd5Value = fields.fileMd5Value
+
+                let folder = path.resolve(__dirname, '../../nodeServer/uploads', fileMd5Value)
+                folderIsExit(folder).then(val => {
+                    let destFile = path.resolve(folder, fields.index)
+                    console.log('----------->', file.data.path, destFile)
+                    copyFile(file.data.path, destFile).then(
+                        successLog => {
+                            resp.send({
+                                stat: 1,
+                                desc: index
+                            })
+                        },
+                        errorLog => {
+                            resp.send({
+                                stat: 0,
+                                desc: 'Error'
+                            })
+                        }
+                    )
+                })
+            })
+            // 文件夹是否存在, 不存在则创建文件
         function folderIsExit(folder) {
 
             console.log('folderIsExit', folder)
 
-            return new Promise(async (resolve, reject) => {
+            return new Promise(async(resolve, reject) => {
                 let result = await fs.ensureDirSync(path.join(folder))
-                // let result = await fs.ensureDirSync(path.resolve(folder))
+                    // let result = await fs.ensureDirSync(path.resolve(folder))
                 console.log('result----', result)
                 resolve(true)
             })
@@ -157,7 +157,7 @@ module.exports = app => {
 
         let isFileExit = await isExist(filePath)
         let result = {}
-        // 如果文件(文件名, 如:node-v7.7.4.pkg)已在存在, 不用再继续上传, 真接秒传
+            // 如果文件(文件名, 如:node-v7.7.4.pkg)已在存在, 不用再继续上传, 真接秒传
         if (isFileExit) {
             result = {
                 stat: 1,
@@ -169,7 +169,7 @@ module.exports = app => {
             }
         } else {
             let isFolderExist = await isExist(folderPath)
-            // 如果文件夹(md5值后的文件)存在, 就获取已经上传的块
+                // 如果文件夹(md5值后的文件)存在, 就获取已经上传的块
             let fileList = []
             if (isFolderExist) {
                 fileList = await listDir(folderPath)

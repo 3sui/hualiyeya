@@ -103,11 +103,11 @@ export default {
               localStorage.username = res.data.username;
 
               console.log(res.data);
-              if (localStorage.role !== '4') {
-                this.$router.push("/DeviceManage");
-              } else {
-                this.$router.push("/RepairRecord");
-              }
+              // if (localStorage.role !== '4') {
+                this.$router.push("/Settings");
+              // } else {
+              //   this.$router.push("/RepairRecord");
+              // }
             } else {
               console.log('密码错误请重输');
               

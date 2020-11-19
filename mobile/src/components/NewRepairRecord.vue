@@ -16,7 +16,7 @@
     <van-form @submit="onSubmit">
 
        <van-field v-model="query.enterprise_name" type="text" required label="企业名称" placeholder="点击输入企业名称"/>
-      <van-field v-model="query.device_eq" type="textgit " required label="设备编号" placeholder="点击输入设备编号"/>
+      <van-field v-model="query.device_eq" type="textgit" required label="设备编号" placeholder="点击输入设备编号"/>
       <!-- 选择企业 -->
       <!-- <van-field
         readonly
@@ -112,8 +112,9 @@
           @cancel="showPicker_person = false"
         />
       </van-popup> -->
-       <van-field v-model="query.repair_person" type="tel" required label="维修人员" disabled/>
-      <van-field v-model="query.repair_person_phone" type="tel" required label="手机号" disabled />
+       <van-field v-model="query.repair_person"  required label="维修人员" disabled/>
+      <van-field v-model="query.contact" type="text" required label="客户联系人" placeholder="点击输入客户联系人" />
+      <van-field v-model="query.contact_phone" type="tel" required label="客户联系电话" placeholder="点击输入客户联系电话" />
       <van-field
         readonly
         clickable
@@ -255,7 +256,8 @@ export default {
         type: "",
         phenomenon: "",
         repair_person: "",
-        repair_person_phone: "",
+        contact:"",
+        contact_phone: "",
         date: "",
         state: "",
         cause: "",
@@ -277,7 +279,8 @@ export default {
         !this.query.type ||
         !this.query.phenomenon ||
         !this.query.repair_person ||
-        !this.query.repair_person_phone ||
+        !this.query.contact ||
+        !this.query.contact_phone ||
         !this.query.date ||
         !this.query.state ||
         !this.query.cause ||
@@ -364,7 +367,7 @@ export default {
       //   });
       // });
       this.query.repair_person=localStorage.ms_username;
-       this.query.repair_person_phone=localStorage.phone;
+      //  this.query.contact_phone=localStorage.phone;
     },
 
     //获取维修状态
@@ -420,7 +423,7 @@ export default {
     //   this.query.repair_person = value;
     //   this.showPicker_person = false;
     //   let index = this.personlist.indexOf(value);
-    //   this.query.repair_person_phone = this.phonelist[index];
+    //   this.query.contact_phone = this.phonelist[index];
     // },
 
     //日期格式化

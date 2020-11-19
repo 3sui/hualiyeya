@@ -12,15 +12,15 @@ module.exports = app => {
 
 
     //获取行业表信息
-    router.get('/Industry', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
-        let sql = "select * from industry where is_deleted = 0 order by created_time Desc"
-        let results = await connection(sql)
-        res.send(results)
-    })
-    //添加行业表信息
-    router.post('/AddIndustry', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.get('/Industry', authMiddle, async(req, res) => {
+            // assert(req.user.role === 1, 403, '您无权访问')
+            let sql = "select * from industry where is_deleted = 0 order by created_time Desc"
+            let results = await connection(sql)
+            res.send(results)
+        })
+        //添加行业表信息
+    router.post('/AddIndustry', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let query = req.body;
 
@@ -32,22 +32,22 @@ module.exports = app => {
     })
 
     //修改行业表信息
-    router.post('/UpdateIndustry', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/UpdateIndustry', authMiddle, async(req, res) => {
+            // assert(req.user.role === 1, 403, '您无权访问')
 
-        let id = req.body.id;
-        let query = req.body;
+            let id = req.body.id;
+            let query = req.body;
 
-        let sql = "update industry set ? where id=" + id
-        let results = await connection(sql, query)
+            let sql = "update industry set ? where id=" + id
+            let results = await connection(sql, query)
 
-        res.send(results)
-    })
-    //根据行业id获取是否有设备关联
+            res.send(results)
+        })
+        //根据行业id获取是否有设备关联
 
 
-    router.post('/CheckIndustryId', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/CheckIndustryId', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let id = req.body.id;
         let sql = `select * from enterprise where industry_id=${id} and  is_deleted=0`
@@ -59,19 +59,19 @@ module.exports = app => {
     })
 
     //单个删除行业表信息
-    router.post('/DeleteIndustry', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/DeleteIndustry', authMiddle, async(req, res) => {
+            // assert(req.user.role === 1, 403, '您无权访问')
 
-        let id = req.body.id;
-        let sql = "update industry set is_deleted=1 where id=" + id
-        let results = await connection(sql)
+            let id = req.body.id;
+            let sql = "update industry set is_deleted=1 where id=" + id
+            let results = await connection(sql)
 
-        res.send(results)
+            res.send(results)
 
-    })
-    //查询行业表信息
-    router.post('/SearchIndustry', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+        })
+        //查询行业表信息
+    router.post('/SearchIndustry', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let keyword = req.body.keyword;
         let sql = "select * from  industry where is_deleted = 0 and industry_name like '%" + keyword + "%' order by created_time Desc"
@@ -85,21 +85,21 @@ module.exports = app => {
 
 
     //获取设备类型表信息
-    router.get('/DeviceType', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.get('/DeviceType', authMiddle, async(req, res) => {
+            // assert(req.user.role === 1, 403, '您无权访问')
 
-        let sql = "select * from device_type where is_deleted = 0 order by created_time Desc"
-        let results = await connection(sql)
+            let sql = "select * from device_type where is_deleted = 0 order by created_time Desc"
+            let results = await connection(sql)
 
-        // for (let i = 0; i < results.length; i++) {
-        //     results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
-        // }
-        res.send(results)
+            // for (let i = 0; i < results.length; i++) {
+            //     results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            // }
+            res.send(results)
 
-    })
-    //添加设备类型表信息
-    router.post('/AddDeviceType', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+        })
+        //添加设备类型表信息
+    router.post('/AddDeviceType', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let query = req.body;
 
@@ -110,19 +110,19 @@ module.exports = app => {
     })
 
     //修改设备类型表信息
-    router.post('/UpdateDeviceType', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/UpdateDeviceType', authMiddle, async(req, res) => {
+            // assert(req.user.role === 1, 403, '您无权访问')
 
-        let id = req.body.id;
-        let query = req.body;
+            let id = req.body.id;
+            let query = req.body;
 
-        let sql = "update device_type set ? where id=" + id
-        let results = await connection(sql, query)
-        res.send(results)
-    })
-    //根据id判断是否可以删除设备类型
-    // router.post('/CheckDeviceTypeId', authMiddle, async (req, res) => {
-    //     assert(req.user.role === 1, 403, '您无权访问')
+            let sql = "update device_type set ? where id=" + id
+            let results = await connection(sql, query)
+            res.send(results)
+        })
+        //根据id判断是否可以删除设备类型
+        // router.post('/CheckDeviceTypeId', authMiddle, async (req, res) => {
+        //     assert(req.user.role === 1, 403, '您无权访问')
 
     //     let id = req.body.id;
     //     let sql = "update device_type set is_deleted=1 where id=" + id
@@ -130,8 +130,8 @@ module.exports = app => {
     //     res.send(results)
     // })
 
-    router.post('/CheckDeviceTypeId', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/CheckDeviceTypeId', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
         let id = req.body.id;
         let sql = `select * from device where device_type=${id} and  is_deleted=0`
         let results = await connection(sql)
@@ -143,17 +143,17 @@ module.exports = app => {
 
 
     //单个删除设备类型表信息
-    router.post('/DeleteDeviceType', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/DeleteDeviceType', authMiddle, async(req, res) => {
+            // assert(req.user.role === 1, 403, '您无权访问')
 
-        let id = req.body.id;
-        let sql = "update device_type set is_deleted=1 where id=" + id
-        let results = await connection(sql)
-        res.send(results)
-    })
-    //查询设备类型表信息
-    router.post('/SearchDeviceType', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+            let id = req.body.id;
+            let sql = "update device_type set is_deleted=1 where id=" + id
+            let results = await connection(sql)
+            res.send(results)
+        })
+        //查询设备类型表信息
+    router.post('/SearchDeviceType', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let keyword = req.body.keyword;
         let sql = "select * from  device_type where is_deleted = 0 and typename like '%" + keyword + "%' order by created_time Desc"
@@ -164,17 +164,17 @@ module.exports = app => {
 
 
     //获取故障类型表信息
-    router.get('/FaultType', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.get('/FaultType', authMiddle, async(req, res) => {
+            // assert(req.user.role === 1, 403, '您无权访问')
 
-        let sql = "select * from fault_type where is_deleted = 0 order by created_time Desc"
-        let results = await connection(sql)
-        res.send(results)
+            let sql = "select * from fault_type where is_deleted = 0 order by created_time Desc"
+            let results = await connection(sql)
+            res.send(results)
 
-    })
-    //添加故障类型表信息
-    router.post('/AddFaultType', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+        })
+        //添加故障类型表信息
+    router.post('/AddFaultType', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let query = req.body;
 
@@ -185,8 +185,8 @@ module.exports = app => {
     })
 
     //修改故障类型表信息
-    router.post('/UpdateFaultType', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/UpdateFaultType', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let id = req.body.id;
         let query = req.body;
@@ -199,8 +199,8 @@ module.exports = app => {
 
 
     //单个删除故障类型表信息
-    router.post('/DeleteFaultType', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/DeleteFaultType', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let id = req.body.id;
         let sql = "update fault_type set is_deleted = 1 where id=" + id
@@ -209,12 +209,12 @@ module.exports = app => {
     })
 
     //查询故障类型表信息
-    router.post('/SearchFaultType', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/SearchFaultType', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let keyword = req.body.keyword;
         let sql = `select * from  fault_type where is_deleted = 0 and (fault_type like '%${keyword}%' or fault_phenomenon like '%${keyword}%') order by created_time Desc`
-        // console.log(sql)
+            // console.log(sql)
         let results = await connection(sql)
         res.send(results)
     })
@@ -222,7 +222,7 @@ module.exports = app => {
 
 
     //获取企业表信息
-    router.get('/Enterprise', authMiddle, async (req, res) => {
+    router.get('/Enterprise', authMiddle, async(req, res) => {
         // assert(req.user.role === 1, 403, '您无权访问')
 
         let sql = `select enterprise.*,industry.industry_name from enterprise,industry where (enterprise.is_deleted = 0)and (enterprise.industry_id=industry.id) order by enterprise.created_time Desc`
@@ -232,8 +232,8 @@ module.exports = app => {
 
 
     //添加企业表信息
-    router.post('/AddEnterprise', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/AddEnterprise', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
         let sql
         let query = req.body;
         let results = {}
@@ -258,32 +258,32 @@ module.exports = app => {
     })
 
     //修改企业表信息
-    router.post('/UpdateEnterprise', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
-        let sql
-        let id = req.body.id;
-        let query = req.body;
-        let results = {}
-        sql = `select * from enterprise where enterprise_name = '${query.enterprise_name}'`
-        let a = await connection(sql)
-        // if (a.length == 0) {
-        results.success = true
-        sql = "update enterprise set ? where id=" + id
-        await connection(sql, query)
-        results.message = '修改成功'
-        res.send(results)
-        // } else {
-        //     results.success = false
+    router.post('/UpdateEnterprise', authMiddle, async(req, res) => {
+            // assert(req.user.role === 1, 403, '您无权访问')
+            let sql
+            let id = req.body.id;
+            let query = req.body;
+            let results = {}
+            sql = `select * from enterprise where enterprise_name = '${query.enterprise_name}'`
+            let a = await connection(sql)
+                // if (a.length == 0) {
+            results.success = true
+            sql = "update enterprise set ? where id=" + id
+            await connection(sql, query)
+            results.message = '修改成功'
+            res.send(results)
+                // } else {
+                //     results.success = false
 
-        //     results.message = '企业名称不能重复'
-        //     res.send(results)
+            //     results.message = '企业名称不能重复'
+            //     res.send(results)
 
-        // }
-    })
-    //根据企业id判断是否关联设备表和用户表
+            // }
+        })
+        //根据企业id判断是否关联设备表和用户表
 
-    router.post('/checkEnterpriseID', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/checkEnterpriseID', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let id = req.body.id;
         let sql1 = `select * from enterprise e, device d where e.id = d.enterprise_id and d.is_deleted = 0 and e.id = ${id}`
@@ -295,21 +295,21 @@ module.exports = app => {
 
 
     //单个删除企业表信息
-    router.post('/DeleteEnterprise', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+    router.post('/DeleteEnterprise', authMiddle, async(req, res) => {
+            // assert(req.user.role === 1, 403, '您无权访问')
 
-        let id = req.body.id;
-        let sql = "update enterprise set is_deleted=1 where id=" + id
-        let results = await connection(sql)
-        res.send(results)
-    })
-    //查询企业表信息
-    router.post('/SearchEnterprise', authMiddle, async (req, res) => {
-        assert(req.user.role === 1, 403, '您无权访问')
+            let id = req.body.id;
+            let sql = "update enterprise set is_deleted=1 where id=" + id
+            let results = await connection(sql)
+            res.send(results)
+        })
+        //查询企业表信息
+    router.post('/SearchEnterprise', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
 
         let keyword = req.body.keyword;
         let sql = `select enterprise.*,industry.industry_name from enterprise,industry where enterprise.industry_id=industry.id and enterprise.enterprise_name like '%${keyword}%' and (enterprise.is_deleted = 0 or enterprise.is_deleted is NULL ) order by enterprise.created_time Desc`
-        // console.log(sql)
+            // console.log(sql)
         let results = await connection(sql)
         res.send(results)
     })
@@ -320,24 +320,24 @@ module.exports = app => {
     //用户管理页面-----------------------------------------------------------------------------
 
     //获取用户表信息
-    router.get('/UserInfo', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 403, '您无权访问')
-        let sql
-        if (req.user.role === 1) {
-            sql = `select user_info.*,enterprise.enterprise_name from user_info,enterprise where (user_info.is_deleted = 0 or user_info.is_deleted is NULL) and user_info.enterprise_id=enterprise.id order by user_info.created_time Desc`
-        }
-        let results = await connection(sql)
+    router.get('/UserInfo', authMiddle, async(req, res) => {
+            // assert(req.user.role < 3, 403, '您无权访问')
+            let sql
+            if (req.user.role === 1) {
+                sql = `select user_info.*,enterprise.enterprise_name from user_info,enterprise where (user_info.is_deleted = 0 or user_info.is_deleted is NULL) and user_info.enterprise_id=enterprise.id order by user_info.created_time Desc`
+            }
+            let results = await connection(sql)
 
 
-        // for (let i = 0; i < results.length; i++) {
-        //     results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
-        // }
-        //  console.log(results)
-        res.send(results)
-    })
-    //添加用户表信息
-    router.post('/AddUserInfo', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 403, '您无权访问')
+            // for (let i = 0; i < results.length; i++) {
+            //     results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            // }
+            //  console.log(results)
+            res.send(results)
+        })
+        //添加用户表信息
+    router.post('/AddUserInfo', authMiddle, async(req, res) => {
+        // assert(req.user.role < 3, 403, '您无权访问')
 
         let query = req.body;
         console.log(query)
@@ -347,18 +347,18 @@ module.exports = app => {
     })
 
     //修改用户表信息
-    router.post('/UpdateUserInfo', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 403, '您无权访问')
+    router.post('/UpdateUserInfo', authMiddle, async(req, res) => {
+            // assert(req.user.role < 3, 403, '您无权访问')
 
-        let id = req.body.id;
-        let query = req.body;
-        let sql = "update user_info set ? where id=" + id
-        let results = await connection(sql, query)
-        res.send(results)
-    })
-    //重置用户密码信息，默认123456
-    router.post('/UpdatePassword', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 403, '您无权访问')
+            let id = req.body.id;
+            let query = req.body;
+            let sql = "update user_info set ? where id=" + id
+            let results = await connection(sql, query)
+            res.send(results)
+        })
+        //重置用户密码信息，默认123456
+    router.post('/UpdatePassword', authMiddle, async(req, res) => {
+        // assert(req.user.role < 3, 403, '您无权访问')
 
         let id = req.body.id;
         let sql = `update user_info set password='${md5('123456')}' where id=` + id
@@ -372,20 +372,20 @@ module.exports = app => {
 
 
     //查询用户表信息
-    router.post('/SearchUserInfo', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 403, '您无权访问')
+    router.post('/SearchUserInfo', authMiddle, async(req, res) => {
+        // assert(req.user.role < 3, 403, '您无权访问')
 
         let keyword = req.body.keyword;
 
         let sql = `select user_info.*,enterprise.enterprise_name from user_info,enterprise where user_info.enterprise_id=enterprise.id and (user_info.is_deleted = 0 or user_info.is_deleted is NULL ) and (user_info.username like '%${keyword}%' or user_info.nickname like '%${keyword}%' or enterprise.enterprise_name like '%${keyword}%' ) order by enterprise.created_time Desc`
-        // console.log(sql)
+            // console.log(sql)
         let results = await connection(sql)
         res.send(results)
     })
 
 
     //获取所有用户权限
-    router.get('/fetchAuthList', authMiddle, async (req, res) => {
+    router.get('/fetchAuthList', authMiddle, async(req, res) => {
         let sql
         let sql2
         if (req.user.role === 1) {
@@ -406,7 +406,7 @@ module.exports = app => {
         sql = `select * from role where id >= ${req.user.role}`
         row.roles = await connection(sql)
         row.enterprise = await connection(sql2)
-        // console.log(row.enterprise);
+            // console.log(row.enterprise);
 
         res.send(row)
     })
@@ -416,7 +416,7 @@ module.exports = app => {
 
 
     //新增用户
-    router.post('/addNewUser', authMiddle, async (req, res) => {
+    router.post('/addNewUser', authMiddle, async(req, res) => {
 
         assert(req.user.role < 3, 403, '没有权限')
 
@@ -464,7 +464,7 @@ module.exports = app => {
     const upload = multer({
         dest: __dirname + '/../../uploads'
     })
-    router.post('/addNewUserAvatar', upload.single('file'), authMiddle, async (req, res) => {
+    router.post('/addNewUserAvatar', upload.single('file'), authMiddle, async(req, res) => {
         const file = req.file
         console.log(req.body);
         console.log(file);
@@ -476,8 +476,8 @@ module.exports = app => {
     })
 
     //单个删除用户表信息
-    router.post('/DeleteUserInfo', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 403, '您无权访问')
+    router.post('/DeleteUserInfo', authMiddle, async(req, res) => {
+        // assert(req.user.role < 3, 403, '您无权访问')
 
         let id = req.body.id;
         let sql = "update user_info set is_deleted=1 where id=" + id
@@ -494,8 +494,8 @@ module.exports = app => {
     //超级管理员可以改所有人的权限
     //企业管理员可以改普通用户权限
     //普通用户无权限修改
-    router.post('/changeAuth', authMiddle, async (req, res) => {
-        assert(req.user.role < 3, 403, '没有权限')
+    router.post('/changeAuth', authMiddle, async(req, res) => {
+        // assert(req.user.role < 3, 403, '没有权限')
         console.log(req.user.role);
 
         let {
@@ -516,7 +516,7 @@ module.exports = app => {
     })
 
     //获取分配设备信息
-    router.get('/fetchDealing', authMiddle, async (req, res) => {
+    router.get('/fetchDealing', authMiddle, async(req, res) => {
         assert(req.user.role < 3, 403, '没有权限')
 
         console.log(req.query)
@@ -546,7 +546,7 @@ module.exports = app => {
     })
 
     //获得修改设备权限的值
-    router.post('/dealingDevice', authMiddle, async (req, res) => {
+    router.post('/dealingDevice', authMiddle, async(req, res) => {
         assert(req.user.role < 3, 403, '没有权限')
 
         console.log(req.body)
@@ -557,7 +557,7 @@ module.exports = app => {
         let sql = 'delete from user_device where user_id = ' + id
         await connection(sql)
         if (ids.length) {
-            ids.forEach(async (item) => {
+            ids.forEach(async(item) => {
                 sql = `insert into user_device (user_id, device_id) values (${id}, ${item})`
                 console.log(sql);
                 await connection(sql)
@@ -570,6 +570,137 @@ module.exports = app => {
         res.send(results)
 
     })
+
+    //获取角色表信息
+
+
+    router.get('/RoleInfo', authMiddle, async(req, res) => {
+            // assert(req.user.role < 3, 403, '您无权访问')
+            let sql
+            if (req.user.role === 1) {
+                sql = `select * from role where is_deleted = 0`
+            }
+            let results = await connection(sql)
+
+
+            // for (let i = 0; i < results.length; i++) {
+            //     results[i].created_time = TimeFomart.Todate(Number(results[i].created_time))
+            // }
+            //  console.log(results)
+            res.send(results)
+        })
+        //获取具体某一个用户的权限
+    router.post('/getRights', authMiddle, async(req, res) => {
+        // assert(req.user.role < 3, 403, '您无权访问')
+        console.log(req.body);
+        let id = req.body.id;
+        console.log(id);
+        let sql = `select * from role where id = ${id}`
+
+        let results = await connection(sql)
+        console.log(results);
+        res.send(results[0])
+    })
+
+    //添加角色表信息
+    router.post('/AddRole', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
+        let sql
+        let query = req.body;
+        let results = {}
+        sql = `select * from role where name = '${query.name}'`
+        let a = await connection(sql, query)
+        console.log(a);
+
+        if (a.length == 0) {
+            results.success = true
+            sql = "insert into role set ? "
+            await connection(sql, query)
+            results.message = '添加成功'
+            res.send(results)
+        } else {
+            results.success = false
+            results.message = '角色名称不能重复'
+            res.send(results)
+
+        }
+
+    })
+
+    //修改角色表信息
+    router.post('/UpdateRole', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
+        let sql
+        let id = req.body.id;
+        let query = req.body;
+        let results = {}
+        sql = `select * from role where name = '${query.name}'`
+        let a = await connection(sql)
+        if (a.length == 0) {
+            results.success = true
+            sql = "update role set ? where id=" + id
+            await connection(sql, query)
+            results.message = '修改成功'
+            res.send(results)
+        } else {
+            results.success = false
+            results.message = '角色名称不能重复'
+            res.send(results)
+
+        }
+    })
+
+    router.post('/UpdateRoleright', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
+
+        let id = req.body.id;
+        let query = req.body;
+        let sql = "update role set ? where id=" + id
+        let results = {}
+        await connection(sql, query)
+
+        results.success = true
+        results.message = '修改成功'
+        res.send(results)
+
+    })
+
+    //根据角色id判断是否关联用户表
+    router.post('/checkRoleID', authMiddle, async(req, res) => {
+        // assert(req.user.role === 1, 403, '您无权访问')
+
+        let id = req.body.id;
+        let sql1 = `select * from user_role where role_id = ${id}`
+            // let sql2 = `select * from enterprise e, user_info u where e.id = u.enterprise_id and u.is_deleted = 0 and e.id = ${id}`
+        let result1 = await connection(sql1)
+            // let result2 = await connection(sql2)
+        console.log(result1.length);
+        res.send(result1.length)
+    })
+
+
+    //单个删除企业表信息
+    router.post('/DeleteRole', authMiddle, async(req, res) => {
+            // assert(req.user.role === 1, 403, '您无权访问')
+            let id = req.body.id;
+            let sql = "update role set is_deleted=1 where id=" + id
+            let results = await connection(sql)
+            res.send(results)
+        })
+        // 查询企业表信息
+        // router.post('/SearchEnterprise', authMiddle, async(req, res) => {
+        //     assert(req.user.role === 1, 403, '您无权访问')
+        //     let keyword = req.body.keyword;
+        //     let sql = `select enterprise.*,industry.industry_name from enterprise,industry where enterprise.industry_id=industry.id and enterprise.enterprise_name like '%${keyword}%' and (enterprise.is_deleted = 0 or enterprise.is_deleted is NULL ) order by enterprise.created_time Desc`
+        //     let results = await connection(sql)
+        //     res.send(results)
+        // })
+
+
+
+
+
+
 
     app.use('/api/dataSettings', router)
 }

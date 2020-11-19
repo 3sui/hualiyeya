@@ -26,7 +26,7 @@
    
 
     <div class="record_container">
-      <div class="record_item" v-for="record in recordlist" @click="handel(record.id)" :key='record'>
+      <div class="record_item" v-for="(record,index) in recordlist" @click="handel(record.id)" :key="index">
         <div class="item-title">
           <van-row :gutter="20">
             <van-col span="2">

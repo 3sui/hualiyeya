@@ -226,7 +226,7 @@ export default {
                     show: false
                 },
                 grid: {
-                    left: 150,
+                    left: 200,
                     bottom: 30
                 },
                 toolbox: {
@@ -267,9 +267,10 @@ export default {
                     //     }
                     // },
                     data: this.faulttypelist,
+                    offset:20,
                     axisLabel: {
-                        margin: 120,
-                        fontSize: 14,
+                        margin:170,
+                        fontSize: 12,
                         align: 'left',
                         color: '#333',
                         rich: {

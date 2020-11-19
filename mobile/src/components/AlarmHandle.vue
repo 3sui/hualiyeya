@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <div class="sub">
+    <div class="sub"  v-if="opera.operation.indexOf('修改')>-1">
       <van-button
         round
         block
@@ -66,7 +66,7 @@
         @click="handle(point.id,'1')"
       >处理报警信息</van-button>
     </div>
-    <div class="sub">
+    <div class="sub"  v-if="opera.operation.indexOf('修改')>-1">
       <van-button
         round
         block
@@ -101,11 +101,18 @@ export default {
   },
   data() {
     return {
-      point: {}
+      point: {},
+      opera:{
+                read:"",
+                operation:"",
+            }
     };
   },
   created() {
     this.getData();
+    
+ this.opera.read=window.localStorage.read;
+this.opera.operation=window.localStorage.operation;
   },
   methods: {
     //时间转化

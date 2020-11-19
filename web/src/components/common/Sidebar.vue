@@ -10,46 +10,28 @@
             unique-opened
             router
         >
-            <template v-for="item in items">
+            <template v-for="item in rightitems">
                 <template v-if="item.subs">
-                    <el-submenu
-                        :index="item.index"
-                        :key="item.index"
-                        v-if="!item.auth.includes(+role)"
-                    >
+                    <el-submenu :index="item.index" :key="item.index">
                         <template slot="title">
                             <i :class="item.icon"></i>
                             <span slot="title">{{ item.title }}</span>
                         </template>
                         <template v-for="subItem in item.subs">
-                            <el-submenu
-                                v-if="subItem.subs && subItem.auth.includes(+role)"
-                                :index="subItem.index"
-                                :key="subItem.index"
-                            >
+                            <!-- <el-submenu :index="subItem.index" :key="subItem.index">
                                 <template slot="title">{{ subItem.title }}</template>
-                                <el-menu-item
-                                    v-for="(threeItem,i) in subItem.subs"
-                                    :key="i"
-                                    :index="threeItem.index"
-                                >{{ threeItem.title }}</el-menu-item>
-                            </el-submenu>
-                            <el-menu-item
-                                v-else-if="!subItem.auth.includes(+role)"
-                                :index="subItem.index"
-                                :key="subItem.index"
-                            >
+                                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">{{
+                                    threeItem.title
+                                }}</el-menu-item>
+                            </el-submenu> -->
+                            <el-menu-item :index="subItem.index" :key="subItem.index">
                                 <template>{{ subItem.title }}</template>
                             </el-menu-item>
                         </template>
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item
-                        :index="item.index"
-                        :key="item.index"
-                        v-if="!item.auth.includes(role)"
-                    >
+                    <el-menu-item :index="item.index" :key="item.index">
                         <i :class="item.icon"></i>
                         <span slot="title">{{ item.title }}</span>
                     </el-menu-item>
@@ -81,7 +63,7 @@ export default {
                 },
                 {
                     icon: 'el-icon-lx-calendar',
-                    index: '1',
+                    index: '1devicebook',
                     title: '设备档案',
 
                     auth: [],
@@ -90,41 +72,17 @@ export default {
                             index: 'DeviceList',
                             title: '设备列表',
                             auth: []
-                            // subs: [
-                            //     {
-                            //         index: 'productlist',
-                            //         title: '设备列表'
-                            //     },
-                            //     {
-                            //         index: '',
-                            //         title: '设备导入模板'
-                            //     },
-                            //     {
-                            //         index: 'productDetails',
-                            //         title: '设备详情'
-                            //     },
-                            //     {
-                            //         index: 'addnewproduct',
-                            //         title: '设备添加/编辑'
-                            //     }
-                            // ]
                         },
                         {
                             index: 'MaintenanceRecords',
                             title: '维修记录',
-                            auth: [2, 3 ,4]
+                            auth: [2, 3, 4]
                         }
-                        // {
-                        //     index: 'EquipmentMonitoring',
-                        //     // index: 'DeviceList',
-
-                        //     title: '设备监控'
-                        // },
                     ]
                 },
                 {
                     icon: 'el-icon-monitor',
-                    index: '2',
+                    index: 'remotemonitor',
                     title: '远程监控',
 
                     auth: [2, 3, 4],
@@ -143,14 +101,9 @@ export default {
                         }
                     ]
                 },
-                // {
-                //     icon: 'el-icon-lx-calendar',
-                //     index: 'ServiceBooklet',
-                //     title: '服务手册'
-                // },
                 {
                     icon: 'el-icon-s-data',
-                    index: '4',
+                    index: 'analysiscenter',
                     title: '分析中心',
 
                     auth: [2, 3, 4],
@@ -174,7 +127,7 @@ export default {
                 },
                 {
                     icon: 'el-icon-setting',
-                    index: '5',
+                    index: 'datasetting',
                     title: '基础数据管理',
                     auth: [2, 3, 4],
 
@@ -183,23 +136,7 @@ export default {
                             index: 'Industry',
                             title: '行业设置',
                             auth: [2, 3, 4]
-                            // subs: [
-                            //     {
-                            //         index: '',
-                            //         title: '新增'
-                            //     }
-                            // ]
                         },
-                        {
-                            index: 'Enterprise',
-                            title: '企业管理',
-                            auth: [2, 3, 4]
-                        },
-                        // {
-                        //     index: 'UserInfo',
-                        //     title: '用户信息',
-                        //     auth: []
-                        // },
                         {
                             index: 'DeviceType',
                             title: '设备类型',
@@ -211,105 +148,26 @@ export default {
                             auth: [2, 3, 4]
                         },
                         {
+                            index: 'Enterprise',
+                            title: '企业管理',
+                            auth: [2, 3, 4]
+                        },
+                        {
+                            index: 'RoleInfo',
+                            title: '角色管理',
+                            auth: [2, 3, 4]
+                        },
+
+                        {
                             index: 'Authority',
                             title: '用户管理',
                             auth: [2, 3, 4]
                         }
                     ]
                 }
-
-                //dome
-
-                // {
-                //     icon: 'el-icon-lx-cascades',
-                //     index: 'table',
-                //     title: '基础表格'
-                // },
-                // {
-                //     icon: 'el-icon-lx-copy',
-                //     index: 'tabs',
-                //     title: 'tab选项卡'
-                // },
-                // {
-                //     icon: 'el-icon-lx-calendar',
-                //     index: '6',
-                //     title: '表单相关',
-                //     subs: [
-                //         {
-                //             index: 'form',
-                //             title: '基本表单'
-                //         },
-                //         {
-                //             index: '6-2',
-                //             title: '三级菜单',
-                //             subs: [
-                //                 {
-                //                     index: 'editor',
-                //                     title: '富文本编辑器'
-                //                 },
-                //                 {
-                //                     index: 'markdown',
-                //                     title: 'markdown编辑器'
-                //                 }
-                //             ]
-                //         },
-                //         {
-                //             index: 'upload',
-                //             title: '文件上传'
-                //         }
-                //     ]
-                // },
-                // {
-                //     icon: 'el-icon-lx-emoji',
-                //     index: 'icon',
-                //     title: '自定义图标'
-                // },
-                // {
-                //     icon: 'el-icon-pie-chart',
-                //     index: 'charts',
-                //     title: 'schart图表'
-                // },
-                // {
-                //     icon: 'el-icon-rank',
-                //     index: '7',
-                //     title: '拖拽组件',
-                //     subs: [
-                //         {
-                //             index: 'drag',
-                //             title: '拖拽列表'
-                //         },
-                //         {
-                //             index: 'dialog',
-                //             title: '拖拽弹框'
-                //         }
-                //     ]
-                // },
-                // {
-                //     icon: 'el-icon-lx-global',
-                //     index: 'i18n',
-                //     title: '国际化功能'
-                // },
-                // {
-                //     icon: 'el-icon-lx-warn',
-                //     index: '8',
-                //     title: '错误处理',
-                //     subs: [
-                //         {
-                //             index: 'permission',
-                //             title: '权限测试'
-                //         },
-                //         {
-                //             index: '404',
-                //             title: '404页面'
-                //         }
-                //     ]
-                // },
-                // {
-                //     icon: 'el-icon-lx-redpacket_fill',
-                //     index: '/donate',
-                //     title: '支持作者'
-                // }
-            ]
+            ],
+            rightitems: [],
+            rights: []
         };
     },
     computed: {
@@ -318,13 +176,68 @@ export default {
         }
     },
     created() {
-        this.role = localStorage.role;
+        this.role = window.localStorage.role;
         // 通过 Event Bus 进行组件间通信，来折叠侧边栏
-        bus.$on('collapse', msg => {
+        bus.$on('collapse', (msg) => {
             this.collapse = msg;
             bus.$emit('collapse-content', msg);
         });
         console.log(this.role);
+
+        this.getRights();
+    },
+
+    methods: {
+        getRights() {
+            let data = {
+                id: this.role
+            };
+            this.$axios
+                .post('/dataSettings/getRights', { id: this.role })
+                .then((res) => {
+                    console.log(res.data);
+                    window.localStorage.read=res.data.read
+                    if(res.data.operation.length>0){
+                    window.localStorage.operation=res.data.operation.split(',')
+                    }else{
+                        window.localStorage.operation=[]
+                    }
+                    this.rights = res.data.rights.split(',') || [];
+                    for(let i=0;i<this.items.length;i++){
+                         if (this.items[i].subs) {
+                            let result=JSON.parse(JSON.stringify(this.items[i]));
+                            console.log(result);
+                            let sub= this.items[i].subs.filter((subitem) => {
+                                if (this.rights.includes(subitem.index)) {
+                                    return subitem;
+                                }
+                            });
+                            console.log(sub);
+                            if(sub.length != 0){
+                                result.subs =sub;
+                                this.rightitems.push(result) ;
+                            }else{
+                                break ;
+                            }
+                            
+
+                            
+                        } else {
+                            if (this.rights.includes(this.items[i].index)) {
+                               this.rightitems.push(this.items[i]) ;
+                            }
+                        }
+
+                    }
+
+             
+                       
+                   
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
     }
 };
 </script>

@@ -49,7 +49,7 @@
       background="#ffffff"
       placeholder="搜索设备名称、出厂编号"
       show-action
-      @search="onSearch(value)"
+      @search="onSearch"
       @cancel="onCancel"
     />
 
@@ -62,25 +62,38 @@
         <van-row :gutter="20">
           <van-col span="8">
             <div class="img">
-              <van-image width="100%" height="100%" fit="cover" :src="Iamge(device.file_path)" />
+              <van-image width="100%" height="100%" fit="contain" :src="Iamge(device.file_path)" />
             </div>
           </van-col>
-          <van-col span="10">
+          <van-col span="16">
             <h3>
               <van-icon color="#007ACC" size="1.2rem" name="user-circle-o" />
               {{device.device_name}}
             </h3>
+            <div class="speci">
+              <div>
             <p>出厂编号:{{device.eq}}</p>
-            <p>测点数:{{device.count?device.count:0}}</p>
-          </van-col>
-          <van-col span="5">
+            <p>测点数:{{device.count?device.count:0}}</p></div>
+           
             <div class="state" :class="device.status==='正常'?'nomalstate':(device.status==='报警'?'alarmstate':'nostate')">{{device.status}}</div>
+            </div> 
           </van-col>
+          <!-- <van-col span="5">
+            <div class="state" :class="device.status==='正常'?'nomalstate':(device.status==='报警'?'alarmstate':'nostate')">{{device.status}}</div>
+          </van-col> -->
         </van-row>
       </div>
     </div>
 
     <van-empty v-if="devicelist.length===0?true:false" description="未获取设备信息" />
+      <van-pagination
+      v-model="currentPage"
+      :total-items="totalitems"
+      :show-page-size="3"
+      force-ellipses
+      @change="HandleChange"
+   
+    />
   </div>
 </template>
 <script>
@@ -94,7 +107,8 @@ import {
   Form,
   Search,
   Image as VanImage,
-  Empty
+  Empty,
+  Pagination
 } from "vant";
 export default {
   name: "DeviceManage",
@@ -107,7 +121,8 @@ export default {
     [Form.name]: Form,
     [Search.name]: Search,
     [VanImage.name]: VanImage,
-    [Empty.name]: Empty
+    [Empty.name]: Empty,
+    [Pagination.name]: Pagination,
   },
   data() {
     return {
@@ -116,13 +131,15 @@ export default {
       deviceNum: 0,
       device_isonNum: 0,
       device_alarmNum: 0,
+      currentPage: 1,
+      totalitems: 0,
      
     };
   },
-  created() {},
-  mounted() {
+  created() {
     this.getData();
-
+  },
+  mounted() {
   },
 
   methods: {
@@ -140,75 +157,30 @@ export default {
     //   let username = localStorage.getItem("ms_username");
     //   console.log(username);
     // },
-
     // 获取设备列表数据
     getData() {
+         let data={
+        startid:(this.currentPage - 1) * 10,
+        keyword:this.value
+      }
       axios({
-        method: "get",
-        url: "/mobile/devicelist"
+        method: "post",
+        url: "/mobile/devicelist",
+        data:data
       })
         .then(res => {
           // console.log(res);
-          if (res.data !== null || res.data.length > 0) {
-            this.devicelist = res.data; 
-         
-          } else {
-           
-            console.log("服务器错误");
-          }
+          if (res.data.count>=0) {
+            this.totalitems=res.data.count; 
+            this.deviceNum=res.data.count; 
+            this.device_isonNum=res.data.device_isonNum; 
+            this.device_alarmNum=res.data.device_alarmNum; 
+            this.devicelist = res.data.data;
+          } 
         })
-        .then(() => {
-          this.deviceNum = 0;
-            this.device_isonNum = 0;
-            this.device_alarmNum = 0;
-            this.devicelist.forEach(element => {
-              this.deviceNum++;
-              if (element.is_on === "1") {
-                this.device_isonNum++;
-              }
-              if (element.status === "报警") {
-                this.device_alarmNum++;
-              }
-            });
-        });
-      // .then(() => {
-
-      //   this.list.forEach(element => {
-      //     let item = {};
-      //     item.id = element.id;
-      //     item.eq = element.eq;
-      //     item.device_name = element.device_name;
-      //     item.file_path = "";
-      //     item.count = 0;
-      //     this.$axios.all([this.getPointNum(element.eq), this.getImage(element.id)])
-      //       .then(
-      //         this.$axios.spread(function(val1, val2) {
-      //           console.log(val1);
-      //           console.log(val2);
-
-      //           //当这两个请求都完成的时候会触发这个函数，两个参数分别代表返回的结果
-      //           if (val1 !== null || val1.length > 0) {
-      //             console.log(this.count);
-
-      //             this.count = val1.data[0].count;
-      //           } else {
-      //             this.count = 0;
-      //           }
-      //           if (val2 !== null || val2.length > 0) {
-      //             this.file_path = val2.data[0].file_path;
-      //           } else {
-      //             this.file_path = "";
-      //           }
-      //           item.count = this.count;
-      //           item.file_path = this.file_path;
-      //            console.log(item);
-      //         })
-      //       )
-      //       .then(() => {
-      //         this.devicelist.push(item);
-      //       });
-      //   });
-      // });
+        .catch(error=>{
+          console.log(errpr);
+        })
     },
 
     //获取测点数
@@ -247,15 +219,19 @@ export default {
     // },
 
     //搜索
-    onSearch(val) {
-      this.devicelist = this.devicelist.filter(array => {
-        return array.device_name.match(val) || array.eq.match(val);
-      });
+    onSearch() {
+      // this.devicelist = this.devicelist.filter(array => {
+      //   return array.device_name.match(val) || array.eq.match(val);
+      // });
+
+      this.currentPage=1;
+      this.getData()
     },
 
     //取消
     onCancel() {
       this.value = "";
+      this.currentPage=1
 
       this.devicelist = [];
       this.getData();
@@ -271,12 +247,23 @@ export default {
           file_path:url
         }
       });
-    }
+    },
+      //换页
+    HandleChange() {
+      // this.$router.push({
+      //   path:'/RepairRecord',
+      //   query:{
+        // page:this.currentPage
+      //   }
+      // })
+      this.devicelist=[]
+      this.getData()
+    },
   }
 };
 </script>
 
-<style scoped>
+<style scoped >
 .devicemanage {
   background-color: #f0f0f0;
   height: 95vh;
@@ -375,8 +362,8 @@ export default {
 .devicemanage .device_item .state {
   text-align: left;
   font-size: 1rem;
-  height: 7rem;
-  line-height: 7rem;
+  /* height: 7rem;
+  line-height: 7rem; */
   word-wrap: break-word;
   /* color: #0dbc79; */
   font-weight: bold;
@@ -408,6 +395,19 @@ width: 12%;
 text-align: center;
 margin-left: 0.1rem;
 color: #1989FA;
+}
+
+.speci{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-right: 1rem;
+
+}
+
+.van-pagination{
+  padding: 0 1rem;
+    margin: 0 0 2rem 0;
 }
 
 

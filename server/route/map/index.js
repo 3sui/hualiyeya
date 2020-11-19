@@ -14,18 +14,19 @@ module.exports = app => {
 
 
     //获取设备数量
-    router.get('/fetchDeviceNum', authMiddle, async (req, res) => {
+    router.get('/fetchDeviceNum', authMiddle, async(req, res) => {
         let sql
-        if (req.user.role === 1 || req.user.role === 4) {
+        if (req.user.read === "查看所有") {
             console.log('超级');
             sql = "select COUNT(*) from device where is_deleted = 0"
         } else if (req.user.role === 2) {
             console.log('企业');
             sql = `select COUNT(*) from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
-        } else {
-            console.log('普通');
-            sql = `select COUNT(*) from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and is_deleted = 0`
         }
+        // else {
+        //     console.log('普通');
+        //     sql = `select COUNT(*) from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and is_deleted = 0`
+        // }
 
         let row = await connection(sql)
         let data = {
@@ -39,29 +40,32 @@ module.exports = app => {
     })
 
     //获取所有设备数据
-    router.get('/fetchAllDevice', authMiddle, async (req, res) => {
+    router.get('/fetchAllDevice', authMiddle, async(req, res) => {
         let sql
-        if (req.user.role === 1 || req.user.role === 4) {
+        if (req.user.read === "查看所有") {
             console.log('超级');
-            sql = "select d.*,u.username from device d left outer join user_info u on d.principal = u.id where d.is_deleted = 0"
-        } else if (req.user.role === 2) {
-            console.log('企业');
-            sql = `select *,d.id from device d inner join user_info u on d.principal = u.id where d.enterprise_id = ${req.user.enterprise_id} and d.is_deleted = 0`
+            sql = "select d.*  from device d where d.is_deleted = 0"
         } else {
-            console.log('普通');
-            sql = `select ud.*,d.*,d.id from user_device ud inner join device d on d.id = ud.device_id inner join user_info u on d.principal = u.id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
+            console.log('企业');
+            sql = `select d.* from device d where d.enterprise_id = ${req.user.enterprise_id} and d.is_deleted = 0`
         }
+        // sql = `select d.*,dt.typename from device d inner join device_type dt on dt.id = d.device_type where d.enterprise_id = ${req.user.enterprise_id} and d.is_deleted = 0`
+        // else {
+        //     console.log('普通');
+        //     sql = `select ud.*,d.*,d.id from user_device ud inner join device d on d.id = ud.device_id inner join user_info u on d.principal = u.id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
+        // }
+        console.log(sql);
         let row = await connection(sql)
         let data = {
             success: true,
             data: row
         }
         res.status(200).send(data)
-        // console.log(row);
+            // console.log(row);
     })
 
     //获取设备图片
-    router.get('/fetchImgList', authMiddle, async (req, res) => {
+    router.get('/fetchImgList', authMiddle, async(req, res) => {
         let id = req.query.id
         console.log(id);
 

@@ -58,7 +58,6 @@ export default {
                                 localStorage.role = res.data.role;
                                 localStorage.avatar = res.data.avatar;
                                 localStorage.username=res.data.username;
-
                                 this.$router.push('/');
                                 console.log(res.data);
                             }

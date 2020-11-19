@@ -31,9 +31,9 @@
                 </el-col>
             </el-row>-->
             <el-row :gutter="20" type="flex">
-                <el-col v-for="(device,index) in deviceTop" :key="index">
+                <el-col v-for="(device,index) in deviceTop" :key="index" v-if="index < 5">
                     <el-card
-                        v-if="index<5"
+                     
                         shadow="hover"
                         :body-style="{padding: '0px'}"
                         :class="backgroundstyle[index]"

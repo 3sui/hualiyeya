@@ -11,6 +11,7 @@
         <div class="container">
             <div class="handle-box d-flex jc-between">
                 <el-button
+                v-if="opera.operation.indexOf('添加')>-1"
                     type="primary"
                     class="handle-del mr10"
                     @click="AddData"
@@ -54,12 +55,14 @@
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
+                             v-if="opera.operation.indexOf('修改')>-1"
                         >编辑</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
+                             v-if="opera.operation.indexOf('删除')>-1"
                         >删除</el-button>
                     </template>
                 </el-table-column>
@@ -124,11 +127,17 @@ export default {
             form: {},
             isAdd: true,
             idx: 1,
-            checkdelete: false
+            checkdelete: false,
+            opera:{
+                read:"",
+                operation:"",
+            }
         };
     },
     created() {
         this.getData();
+        this.opera.read=window.localStorage.read;
+        this.opera.operation=window.localStorage.operation;
     },
 
     methods: {

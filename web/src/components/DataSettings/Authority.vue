@@ -25,6 +25,7 @@
                     class="handle-del mr10"
                     @click="AddData"
                     icon="el-icon-plus"
+                    v-if="opera.operation.indexOf('添加')>-1"
                 >新增</el-button>
                 <el-input
                     prefix-icon="el-icon-search"
@@ -73,6 +74,7 @@
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
+                            v-if="opera.operation.indexOf('修改')>-1"
                         >修改权限</el-button>
                         <!-- <el-button
                             type="text"
@@ -84,12 +86,14 @@
                             type="text"
                             icon="el-icon-refresh"
                             @click="handleReset(scope.$index, scope.row)"
+                            v-if="opera.operation.indexOf('修改')>-1"
                         >重置密码</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
+                            v-if="opera.operation.indexOf('删除')>-1"
                         >删除</el-button>
                         <!-- <el-button
                             type="text"
@@ -314,11 +318,17 @@ export default {
                         trigger: 'blur'
                     }
                 ]
+            },
+              opera:{
+                read:"",
+                operation:"",
             }
         };
     },
     created() {
         this.getData();
+        this.opera.read=window.localStorage.read;
+        this.opera.operation=window.localStorage.operation;
     },
     components: {},
 

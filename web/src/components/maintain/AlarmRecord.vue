@@ -108,19 +108,21 @@
                             >{{scope.row.is_handled == '0'? '未处理' : '已处理'}}</el-tag>
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="100" align="center">
+                    <el-table-column label="操作" width="160" align="center">
                         <template slot-scope="scope">
                             <el-button
                                 v-if="scope.row.is_handled == 0"
                                 type="text"
                                 icon="el-icon-edit"
                                 @click="handleEdit(scope.$index, scope.row)"
+                                v-show="opera.operation.indexOf('修改')>-1"
                             >标为已读</el-button>
                             <el-button
                                 type="text"
                                 icon="el-icon-delete"
                                 class="red"
                                 @click="handleDelete(scope.$index, scope.row)"
+                                v-if="opera.operation.indexOf('删除')>-1"
                             >删除</el-button>
                         </template>
                     </el-table-column>
@@ -187,6 +189,10 @@ export default {
                         }
                     }
                 ]
+            },
+            opera:{
+                read:"",
+                operation:"",
             }
         };
     },
@@ -196,6 +202,8 @@ export default {
     computed: {},
     created() {
         this.getData();
+        this.opera.read=window.localStorage.read;
+        this.opera.operation=window.localStorage.operation;
     },
     methods: {
         handleSelectionChange(val) {

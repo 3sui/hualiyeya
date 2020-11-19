@@ -10,9 +10,9 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import './plugins/axios'
-
-import ElementUI from 'element-ui';
 import VueI18n from 'vue-i18n';
+import ElementUI from 'element-ui';
+
 
 import BaiduMap from 'vue-baidu-map'
 import echarts from 'echarts'
@@ -35,7 +35,7 @@ import JsonExcel from 'vue-json-excel'
 Vue.component('downloadExcel', JsonExcel)
 Vue.use(XLSX)
 Vue.use(echarts)
-// Vue.use(Moment)
+    // Vue.use(Moment)
 Vue.config.productionTip = false;
 Vue.use(BaiduMap, {
     // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
@@ -55,6 +55,7 @@ Vue.prototype.$echarts = echarts;
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | 设备远程诊断系统`;
     const role = localStorage.getItem('ms_username');
+    console.log(role + '1111111111');
     if (!role && to.path !== '/login') {
         next('/login');
     } else if (to.meta.permission) {
@@ -73,10 +74,10 @@ router.beforeEach((to, from, next) => {
 });
 
 //全局过滤器
-Vue.filter('convertTime', function (data, formatStr) {
+Vue.filter('convertTime', function(data, formatStr) {
     return Moment(data, "YYYY-MM-DD HH:mm:ss").format(formatStr);
 });
-Vue.filter('convertTime2', function (data, formatStr) {
+Vue.filter('convertTime2', function(data, formatStr) {
     return Moment(+data).format(formatStr)
 })
 Vue.mixin({

@@ -2,7 +2,7 @@
   <div class="menu">
     <van-tabbar v-model="active" fixed>
       <van-tabbar-item
-        v-for="item,index in items"
+        v-for="item,index in rightitems"
         :key="item.index"
         :icon="item.icon"
         :to="item.index"
@@ -44,7 +44,7 @@ export default {
        this.tabbarActive();
   },
   mounted() {
-      this.getRole();
+      this.getRights();
   
   },
 
@@ -82,7 +82,10 @@ export default {
           icon: "setting-o",
           show: true
         }
-      ]
+      ],
+      rights:[],
+      rightitems:[],
+      role:"",
     };
   },
   
@@ -90,7 +93,7 @@ export default {
     tabbarActive() {
       let path=this.$route.name;
     
-      var index = this.items.map(item => item.index).indexOf(path);
+      var index = this.rightitems.map(item => item.index).indexOf(path);
       if (index != -1) {
         this.active = index;
         localStorage.active=index
@@ -117,7 +120,35 @@ export default {
         this.items[1].show = false;
       }
       } 
-    }
+    },
+      getRights() {
+            let data = {
+                id: window.localStorage.role
+            };
+            this.$axios
+                .post('/dataSettings/getRights',data)
+                .then((res) => {
+                    console.log(res.data);
+                    window.localStorage.read=res.data.read
+                    if(res.data.operation.length>0){
+                    window.localStorage.operation=res.data.operation.split(',')
+                    }else{
+                        window.localStorage.operation=[]
+                    }
+                    this.rights = res.data.rights.split(',') || [];
+                    for(let i=0;i<this.items.length;i++){
+                       
+                            if (this.rights.includes(this.items[i].index)) {
+                               this.rightitems.push(this.items[i]) ;
+                            }
+                        
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+
   }
 };
 </script>

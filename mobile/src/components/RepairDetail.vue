@@ -49,9 +49,16 @@
         title-class="titleclass"
         value-class="valueclass"
       />
+       <van-cell
+        title="客户联系人"
+        :value="query.contact"
+        size="large"
+        title-class="titleclass"
+        value-class="valueclass"
+      />
       <van-cell
-        title="手机号"
-        :value="query.repair_person_phone"
+        title="客户联系电话"
+        :value="query.contact_phone"
         size="large"
         title-class="titleclass"
         value-class="valueclass"
@@ -143,7 +150,7 @@ export default {
         //   repair_person: "",
         //   date: "",
         //   state: "",
-        //  repair_person_phone: "",
+        //  contact_phone: "",
         //   cause: "",
         //   methods: ""
       }

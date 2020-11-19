@@ -10,9 +10,7 @@
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 设备档案
-                </el-breadcrumb-item>
+                <el-breadcrumb-item> <i class="el-icon-lx-cascades"></i> 设备档案 </el-breadcrumb-item>
                 <el-breadcrumb-item>维修记录</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -27,12 +25,10 @@
                                 class="handle-del mr10"
                                 @click="$router.push('./addNewMaintenance')"
                             >新增</el-button>-->
-                            <el-button
-                                type="primary"
-                                icon="el-icon-delete"
-                                class="handle-del mr10"
-                                @click="delAllSelection"
-                            >批量删除</el-button>
+                            <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="delAllSelection"
+                            v-if="opera.operation.indexOf('删除')>-1"
+                                >批量删除</el-button
+                            >
                         </div>
                         <div></div>
                     </el-col>
@@ -100,23 +96,15 @@
                 <el-table-column prop="state" label="处理状态"></el-table-column>
 
                 <el-table-column prop="created_time" label="维修时间">
-                    <template
-                        slot-scope="scope"
-                    >{{scope.row.created_time | convertTime('YYYY-MM-DD HH:mm')}}</template>
+                    <template slot-scope="scope">{{ scope.row.created_time | convertTime('YYYY-MM-DD HH:mm') }}</template>
                 </el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-view"
-                            @click="handleDetail(scope.$index, scope.row)"
-                        >详情</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-delete"
-                            class="red"
-                            @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button>
+                        <el-button type="text" icon="el-icon-view" @click="handleDetail(scope.$index, scope.row)">详情</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
+                        v-if="opera.operation.indexOf('删除')>-1"
+                            >删除</el-button
+                        >
                     </template>
                 </el-table-column>
             </el-table>
@@ -209,11 +197,18 @@ export default {
             pageTotal: 0,
             form: {},
             idx: -1,
-            id: -1
+            id: -1,
+
+            opera: {
+                read: '',
+                operation: ''
+            }
         };
     },
     created() {
         this.getData();
+        this.opera.read = window.localStorage.read;
+        this.opera.operation = window.localStorage.operation;
     },
     methods: {
         //吧时间戳转化为想要的时间格式
@@ -233,7 +228,7 @@ export default {
         getData() {
             axios
                 .get('/Repair')
-                .then(res => {
+                .then((res) => {
                     window.console.log(res);
                     if (res.status === 200) {
                         this.tableData = res.data;
@@ -303,7 +298,7 @@ export default {
                             id: idArr
                         }
                     })
-                        .then(res => {
+                        .then((res) => {
                             window.console.log(res.data);
                             this.$message.success(res.data.data);
                             this.getData();
@@ -340,7 +335,7 @@ export default {
                             id: idArr
                         }
                     })
-                        .then(res => {
+                        .then((res) => {
                             window.console.log(res.data);
                             this.$message.success(res.data.data);
                             this.getData();

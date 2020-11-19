@@ -52,7 +52,7 @@
                 </el-row>
                 <el-card shadow="hover" style="height:460px;">
                     <div slot="header" class="clearfix">
-                        <span>设备类型</span>
+                        <span>设备分布</span>
                     </div>
                     <div class="schart-box">
                         <!-- <div class="content-title">饼状图</div> -->
@@ -94,11 +94,12 @@
                                             </template>
                                         </el-table-column>
                                         <el-table-column prop="date" width="180"></el-table-column>
-                                        <el-table-column width="120">
-                                            <template slot-scope="scope">
-                                                <el-button
+                                        <el-table-column width="120" >
+                                            <template slot-scope="scope" >
+                                                <el-button                                          
                                                     size="small"
-                                                    @click="handleRead(scope.$index,scope.row)"
+                                                    @click="handleRead(scope.$index,scope.row)"    
+                                                     v-if="opera.operation.indexOf('修改')>-1"                                            
                                                 >标为已读</el-button>
                                             </template>
                                         </el-table-column>
@@ -197,7 +198,7 @@ export default {
                 labels: [0],
                 datasets: [
                     {
-                        label: '设备数',
+                        label: '维修数',
                         data: [0]
                     }
                 ]
@@ -228,10 +229,12 @@ export default {
                     position: 'bottom'
                 },
                 bottomPadding: '10px',
-                labels: ['江苏'],
+                // labels: ['江苏'],
+                labels: [],
                 datasets: [
                     {
-                        data: [3]
+                        // data: [3]
+                        data: []
                        
                     }
                 ]
@@ -240,12 +243,18 @@ export default {
             deviceNum: 0,
             repair: 0,
             run: 0,
-            bed: 0
+            bed: 0,
+            opera:{
+                read:"",
+                operation:"",
+            }
         };
     },
     created() {
         // this.fetchDeviceNum();
         this.fetchDeviceInfo();
+         this.opera.read=window.localStorage.read;
+        this.opera.operation=window.localStorage.operation;
         // this.fetchDeviceStatus();
     },
     components: {
@@ -255,9 +264,9 @@ export default {
         unreadNum() {
             return this.unread.length;
         },
-        role() {
-            return this.name === 'admin' ? '超级管理员' : '普通用户';
-        }
+        // role() {
+        //     return this.name === 'admin' ? '超级管理员' : '普通用户';
+        // }
     },
 
     // created() {
@@ -319,10 +328,28 @@ export default {
                         this.run = res.data.run;
                         this.bed = res.data.bed;
                         this.deviceNum = res.data.deviceNum;
-                        this.$set(this.options, 'labels', res.data.rep_name);
-                        this.$set(this.options.datasets[0], 'data', res.data.rep_num);
-                        // this.options.labels = res.data.rep_name
-                        // this.options.datasets.data = res.data.rep_num
+                        let list=res.data.devicefenbu;
+                        let listname=Array.from(new Set(list))
+                        let listvalue=[]
+                        listname.forEach(element=>{
+                            let count=0;
+                            list.forEach(item=>{
+                                
+                                if(element===item){
+                                    count++;
+                                }
+                              
+                            })
+                              listvalue.push(count)
+                        }
+                            
+                        )
+                        console.log(listname);
+                        console.log(listvalue);
+                        this.$set(this.options3, 'labels', listname);
+                        this.$set(this.options3.datasets[0], 'data', listvalue);
+                        this.options.labels = res.data.rep_name
+                        this.options.datasets[0].data = res.data.rep_num
                     }
                 })
                 .catch(err => {

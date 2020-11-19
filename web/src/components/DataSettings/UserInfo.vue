@@ -15,6 +15,7 @@
                     class="handle-del mr10"
                     @click="AddData"
                     icon="el-icon-plus"
+                     v-if="opera.operation.indexOf('添加')>-1"
                 >新增</el-button>
                 <el-input v-model="keyword" placeholder="企业名称、用户名、用户昵称" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch(keyword)">搜索</el-button>
@@ -68,18 +69,21 @@
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
+                             v-if="opera.operation.indexOf('修改')>-1"
                         >编辑</el-button>
 
                         <el-button
                             type="text"
                             icon="el-icon-refresh"
                             @click="handleReset(scope.$index, scope.row)"
+                             v-if="opera.operation.indexOf('删除')>-1"
                         >重置密码</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
+                            v-if="opera.operation.indexOf('删除')>-1"
                         >删除</el-button>
                     </template>
                 </el-table-column>
@@ -126,7 +130,7 @@
                     <el-select v-model="form.permission" placeholder="请选择">
                         <el-option
                             v-for="permission in permissions"
-                            :label="permission.permission_name"
+                            :label="permission.rolename"
                             :value="permission.id"
                             :key="permission"
                         ></el-option>
@@ -148,10 +152,10 @@ export default {
         return {
             enterprises: [],
             permissions: [
-                { id: 1, permission_name: '超级管理员' },
-                { id: 2, permission_name: '企业管理员' },
-                { id: 3, permission_name: '企业普通账号' },
-                { id: 4, permission_name: '维修工账号' }
+                { id: 1, rolename: '超级管理员' },
+                { id: 2, rolename: '企业管理员' },
+                { id: 3, rolename: '企业普通账号' },
+                { id: 4, rolename: '维修工账号' },
             ],
             keyword: '',
             tableData: [],
@@ -161,12 +165,18 @@ export default {
             pageSize: 10,
             form: {},
             isAdd: true,
-            idx: 1
+            idx: 1,
+            opera:{
+                read:"",
+                operation:"",
+            }
         };
     },
     created() {
         this.getData();
         this.getEnterprises();
+        this.opera.read=window.localStorage.read;
+        this.opera.operation=window.localStorage.operation;
     },
 
     methods: {

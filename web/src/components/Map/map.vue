@@ -8,13 +8,13 @@
  -->
  <template>
     <div id="maps">
-        <div class="crumbs">
+        <!-- <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
                     <i class="el-icon-lx-emoji"></i> 用户地图
                 </el-breadcrumb-item>
             </el-breadcrumb>
-        </div>
+        </div> -->
         <div>
             <el-row class="container">
                 <el-col :span="18">
@@ -111,7 +111,7 @@
                     <p>设备型号: {{drawerData.device_model}}</p>
                     <p>工作状态: {{drawerData.status}}</p>
                     <p>设备地址: {{drawerData.address}}</p>
-                    <p>设备负责人: {{drawerData.username}}</p>
+                    <!-- <p>设备负责人: {{drawerData.username}}</p> -->
                 </div>
 
                 <el-button

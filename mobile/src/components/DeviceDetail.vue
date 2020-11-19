@@ -28,7 +28,7 @@
       </div>
       <div class="device_item">
         <van-row>
-          <van-col span="12">
+          <van-col span="16">
             <p>设备编号: {{device.eq}}</p>
             <p>设备类型: {{device.typename}}</p>
             <p>设备型号: {{device.device_model}}</p>
@@ -41,7 +41,7 @@
               >{{device.status}}</van-tag>
             </p>
           </van-col>
-          <van-col span="12">
+          <van-col span="8">
             <div class="img">
               <van-image width="100%" height="100%" fit="fill" :src="Iamge(imgpath)" />
             </div>
@@ -50,7 +50,7 @@
       </div>
 
       <div class="point-title">测点详情</div>
-      <div class="point-item" v-for="point in pointlist" :key="point">
+      <div class="point-item" v-for="(point,index) in pointlist" :key="index">
         <van-row>
           <van-col span="12">
             <div class="point-detail">
@@ -322,7 +322,6 @@ export default {
 .device_item {
   padding: 1rem 0.5rem;
   background-color: white;
-  /* margin-bottom: 1rem; */
   height: 6rem;
   border-bottom: 1px solid #e4e4e4;
 }
@@ -352,7 +351,7 @@ export default {
   font-weight: bold;
 }
 
-.device_item .state {
+/* .device_item .state {
   text-align: center;
   font-size: 1.4rem;
   height: 9rem;
@@ -360,7 +359,7 @@ export default {
   word-wrap: break-word;
   color: #0dbc79;
   font-weight: bold;
-}
+} */
 
 .point-item {
   background: white;

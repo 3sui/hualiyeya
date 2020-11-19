@@ -18,20 +18,37 @@ module.exports = app => {
     //超级管理员可以看到所有设备
     //企业管理员可以看到所在企业的设备
     //企业用户能看到自己管理的设备
-    router.get('/fetchAllDevice', authMiddle, async (req, res) => {
+    router.get('/fetchAllDevice', authMiddle, async(req, res) => {
+        let sql;
 
-        if (req.user.role === 1 || req.user.role === 4) {
+        if (req.user.read === "查看所有") {
             console.log('超级');
-            sql = "select d.*,dt.typename from device d inner join device_type dt on dt.id = d.device_type where d.is_deleted = 0"
-        } else if (req.user.role === 2) {
-            console.log('企业');
-            sql = `select d.*,dt.typename from device d inner join device_type dt on dt.id = d.device_type where d.enterprise_id = ${req.user.enterprise_id} and d.is_deleted = 0`
+            sql = "select d.*,dt.typename from device d left join device_type dt on dt.id = d.device_type where d.is_deleted = 0"
+                // } else if (req.user.enterprise_id !== 1) {
         } else {
-            console.log('普通');
-            sql = `select ud.user_id uid, ud.device_id did, d.eq, d.device_name,d.created_time, d.device_type, d.device_supplier, d.address,d.device_description,d.is_on,d.status from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
-            console.log(sql);
+            console.log('企业');
+            sql = `select d.*,dt.typename from device d left join device_type dt on dt.id = d.device_type where d.enterprise_id = ${req.user.enterprise_id} and d.is_deleted = 0`
 
         }
+        // else {
+        //     console.log('普通');
+        //     sql = `select ud.user_id uid, ud.device_id did, d.eq, d.device_name,d.created_time, d.device_type, d.device_supplier, d.address,d.device_description,d.is_on,d.status from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
+        //     console.log(sql);
+
+        // }
+        //   if (req.user.role === 1 || req.user.role === 4) {
+        //     console.log('超级');
+        //     sql = "select d.*,dt.typename from device d inner join device_type dt on dt.id = d.device_type where d.is_deleted = 0"
+        // } else if (req.user.role === 2) {
+        //     console.log('企业');
+        //     sql = `select d.*,dt.typename from device d inner join device_type dt on dt.id = d.device_type where d.enterprise_id = ${req.user.enterprise_id} and d.is_deleted = 0`
+        // } else {
+        //     console.log('普通');
+        //     sql = `select ud.user_id uid, ud.device_id did, d.eq, d.device_name,d.created_time, d.device_type, d.device_supplier, d.address,d.device_description,d.is_on,d.status from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
+        //     console.log(sql);
+
+        // }
+        console.log(sql);
         let row = await connection(sql)
         sql = `select * from device_type where is_deleted = 0`
         let deviceType = await connection(sql)
@@ -47,10 +64,10 @@ module.exports = app => {
 
     //产品列表点击删除
     //企业用户没有权限
-    router.get('/deleteProducts', authMiddle, async (req, res) => {
+    router.get('/deleteProducts', authMiddle, async(req, res) => {
         console.log(123);
 
-        assert(req.user.role < 2, 405, '您没有权限进行删除操作')
+        // assert(req.user.role < 2, 405, '您没有权限进行删除操作')
         let body = req.query
         let sql = 'update device set is_deleted = 1 WHERE id in (' + body.id + ')'
         console.log(body);
@@ -60,8 +77,8 @@ module.exports = app => {
     })
 
     //保存编辑内容
-    router.post('/saveEdit', authMiddle, async (req, res) => {
-        assert(req.user.role < 2, 405, '您没有权限进行编辑操作')
+    router.post('/saveEdit', authMiddle, async(req, res) => {
+        // assert(req.user.role < 2, 405, '您没有权限进行编辑操作')
 
         let {
             id,
@@ -91,8 +108,8 @@ module.exports = app => {
     })
 
     //获取设备配置信息
-    router.get('/fetchSetting', authMiddle, async (req, res) => {
-        assert(req.user.role < 2, 405, '您没有权限进行配置操作')
+    router.get('/fetchSetting', authMiddle, async(req, res) => {
+        // assert(req.user.role < 2, 405, '您没有权限进行配置操作')
 
         console.log(123)
 
@@ -109,8 +126,8 @@ module.exports = app => {
     })
 
     //保存配置更新
-    router.post('/saveSetting', authMiddle, async (req, res) => {
-        assert(req.user.role < 2, 405, '您没有权限进行更新操作')
+    router.post('/saveSetting', authMiddle, async(req, res) => {
+        // assert(req.user.role < 2, 405, '您没有权限进行更新操作')
 
         console.log(req.body)
         let eq = req.body.eq
@@ -135,34 +152,35 @@ module.exports = app => {
 
     //新增页面------------------------------------------------
     //获取新增页面基本信息
-    router.get('/fetchCaseInfo', authMiddle, async (req, res) => {
-        assert(req.user.role < 2, 405, '您没有权限进行新增操作')
+    router.get('/fetchCaseInfo', authMiddle, async(req, res) => {
+        // assert(req.user.role < 2, 405, '您没有权限进行新增操作')
 
         let sql
         let results = {}
         sql = 'select * from device_type where is_deleted = 0'
         results.type = await connection(sql)
-        if (req.user.role == 1) {
+        if (req.user.enterprise_id === 1) {
             sql = 'select * from enterprise where is_deleted = 0'
             results.enterprise = await connection(sql)
             sql = 'select * from user_info where is_deleted = 0'
             results.user = await connection(sql)
-        } else if (req.user.role == 2) {
+        } else {
             console.log(req.user)
             sql = 'select * from enterprise where is_deleted = 0 and id = ' + req.user.enterprise_id
             results.enterprise = await connection(sql)
             sql = 'select * from user_info where is_deleted = 0 and enterprise_id = ' + req.user.enterprise_id
             results.user = await connection(sql)
-        } else {
-            assert(false, 403, '您没有权限')
         }
+        // else {
+        //     assert(false, 403, '您没有权限')
+        // }
         res.send(results)
     })
 
 
     //添加设备信息
-    router.post('/addNewProduct', authMiddle, async (req, res) => {
-        assert(req.user.role < 2, 405, '您没有权限进行添加操作')
+    router.post('/addNewProduct', authMiddle, async(req, res) => {
+        // assert(req.user.role < 2, 405, '您没有权限进行添加操作')
         console.log(req.body);
         req.body.created_by = req.user.username
         let {
@@ -191,8 +209,8 @@ module.exports = app => {
     const upload = multer({
         dest: __dirname + '/../../uploads'
     })
-    router.post('/upload', authMiddle, upload.single('file'), async (req, res) => {
-        assert(req.user.role < 2, 405, '您没有权限进行添加操作')
+    router.post('/upload', authMiddle, upload.single('file'), async(req, res) => {
+        // assert(req.user.role < 2, 405, '您没有权限进行添加操作')
         const file = req.file
         const id = req.body.id
         const type = req.body.type
@@ -219,8 +237,8 @@ module.exports = app => {
     })
 
     //配置设备阈值-------------------------------------------
-    router.post('/settings', authMiddle, async (req, res) => {
-        assert(req.user.role < 2, 405, '您没有权限进行添加操作')
+    router.post('/settings', authMiddle, async(req, res) => {
+        // assert(req.user.role < 2, 405, '您没有权限进行添加操作')
 
         console.log(req.body);
         let eq = req.body.eq.id
@@ -231,14 +249,14 @@ module.exports = app => {
 
             let sql = `insert into devicedata_limit set ?`
             await connection(sql, item)
-            // let {
-            //     cp_id,
-            //     cp_name,
-            //     unit,
-            //     k,
-            //     limit_up,
-            //     limit_down
-            // } = point
+                // let {
+                //     cp_id,
+                //     cp_name,
+                //     unit,
+                //     k,
+                //     limit_up,
+                //     limit_down
+                // } = point
         })
         let results = {
             success: true,
@@ -250,7 +268,7 @@ module.exports = app => {
     //设备详情页面----------------------------
 
     //获取设备基本信息
-    router.get('/getDeviceInfo', async (req, res) => {
+    router.get('/getDeviceInfo', async(req, res) => {
         let id = req.query.id
 
         console.log(id)
@@ -277,28 +295,28 @@ module.exports = app => {
 
     //手机端
     //获取设备列表
-    router.get('/fetchDevices', authMiddle, async (req, res) => {
+    // router.get('/fetchDevices', authMiddle, async(req, res) => {
 
-        if (req.user.role === 1 || req.user.role === 4) {
-            console.log('超级');
-            sql = "select * from device where is_deleted = 0"
-        } else if (req.user.role === 2) {
-            console.log('企业');
-            sql = `select * from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
-        } else {
-            console.log('普通');
-            sql = `select ud.user_id uid, ud.device_id did, d.eq, d.device_name,d.created_time, d.device_type, d.device_supplier, d.address,d.device_description,d.is_on,d.status from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
-            console.log(sql);
+    //     if (req.user.role === 1 || req.user.role === 4) {
+    //         console.log('超级');
+    //         sql = "select * from device where is_deleted = 0"
+    //     } else if (req.user.role === 2) {
+    //         console.log('企业');
+    //         sql = `select * from device where enterprise_id = ${req.user.enterprise_id} and is_deleted = 0`
+    //     } else {
+    //         console.log('普通');
+    //         sql = `select ud.user_id uid, ud.device_id did, d.eq, d.device_name,d.created_time, d.device_type, d.device_supplier, d.address,d.device_description,d.is_on,d.status from user_device ud inner join device d on d.id = ud.device_id where ud.user_id = ${req.user.id} and d.is_deleted = 0`
+    //         console.log(sql);
 
-        }
-        let row = await connection(sql)
-        let data = {
-            success: true,
-            data: row
-        }
-        res.send(data)
+    //     }
+    //     let row = await connection(sql)
+    //     let data = {
+    //         success: true,
+    //         data: row
+    //     }
+    //     res.send(data)
 
-    })
+    // })
 
 
     app.use('/api/device', router)

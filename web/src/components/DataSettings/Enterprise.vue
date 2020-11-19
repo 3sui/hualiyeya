@@ -15,6 +15,7 @@
                     class="handle-del mr10"
                     @click="AddData"
                     icon="el-icon-plus"
+                    v-if="opera.operation.indexOf('添加')>-1"
                 >新增</el-button>
                 <el-input
                     prefix-icon="el-icon-search"
@@ -75,12 +76,14 @@
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
+                            v-if="opera.operation.indexOf('修改')>-1"
                         >编辑</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
+                            v-if="opera.operation.indexOf('删除')>-1"
                         >删除</el-button>
                     </template>
                 </el-table-column>
@@ -182,7 +185,11 @@ export default {
             },
             isAdd: true,
             idx: 1,
-            checkdelete: false
+            checkdelete: false,
+            opera:{
+                read:"",
+                operation:"",
+            }
             // rules: {
             //     enterprise_name: [
             //         { required: true, message: '请输入企业名称', trigger: 'blur' },
@@ -199,6 +206,8 @@ export default {
     created() {
         this.getData();
         this.getIndustries();
+        this.opera.read=window.localStorage.read;
+        this.opera.operation=window.localStorage.operation;
     },
 
     methods: {
@@ -275,7 +284,7 @@ export default {
                 this.$message.error('有企业关联设备或用户，请解除关联后删除！');
             } else {
                 // 二次确认删除
-                this.$('确定要删除吗？', '提示', {
+                this.$confirm('确定要删除吗？', '提示', {
                     type: 'warning'
                 })
                     .then(() => {

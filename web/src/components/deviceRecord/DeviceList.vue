@@ -26,12 +26,14 @@
                                 icon="el-icon-lx-add"
                                 class="handle-del mr10"
                                 @click="$router.push('./addnewproduct')"
+                                v-if="opera.operation.indexOf('添加')>-1"
                             >新增</el-button>
                             <el-button
                                 type="primary"
                                 icon="el-icon-delete"
                                 class="handle-del mr10"
                                 @click="delAllSelection"
+                                v-if="opera.operation.indexOf('删除')>-1"
                             >批量删除</el-button>
                         </div>
                         <div></div>
@@ -130,7 +132,7 @@
                 <el-table-column prop="typename" label="设备种类"></el-table-column>
                 <el-table-column prop="device_description" label="设备型号"></el-table-column>
                 <el-table-column prop="device_description" label="型号描述"></el-table-column>
-                <el-table-column prop="device_supplier" label="客户名称"></el-table-column>
+                <el-table-column prop="device_supplier" label="生产厂家"></el-table-column>
                 <!-- <el-table-column prop="CustomerIndustry" label="客户行业"></el-table-column> -->
                 <el-table-column prop="address" label="安装地址(详情)"></el-table-column>
                 <!-- <el-table-column prop="Duration" label="运行时长(h)"></el-table-column> -->
@@ -179,6 +181,7 @@
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
+                            v-if="opera.operation.indexOf('修改')>-1"
                         >编辑</el-button>
                         <el-button
                             type="text"
@@ -189,12 +192,14 @@
                             type="text"
                             icon="el-icon-setting"
                             @click="handleSetting(scope.$index, scope.row)"
+                            v-if="opera.operation.indexOf('修改') + opera.operation.indexOf('添加')>-1"
                         >测点配置</el-button>
                         <el-button
                             type="text"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
+                             v-if="opera.operation.indexOf('删除')>-1"
                         >删除</el-button>
                     </template>
                 </el-table-column>
@@ -379,11 +384,17 @@ export default {
             }, //配置测点数据
 
             idx: -1,
-            id: -1
+            id: -1,
+            opera:{
+                read:"",
+                operation:"",
+            }
         };
     },
     created() {
         this.getData();
+         this.opera.read=window.localStorage.read;
+        this.opera.operation=window.localStorage.operation;
     },
     computed: {},
     methods: {

@@ -29,7 +29,7 @@
                     >返回</el-button>
                 </div>
                 <!-- <el-button type="primary" icon="el-icon-edit" class="handle-del mr10 mb-30">编辑</el-button> -->
-                <div style="float: right;display:flex;margin-bottom: 10px">
+                <div style="float: right;display:flex;margin-bottom: 10px" v-if="opera.operation.indexOf('添加')>-1">
                     <div>
                         <el-upload
                             multiple
@@ -46,7 +46,7 @@
                             accept=".pdf, .doc, .docx"
                             :auto-upload="false"
                         >
-                            <el-button size="small" type="primary">上传文档</el-button>
+                            <el-button size="small" type="primary"  >上传文档</el-button>
 
                             <!-- <span slot="tip" class="el-upload__tip ml-2">只能上传pdf/word文件，且不超过2MB，最多上传3份文档</span> -->
                         </el-upload>
@@ -54,7 +54,7 @@
                             校验进度
                             <el-progress :percentage="percentage1"></el-progress>
                         </div>
-                        <div v-if="percentage2">
+                        <div v-if="percentage2" >
                             上传进度
                             <el-progress :percentage="percentage2"></el-progress>
                         </div>
@@ -199,11 +199,17 @@ export default {
             srcList: [],
             fileListWord: [],
             percentage1: 0,
-            percentage2: 0
+            percentage2: 0,
+            opera:{
+                read:"",
+                operation:"",
+            }
         };
     },
     created() {
         this.getDeviceIDAndInfo();
+        this.opera.read=window.localStorage.read;
+        this.opera.operation=window.localStorage.operation;
     },
     components: {},
 

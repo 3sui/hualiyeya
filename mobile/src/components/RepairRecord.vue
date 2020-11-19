@@ -96,6 +96,13 @@
     </div>
 
     <van-empty v-if="recordlist.length===0?true:false" description="未获取维修记录信息" />
+      <van-pagination
+      v-model="currentPage"
+      :total-items="totalitems"
+      :show-page-size="3"
+      force-ellipses
+      @change="HandleChange"
+    />
   </div>
 </template>
 <script>
@@ -110,7 +117,8 @@ import {
   Button,
   Image as VanImage,
   SwipeCell,
-  Empty
+  Empty,
+  Pagination,
 } from "vant";
 export default {
   name: "RepairRecord",
@@ -125,13 +133,16 @@ export default {
     [VanImage.name]: VanImage,
     [SwipeCell.name]: SwipeCell,
     [Button.name]: Button,
-    [Empty.name]: Empty
+    [Empty.name]: Empty,
+    [Pagination.name]: Pagination,
   },
   data() {
     return {
-      rolecheck: false,
+      rolecheck: window.localStorage.operation.indexOf('修改')>-1 ? true:false,
       value: "",
       recordlist: [],
+      currentPage: 1,
+      totalitems: 0,
 
       colors: [
         "#EB6379",
@@ -150,16 +161,21 @@ export default {
   created() {
     this.getData();
 
-    this.getRole();
+    // this.getRole();
   },
   methods: {
     //获取列表数据
     getData() {
+      let data={
+        startid:(this.currentPage - 1) * 10,
+        value:this.value
+      }
       this.$axios
-        .get("/mobile/Repair")
+        .post("/mobile/Repair",data)
         .then(res => {
           if (res.status === 200) {
-            this.recordlist = res.data;
+            this.totalitems=res.data.count;
+            this.recordlist = res.data.data;
             // console.log(this.recordlist);
           }
         })
@@ -201,40 +217,55 @@ export default {
       //  return 'black'
     },
     //搜索
-    onSearch(val) {
-      this.recordlist = this.recordlist.filter(array => {
-        return (
-          array.state.match(val) ||
-          // array.type.match(val) ||
-          array.device_eq.match(val) ||
-          array.date.match(val) ||
-          array.enterprise_name.match(val)
-        );
-      });
+    onSearch() {
+      this.currentPage=1;
+      this.getData()
+      // this.recordlist = this.recordlist.filter(array => {
+      //   return (
+      //     array.state.match(val) ||
+      //     // array.type.match(val) ||
+      //     array.device_eq.match(val) ||
+      //     array.date.match(val) ||
+      //     array.enterprise_name.match(val)
+      //   );
+      // });
     },
 
     //取消
     onCancel() {
       this.value = "";
       this.recordlist = [];
+      this.currentPage=1
       this.getData();
       // location.reload()
     },
 
+    //换页
+    HandleChange() {
+      // this.$router.push({
+      //   path:'/RepairRecord',
+      //   query:{
+        // page:this.currentPage
+      //   }
+      // })
+      this.recordlist=[]
+      this.getData()
+    },
+
     //获取用户权限
 
-    getRole() {
-      if (localStorage) {
-        let user_role = localStorage.getItem("role");
-        if (user_role === "4") {
-          this.rolecheck = true;
-        } else {
-          return;
-        }
-      } else {
-        return;
-      }
-    },
+    // getRole() {
+    //   if (localStorage) {
+    //     let user_role = localStorage.getItem("role");
+    //     if (user_role === "4") {
+    //       this.rolecheck = true;
+    //     } else {
+    //       return;
+    //     }
+    //   } else {
+    //     return;
+    //   }
+    // },
     //企业用户进入维修记录详情，只能查看
     goRecordDetail(id) {
       this.$router.push({
@@ -372,5 +403,10 @@ export default {
   text-align: center;
   margin-left: 0.1rem;
   color: #1989fa;
+}
+
+.van-pagination{
+  padding: 0 1rem;
+    margin: 0 0 2rem 0;
 }
 </style>
