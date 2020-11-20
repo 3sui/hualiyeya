@@ -56,14 +56,14 @@
                 <!-- 操作 -->
                 <el-table-column label="操作" width="460" align="center">
                     <template slot-scope="scope">
-                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"
+                        <el-button type="text" size="14" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)"
                          v-if="opera.operation.indexOf('修改')>-1">修改</el-button>
-                        <el-button type="text" icon="el-icon-edit" @click="handleEditRole(scope.$index, scope.row)"
+                        <el-button type="text" size="14" icon="el-icon-edit" @click="handleEditRole(scope.$index, scope.row)"
                          v-if="opera.operation.indexOf('修改')>-1">菜单设置</el-button>
-                        <el-button type="text" icon="el-icon-edit" @click="handleDataRight(scope.$index, scope.row)"
+                        <el-button type="text" size="14" icon="el-icon-edit" @click="handleDataRight(scope.$index, scope.row)"
                          v-if="opera.operation.indexOf('修改')>-1">数据权限</el-button>
                         <!-- v-if="scope.row.id!==1" -->
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
+                        <el-button type="text" size="14" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)"
                          v-if="opera.operation.indexOf('删除')>-1"
                             >删除</el-button
                         >

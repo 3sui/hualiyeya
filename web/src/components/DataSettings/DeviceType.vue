@@ -58,6 +58,7 @@
                         <el-button
                          v-if="opera.operation.indexOf('删除')>-1"
                             type="text"
+                            size="14"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"

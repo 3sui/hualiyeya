@@ -58,13 +58,19 @@
                         <div>{{scope.row.created_time | convertTime('YYYY-MM-DD HH:mm')}}</div>
                     </template>
                 </el-table-column>
-                <el-table-column
+                <!-- <el-table-column
                     prop="name"
                     label="权限等级"
                     align="center"
                     :filters="[{ text: '超级管理员', value: '超级管理员' }, { text: '企业管理员', value: '企业管理员' }, { text: '企业用户', value: '企业用户' }, { text: '维修工', value: '维修工' }]"
                     :filter-method="filterRole"
                     filter-placement="bottom-end"
+                ></el-table-column> -->
+                   <el-table-column
+                    prop="name"
+                    label="权限等级"
+                    align="center"
+                  
                 ></el-table-column>
 
                 <!-- 操作 -->
@@ -72,6 +78,7 @@
                     <template slot-scope="scope">
                         <el-button
                             type="text"
+                            size="14"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
                             v-if="opera.operation.indexOf('修改')>-1"
@@ -84,12 +91,14 @@
                         >分配设备</el-button> -->
                         <el-button
                             type="text"
+                            size="14"
                             icon="el-icon-refresh"
                             @click="handleReset(scope.$index, scope.row)"
                             v-if="opera.operation.indexOf('修改')>-1"
                         >重置密码</el-button>
                         <el-button
                             type="text"
+                            size="14"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"

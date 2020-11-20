@@ -32,8 +32,6 @@ export default {
       
     // },
     $route(){
-    
-      
       this.tabbarActive();
       }
 
@@ -41,16 +39,16 @@ export default {
 
   },
   created(){
-       this.tabbarActive();
+    this.getRights();
+   
   },
   mounted() {
-      this.getRights();
-  
+     this.tabbarActive();
   },
 
   data() {
     return {
-      active: 0,
+      active: "",
       items: [
         {
           index: "DeviceManage",
@@ -92,13 +90,15 @@ export default {
   methods: {
     tabbarActive() {
       let path=this.$route.name;
-    
-      var index = this.rightitems.map(item => item.index).indexOf(path);
-      if (index != -1) {
+      console.log(path);
+      let list=this.rightitems.map(item => item.index)
+      console.log(list);
+      var index =list.indexOf(path);
+      if (index > -1) {
         this.active = index;
         localStorage.active=index
       }
-      // console.log(index);
+      console.log(index);
       
     },
 
@@ -143,7 +143,11 @@ export default {
                             }
                         
                     }
+                    this.tabbarActive()
                 })
+                // .then(()=>{
+                //    this.tabbarActive()
+                // })
                 .catch((error) => {
                     console.log(error);
                 });

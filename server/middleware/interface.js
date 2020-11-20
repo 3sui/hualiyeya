@@ -116,7 +116,7 @@ const interface = [{
     {
         path: "Settings",
         interfacepath: ["/ModifyPassword"],
-        public: false,
+        public: true,
     },
 ]
 

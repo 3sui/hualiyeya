@@ -101,6 +101,8 @@ export default {
               localStorage.role = res.data.role;
               localStorage.avatar = res.data.avatar;
               localStorage.username = res.data.username;
+              localStorage.read = res.data.read;
+              localStorage.operation = res.data.operation;
 
               console.log(res.data);
               // if (localStorage.role !== '4') {

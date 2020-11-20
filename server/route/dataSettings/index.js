@@ -388,22 +388,20 @@ module.exports = app => {
     router.get('/fetchAuthList', authMiddle, async(req, res) => {
         let sql
         let sql2
-        if (req.user.role === 1) {
+        if (req.user.read === "查看全部") {
             console.log('超级');
             sql = `select u.*, e.enterprise_name, ur.role_id, r.id rid, r.name from user_info u left outer join enterprise e ON e.id = u.enterprise_id left outer join user_role ur on ur.user_id = u.id left outer join role r on ur.role_id = r.id where u.is_deleted = 0 order by u.created_time Desc`
             sql2 = `select * from enterprise e where e.is_deleted = 0`
-        } else if (req.user.role === 2) {
+        } else {
             console.log('企业');
 
             sql = `select u.*, e.enterprise_name, ur.role_id, r.id rid, r.name from user_info u left outer join enterprise e ON e.id = u.enterprise_id left outer join user_role ur on ur.user_id = u.id left outer join role r on ur.role_id = r.id where u.is_deleted = 0 and u.enterprise_id = ${req.user.enterprise_id} order by u.created_time Desc`
             sql2 = `select * from enterprise e where e.is_deleted = 0 and e.id=${req.user.enterprise_id}`
-        } else {
-            assert(false, 403, '没有权限')
         }
         let row = {}
         row.success = true
         row.tableData = await connection(sql)
-        sql = `select * from role where id >= ${req.user.role}`
+        sql = `select * from role where is_deleted=0`
         row.roles = await connection(sql)
         row.enterprise = await connection(sql2)
             // console.log(row.enterprise);
@@ -418,7 +416,7 @@ module.exports = app => {
     //新增用户
     router.post('/addNewUser', authMiddle, async(req, res) => {
 
-        assert(req.user.role < 3, 403, '没有权限')
+        // assert(req.user.role < 3, 403, '没有权限')
 
         let {
             enterprise_id,

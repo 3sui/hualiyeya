@@ -53,12 +53,14 @@
                     <template slot-scope="scope">
                         <el-button
                             type="text"
+                            size="14"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
                              v-if="opera.operation.indexOf('修改')>-1"
                         >编辑</el-button>
                         <el-button
                             type="text"
+                            size="14"
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
