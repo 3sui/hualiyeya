@@ -388,7 +388,7 @@ module.exports = app => {
     router.get('/fetchAuthList', authMiddle, async(req, res) => {
         let sql
         let sql2
-        if (req.user.read === "查看全部") {
+        if (req.user.read === "查看所有") {
             console.log('超级');
             sql = `select u.*, e.enterprise_name, ur.role_id, r.id rid, r.name from user_info u left outer join enterprise e ON e.id = u.enterprise_id left outer join user_role ur on ur.user_id = u.id left outer join role r on ur.role_id = r.id where u.is_deleted = 0 order by u.created_time Desc`
             sql2 = `select * from enterprise e where e.is_deleted = 0`

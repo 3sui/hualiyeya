@@ -12,6 +12,7 @@ module.exports = app => {
 
     //获取维修表信息
     router.post('/Repair', authMiddle, async(req, res) => {
+        // console.log(req.user);
 
         let sql = '';
         let startid = req.body.startid;
@@ -21,7 +22,13 @@ module.exports = app => {
         if (req.user.read === "查看所有") {
             sql = `select * from repair where is_deleted = 0 and (enterprise_name like '%${keyword}%' or device_eq like '%${keyword}%' or date like '%${keyword}%' or state like '%${keyword}%' )order by date Desc `
         } else {
-            sql = `select r.*,d.enterprise_id from repair r  left outer join device d on r.device_eq=d.eq  where r.is_deleted = 0 and  d.enterprise_id=${req.user.enterprise_id} and (enterprise_name like '%${keyword}%' or device_eq like '%${keyword}%' or date like '%${keyword}%' or state like '%${keyword}%' ) order by r.date Desc`
+            if (req.user.enterprise_id === 1) {
+                sql = `select r.* from repair r  where r.is_deleted = 0 and  r.created_by='${req.user.username}' and (enterprise_name like '%${keyword}%' or device_eq like '%${keyword}%' or date like '%${keyword}%' or state like '%${keyword}%' ) order by r.date Desc`
+
+            } else {
+                sql = `select r.*,d.enterprise_id from repair r  left outer join device d on r.device_eq=d.eq  where r.is_deleted = 0 and  d.enterprise_id=${req.user.enterprise_id} and (enterprise_name like '%${keyword}%' or device_eq like '%${keyword}%' or date like '%${keyword}%' or state like '%${keyword}%' ) order by r.date Desc`
+            }
+
         }
         console.log(sql);
 

@@ -261,7 +261,8 @@ export default {
         date: "",
         state: "",
         cause: "",
-        methods: ""
+        methods: "",
+        created_by:"",
       }
     };
   },
@@ -288,6 +289,7 @@ export default {
       ) {
         Toast.fail("请输入必填项");
       } else {
+        this.query.created_by=window.localStorage.username
         this.$axios
           .post("/mobile/AddRepair", this.query)
           .then(res => {

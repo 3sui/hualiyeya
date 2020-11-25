@@ -146,7 +146,7 @@
                 <el-form-item label="账号" prop="username">
                     <el-input v-model="newUser.username"></el-input>
                 </el-form-item>
-                <el-form-item label="用户名" prop="nickname">
+                <el-form-item label="名称" prop="nickname">
                     <el-input v-model="newUser.nickname"></el-input>
                 </el-form-item>
                 <el-form-item label="权限" prop="role">

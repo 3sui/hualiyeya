@@ -25,12 +25,18 @@ module.exports = app => {
             if (req.user.read === "查看所有") {
                 results = result;
             } else {
-                sql = `select * from enterprise where id= ${req.user.enterprise_id}`
-                console.log(sql);
-                let enterprise = await connection(sql)
-                console.log(enterprise);
-                results = result.filter(item => item.enterprise_name === enterprise[0].enterprise_name)
+                if (req.user.enterprise_id === 1) {
+                    results = result.filter(item => item.created_by === req.user.username)
+                } else {
+                    sql = `select * from enterprise where id= ${req.user.enterprise_id}`
+                    console.log(sql);
+                    let enterprise = await connection(sql)
+                    console.log(enterprise);
+                    results = result.filter(item => item.enterprise_name === enterprise[0].enterprise_name)
+                }
             }
+
+
 
             res.send(results)
         })
@@ -107,7 +113,7 @@ module.exports = app => {
 
         })
         //查询维修表信息
-    router.post('/SearchRepair', async(req, res) => {
+    router.post('/SearchRepair', authMiddle, async(req, res) => {
             let keyword = req.body.keyword;
             let sql = `select enterprise.enterprise_name,repair.*,device.eq,device.device_name,device_type.typename from repair,enterprise,device,device_type where (repair.is_deleted = 0 or repair.is_deleted is NULL) and repair.device_id= device.id and device.device_type=device_type.id  and device.enterprise_id= enterprise.id and (enterprise.enterprise_name like '%${keyword}%' or device.eq like '%${keyword}%' or device.device_name like '%${keyword}%' or repair.repair_person like '%${keyword}%')order by repair.created_time Desc`
             connection.query(sql, (err, results) => {
