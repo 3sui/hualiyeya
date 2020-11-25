@@ -37,6 +37,7 @@ Vue.use(XLSX)
 Vue.use(echarts)
     // Vue.use(Moment)
 Vue.config.productionTip = false;
+
 Vue.use(BaiduMap, {
     // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
     ak: 'MrbZMmsfnNd32LhWaqtPgCCb7CKi4uvQ'
