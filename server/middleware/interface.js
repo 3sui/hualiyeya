@@ -48,24 +48,24 @@ const interface = [{
 
     {
         path: "DeviceType",
-        interfacepath: ["/DeviceType", "/CheckDeviceTypeId", "/DeleteDeviceType", "/AddDeviceType", "/updateDeviceType"],
+        interfacepath: ["/DeviceType", "/CheckDeviceTypeId", "/DeleteDeviceType", "/AddDeviceType", "/UpdateDeviceType"],
         public: false,
     },
 
     {
         path: "FaultType",
-        interfacepath: ["/FaultType", "/DeleteFaultType", "/AddFaultType", "/updateFaultType"],
+        interfacepath: ["/FaultType", "/DeleteFaultType", "/AddFaultType", "/UpdateFaultType"],
         public: false,
     },
 
     {
         path: "Enterprise",
-        interfacepath: ["/Industry", "/Enterprise", "/checkEnterpriseID", "/DeleteEnterprise", "/AddEnterprise", "/updateEnterprise", ],
+        interfacepath: ["/Industry", "/Enterprise", "/checkEnterpriseID", "/DeleteEnterprise", "/AddEnterprise", "/UpdateEnterprise"],
         public: false,
     },
     {
         path: "Industry",
-        interfacepath: ["/Industry", "/CheckIndustryId", "/DeleteIndustry", "/AddIndustry", "/updateIndustry"],
+        interfacepath: ["/Industry", "/CheckIndustryId", "/DeleteIndustry", "/AddIndustry", "/UpdateIndustry"],
         public: false,
     },
 

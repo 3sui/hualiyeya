@@ -42,15 +42,20 @@ module.exports = option => {
         let rights = result2[0].rights.split(',') || []
         let reqpath = req.route.path
         console.log(reqpath);
+        // console.log(interface);
         let interfacenow = interface.filter(item => {
-            if (item.interfacepath.includes(reqpath)) {
-                return item
-            }
-        })
+
+                if (item.interfacepath.indexOf(reqpath) > -1) {
+                    return item
+                }
+            })
+            // let interfacenow = interface.filter(item => {
+            //     item.interfacepath.indexOf(reqpath) > -1
+            // })
 
 
         console.log(interfacenow);
-        assert(rights.includes(interfacenow[0].path) || interfacenow[0].public, 403, '无访问权限')
+        assert(interfacenow[0].public || rights.includes(interfacenow[0].path), 403, '无访问权限')
             // console.log(result2);
 
         console.log(req);

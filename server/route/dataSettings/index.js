@@ -274,9 +274,8 @@ module.exports = app => {
             res.send(results)
                 // } else {
                 //     results.success = false
-
-            //     results.message = '企业名称不能重复'
-            //     res.send(results)
+                //     results.message = '企业名称不能重复'
+                //     res.send(results)
 
             // }
         })
