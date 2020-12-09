@@ -623,7 +623,11 @@ export default {
             );
         },
 
-        handlePageChange() {},
+        handlePageChange(val) {
+             window.console.log(val);
+            this.$set(this.query, 'pageIndex', val);
+            this.getData();
+        },
         handleSelectionChange(val) {
             this.multipleSelection = val;
         }
